@@ -2,7 +2,7 @@
   <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Crear Barrio</h1>
+        <h1 class="mb-3">Crear Ordenes de Compra</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="2" md="2">
@@ -27,7 +27,7 @@
   <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Editar Barrio</h1>
+        <h1 class="mb-3">Editar Orden de Compra</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="2" md="2">
@@ -58,17 +58,17 @@
       </v-col>
 
       <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-        Cantidad de Barrio: {{ items.length }}
+        Cantidad Ordenes de Compra: {{ items.length }}
       </v-col>
-
+      
     </v-row>
-    
+
     <v-card class="mt-5 rounded-xl">
       <v-data-table :headers="headers" :items="itemsComputed">
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Barrios</p>
+              <p class="font-weight-bold">Ordenes de Compra</p>
             </v-toolbar-title>
 
             <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -159,10 +159,10 @@ export default {
     this.dialogoFormulario = true;
 
     // Recuperar datos del localStorage
-    let datosGuardadosBarrio = JSON.parse(localStorage.getItem('datosGuardadosBarrio')) || [];
+    let datosGuardadosOrdenC = JSON.parse(localStorage.getItem('datosGuardadosOrdenC')) || [];
     
     // Encontrar el último valor guardado
-    let ultimoValor = datosGuardadosBarrio.length > 0 ? datosGuardadosBarrio[datosGuardadosBarrio.length - 1] : 0;
+    let ultimoValor = datosGuardadosOrdenC.length > 0 ? datosGuardadosOrdenC[datosGuardadosOrdenC.length - 1] : 0;
     
     // Incrementar el último valor para generar un nuevo código
     let nuevoValor = ultimoValor + 1;
@@ -186,12 +186,13 @@ export default {
         this.emptyFieldError = true;
         return;
       }
+
       this.items.push({
         id: this.formulario.codigo,
         descripcion: this.formulario.descripcion,
         action: ''
       })
-      localStorage.setItem('db-itemsBarrio', JSON.stringify(this.items));
+      localStorage.setItem('db-itemsOrden', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.dialogoFormulario = false
@@ -203,12 +204,14 @@ export default {
         this.emptyFieldError = true;
         return;
       }
+
+
       this.items.forEach(item => {
         if (item.id === this.formulario.codigo) {
           item.descripcion = this.formulario.descripcion
         }
       })
-      localStorage.setItem('db-itemsBarrio', JSON.stringify(this.items))
+      localStorage.setItem('db-itemsOrden', JSON.stringify(this.items))
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -220,7 +223,7 @@ export default {
       this.items = this.items.filter(item => {
         return item.id != parametro.id
       })
-      localStorage.setItem('db-itemsBarrio', JSON.stringify(this.items))
+      localStorage.setItem('db-itemsOrden', JSON.stringify(this.items))
     }
 
   },
@@ -229,7 +232,7 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsBarrio')) || []
+    this.items = JSON.parse(localStorage.getItem('db-itemsOrden')) || []
 
   },
 

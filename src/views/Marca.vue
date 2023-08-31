@@ -2,7 +2,7 @@
   <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Crear Barrio</h1>
+        <h1 class="mb-3">Crear Marcas</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="2" md="2">
@@ -27,12 +27,9 @@
   <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Editar Barrio</h1>
+        <h1 class="mb-3">Editar Marcas</h1>
         <v-form>
           <v-row>
-            <v-col cols="12" sm="2" md="2">
-              <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
-            </v-col>
             <v-col cols="12" sm="10" md="10">
               <v-text-field variant="outlined" label="Descripcion de ciudad" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
@@ -58,17 +55,17 @@
       </v-col>
 
       <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-        Cantidad de Barrio: {{ items.length }}
+        Cantidad de Marcas: {{ items.length }}
       </v-col>
-
+      
     </v-row>
-    
+
     <v-card class="mt-5 rounded-xl">
       <v-data-table :headers="headers" :items="itemsComputed">
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Barrios</p>
+              <p class="font-weight-bold">Marcas de Productos</p>
             </v-toolbar-title>
 
             <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -159,10 +156,10 @@ export default {
     this.dialogoFormulario = true;
 
     // Recuperar datos del localStorage
-    let datosGuardadosBarrio = JSON.parse(localStorage.getItem('datosGuardadosBarrio')) || [];
+    let datosGuardadosMarcas = JSON.parse(localStorage.getItem('datosGuardadosMarcas')) || [];
     
     // Encontrar el último valor guardado
-    let ultimoValor = datosGuardadosBarrio.length > 0 ? datosGuardadosBarrio[datosGuardadosBarrio.length - 1] : 0;
+    let ultimoValor = datosGuardadosMarcas.length > 0 ? datosGuardadosMarcas[datosGuardadosMarcas.length - 1] : 0;
     
     // Incrementar el último valor para generar un nuevo código
     let nuevoValor = ultimoValor + 1;
@@ -186,12 +183,14 @@ export default {
         this.emptyFieldError = true;
         return;
       }
+
+
       this.items.push({
         id: this.formulario.codigo,
         descripcion: this.formulario.descripcion,
         action: ''
       })
-      localStorage.setItem('db-itemsBarrio', JSON.stringify(this.items));
+      localStorage.setItem('db-itemsMarca', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.dialogoFormulario = false
@@ -203,12 +202,14 @@ export default {
         this.emptyFieldError = true;
         return;
       }
+
+
       this.items.forEach(item => {
         if (item.id === this.formulario.codigo) {
           item.descripcion = this.formulario.descripcion
         }
       })
-      localStorage.setItem('db-itemsBarrio', JSON.stringify(this.items))
+      localStorage.setItem('db-itemsMarca', JSON.stringify(this.items))
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -220,7 +221,7 @@ export default {
       this.items = this.items.filter(item => {
         return item.id != parametro.id
       })
-      localStorage.setItem('db-itemsBarrio', JSON.stringify(this.items))
+      localStorage.setItem('db-itemsMarca', JSON.stringify(this.items))
     }
 
   },
@@ -229,7 +230,7 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsBarrio')) || []
+    this.items = JSON.parse(localStorage.getItem('db-itemsMarca')) || []
 
   },
 
