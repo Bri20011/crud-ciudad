@@ -63,7 +63,7 @@
     <v-row>
 
       <v-col cols="12" sm="5" md="5">
-        <v-text-field :loading="loading" density="compact" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
+        <v-text-field :loading="loading" density="compact"  v-model="buscador" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
           single-line hide-details rounded click:prependInner></v-text-field>
       </v-col>
 

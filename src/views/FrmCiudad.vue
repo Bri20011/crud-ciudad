@@ -2,26 +2,21 @@
   <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Crear Porcentaje de Iva</h1>
+        <h1 class="mb-3">Crear Ciudad</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="2" md="2">
               <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled></v-text-field>
             </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Descripcion de Iva" v-model="formulario.descripcion"
+            <v-col cols="12" sm="10" md="10">
+              <v-text-field variant="outlined" label="Descripcion de ciudad" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Porcentaje (%)" v-model="formulario.porcentaje"
-              :error="excededLimitIva" :error-messages="errorMessageE" required ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
+
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-              :disabled="excededLimit || !formulario.descripcion || excededLimitIva || !formulario.porcentaje">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -32,26 +27,22 @@
   <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Editar Iva</h1>
+        <h1 class="mb-3">Editar Ciudad</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="2" md="2">
               <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
             </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Descripcion de Iva" v-model="formulario.descripcion"
+            <v-col cols="12" sm="10" md="10">
+              <v-text-field variant="outlined" label="Descripcion de ciudad" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Porcentaje (%)" v-model="formulario.porcentaje"
-              :error="excededLimitIva" :error-messages="errorMessageE" required ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-              :disabled="excededLimit || !formulario.descripcion || excededLimitIva || !formulario.porcentaje">Guardar</v-btn>
+              :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -62,14 +53,14 @@
     <v-row>
 
       <v-col cols="12" sm="5" md="5">
-        <v-text-field :loading="loading" density="compact" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
+        <v-text-field :loading="loading" v-model="buscador" density="compact" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
           single-line hide-details rounded click:prependInner></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-       Cantidad de Ivas: {{ items.length }}
+        Cantidad de Ciudad: {{ items.length }}
       </v-col>
-      
+
     </v-row>
 
     <v-card class="mt-5 rounded-xl">
@@ -77,7 +68,7 @@
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Registro de Ivas</p>
+              <p class="font-weight-bold">Ciudades</p>
             </v-toolbar-title>
 
             <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -107,6 +98,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { CiudadAPI } from '@/services/ciudad.api'
 export default {
   components: {
     VDataTable
@@ -117,16 +109,13 @@ export default {
       dialogoFormularioEditar: false,
       formulario: {
         codigo: '',
-        descripcion: '',
-        porcentaje:''
+        descripcion: ''
       },
       limit: 45,
-      limiteE:2,
       contador: 1,
       defaultFormulario: {
         codigo: '',
-        descripcion: '',
-        porcentaje:''
+        descripcion: ''
       },
       buscador: '',
       headers: [
@@ -137,14 +126,12 @@ export default {
           key: 'id',
         },
         { title: 'Descripcion', key: 'descripcion' },
-        { title: 'Porcentaje (%)', key: 'porcentaje' ,sortable: false, align: 'star'},
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
         {
           id: '1',
-          descripcion: 'Central',
-          porcentaje:'001',
+          descripcion: 'Campo',
           action: ''
         }
       ]
@@ -159,22 +146,13 @@ export default {
     excededLimit() {
       return this.formulario.descripcion.length > this.limit;
     },
-    excededLimitIva() {
-      const porcentaje = this.formulario.porcentaje;
-    return isNaN(porcentaje) || porcentaje < 1 || porcentaje > 99;
-    },
     errorMessage() {
       if (this.excededLimit) {
         return 'Superaste el límite de 45 letras';
       }
       return '';
-    },
-    errorMessageE() {
-      if (this.excededLimitIva) {
-        return 'Solo puedes guardar hasta 2 Digitos"';
-      }
-      return '';
     }
+
   },
   methods:
   {
@@ -183,10 +161,10 @@ export default {
     this.dialogoFormulario = true;
 
     // Recuperar datos del localStorage
-    let datosGuardadosIvas = JSON.parse(localStorage.getItem('datosGuardadosIvas')) || [];
+    let datosGuardadosCiudad = JSON.parse(localStorage.getItem('datosGuardadosCiudad')) || [];
     
     // Encontrar el último valor guardado
-    let ultimoValor = datosGuardadosIvas.length > 0 ? datosGuardadosIvas[datosGuardadosIvas.length - 1] : 0;
+    let ultimoValor = datosGuardadosCiudad.length > 0 ? datosGuardadosCiudad[datosGuardadosCiudad.length - 1] : 0;
     
     // Incrementar el último valor para generar un nuevo código
     let nuevoValor = ultimoValor + 1;
@@ -199,67 +177,82 @@ export default {
     // Asignar el nuevo valor al formulario
     this.formulario.codigo = nuevoValor;
   },
+
+
+
     generarCodigo() {
       const nuevoCodigo = this.contador++;
       return nuevoCodigo;
     },
     guardarFormulario() {
 
-      if (!this.formulario.descripcion || !this.formulario.porcentaje || this.excededLimit || this.excededLimitIva || 
-        isNaN(this.formulario.porcentaje) || this.formulario.porcentaje === "" || this.formulario.porcentaje > 99 || this.formulario.porcentaje < 1) {
-      this.emptyFieldError = true;
-      return;
-    }
+      if (!this.formulario.descripcion) {
         
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        porcentaje: this.formulario.porcentaje,
-        action: ''
+        this.emptyFieldError = true;
+        return;
+      }
+
+      CiudadAPI.create(
+        {
+          idCiudad: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion
+        }
+      ).then(()=> {
+        this.obtenerCiudades()
       })
-      localStorage.setItem('db-itemsIvas', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
-      this.formulario.porcentaje = '';
       this.dialogoFormulario = false
     },
+   
+
     guardarFormularioEditar() {
 
-      if (!this.formulario.descripcion || this.emptyFieldError || this.excededLimit || this.excededLimitIva || 
-        isNaN(this.formulario.porcentaje) || this.formulario.porcentaje === "" || this.formulario.porcentaje > 99) {
-      this.emptyFieldError = true;
-      return;
+      if (!this.formulario.descripcion) {
+        
+        this.emptyFieldError = true;
+        return;
       }
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
-          item.porcentaje = this.formulario.porcentaje
+
+      CiudadAPI.update(
+        this.formulario.codigo,
+        {
+          idCiudad: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion
         }
+      ).then(()=> {
+        this.obtenerCiudades()
       })
-      localStorage.setItem('db-itemsIvas', JSON.stringify(this.items))
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
       this.dialogoFormularioEditar = true
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
-      this.formulario.porcentaje = parametro.porcentaje
     },
+    
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      CiudadAPI.delete(parametro.id).then(() => this.obtenerCiudades())
+    },
+    obtenerCiudades() {
+      CiudadAPI.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idCiudad,
+            descripcion: item.Descripcion
+          }
+        })
       })
-      localStorage.setItem('db-itemsIvas', JSON.stringify(this.items))
-    }
+    },
 
   },
 
+  
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsIvas')) || []
-
+    this.obtenerCiudades()
   },
 
 }
