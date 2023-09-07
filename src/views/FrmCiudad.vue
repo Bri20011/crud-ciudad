@@ -223,6 +223,7 @@ export default {
       ).then(()=> {
         this.obtenerCiudades()
       })
+      this.formulario.descripcion = '';
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
