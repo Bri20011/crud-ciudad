@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { MarcaApi } from '@/services/marca.api'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 export default {
   components: {
@@ -184,17 +185,19 @@ export default {
         return;
       }
 
-
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        action: ''
+      MarcaApi.create(
+        {
+          idmarca: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion
+        }
+      ).then(()=> {
+        this.obtenerMarca()
       })
-      localStorage.setItem('db-itemsMarca', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.dialogoFormulario = false
     },
+   
     guardarFormularioEditar() {
 
       if (!this.formulario.descripcion) {
@@ -203,13 +206,16 @@ export default {
         return;
       }
 
-
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
+      MarcaApi.update(
+        this.formulario.codigo,
+        {
+          idmarca: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion
         }
+      ).then(()=> {
+        this.obtenerMarca()
       })
-      localStorage.setItem('db-itemsMarca', JSON.stringify(this.items))
+      this.formulario.descripcion = '';
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -218,21 +224,28 @@ export default {
       this.formulario.descripcion = parametro.descripcion
     },
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
-      })
-      localStorage.setItem('db-itemsMarca', JSON.stringify(this.items))
-    }
+      MarcaApi.delete(parametro.id).then(() => this.obtenerMarca())
 
+    },
+    obtenerMarca() {
+      MarcaApi.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idmarca,
+            descripcion: item.Descripcion
+          }
+        })
+      })
+    },
   },
 
 
   created() {
-    // Generar automáticamente el código al cargar el componente
-    this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsMarca')) || []
-
+      // Generar automáticamente el código al cargar el componente
+      this.formulario.codigo = this.generarCodigo();
+    this.obtenerMarca()
   },
+
 
 }
 </script>
