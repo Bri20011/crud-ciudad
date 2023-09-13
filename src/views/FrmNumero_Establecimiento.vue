@@ -108,6 +108,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { EstablecimientoAPI } from '@/services/establecimiento.api'
+
 export default {
   components: {
     VDataTable
@@ -208,14 +210,15 @@ export default {
       this.emptyFieldError = true;
       return;
     }
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        numero: this.formulario.numero,
-        action: ''
+    EstablecimientoAPI.create(
+        {
+          idEstablecimiento: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Numero_establec: this.formulario.numero
+        }
+      ).then(()=> {
+        this.ObtenerEstablecimiento()
       })
-      localStorage.setItem('db-itemsEstab', JSON.stringify(this.items));
-
       this.formulario.descripcion = '';
       this.formulario.numero = '';
       this.dialogoFormulario = false
@@ -227,13 +230,19 @@ export default {
       return;
     }
 
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
-          item.numero = this.formulario.numero
+    EstablecimientoAPI.update(
+        this.formulario.codigo,
+        {
+          idEstablecimiento: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Numero_establec: this.formulario.numero
         }
+      ).then(()=> {
+        this.ObtenerEstablecimiento()
       })
-      localStorage.setItem('db-itemsEstab', JSON.stringify(this.items))
+
+
+
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -243,20 +252,28 @@ export default {
       this.formulario.numero = parametro.numero
     },
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      EstablecimientoAPI.delete(parametro.id).then(() => this.ObtenerEstablecimiento())
+    },
+    ObtenerEstablecimiento() {
+      EstablecimientoAPI.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idEstablecimiento,
+            descripcion: item.Descripcion,
+            numero: item.Numero_establec
+          }
+        })
       })
-      localStorage.setItem('db-itemsEstab', JSON.stringify(this.items))
-    }
+    },
 
   },
 
+  
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsEstab')) || []
-
+    this.ObtenerEstablecimiento()
   },
 
 }

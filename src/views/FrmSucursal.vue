@@ -42,7 +42,7 @@
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-              :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -53,14 +53,14 @@
     <v-row>
 
       <v-col cols="12" sm="5" md="5">
-        <v-text-field :loading="loading" density="compact" variant="solo"  v-model="buscador" label="Buscar" append-inner-icon="mdi-magnify"
-          single-line hide-details rounded click:prependInner></v-text-field>
+        <v-text-field :loading="loading" density="compact" variant="solo" v-model="buscador" label="Buscar"
+          append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
         Cantidad Sucursal: {{ items.length }}
       </v-col>
-      
+
     </v-row>
 
     <v-card class="mt-5 rounded-xl">
@@ -98,6 +98,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { SucursalAPI } from '@/services/sucursal.api'
 export default {
   components: {
     VDataTable
@@ -155,26 +156,26 @@ export default {
   methods:
   {
     abrirDialogo() {
-    // Abrir el modal y cargar el código aquí
-    this.dialogoFormulario = true;
+      // Abrir el modal y cargar el código aquí
+      this.dialogoFormulario = true;
 
-    // Recuperar datos del localStorage
-    let datosGuardadosSucursal = JSON.parse(localStorage.getItem('datosGuardadosSucursal')) || [];
-    
-    // Encontrar el último valor guardado
-    let ultimoValor = datosGuardadosSucursal.length > 0 ? datosGuardadosSucursal[datosGuardadosSucursal.length - 1] : 0;
-    
-    // Incrementar el último valor para generar un nuevo código
-    let nuevoValor = ultimoValor + 1;
-    
-    // Verificar si el nuevo valor ya está en uso
-    while (this.items.some(item => item.id === nuevoValor)) {
-      nuevoValor++; // Incrementar hasta encontrar un código no utilizado
-    }
-    
-    // Asignar el nuevo valor al formulario
-    this.formulario.codigo = nuevoValor;
-  },
+      // Recuperar datos del localStorage
+      let datosGuardadosSucursal = JSON.parse(localStorage.getItem('datosGuardadosSucursal')) || [];
+
+      // Encontrar el último valor guardado
+      let ultimoValor = datosGuardadosSucursal.length > 0 ? datosGuardadosSucursal[datosGuardadosSucursal.length - 1] : 0;
+
+      // Incrementar el último valor para generar un nuevo código
+      let nuevoValor = ultimoValor + 1;
+
+      // Verificar si el nuevo valor ya está en uso
+      while (this.items.some(item => item.id === nuevoValor)) {
+        nuevoValor++; // Incrementar hasta encontrar un código no utilizado
+      }
+
+      // Asignar el nuevo valor al formulario
+      this.formulario.codigo = nuevoValor;
+    },
     generarCodigo() {
       const nuevoCodigo = this.contador++;
       return nuevoCodigo;
@@ -182,35 +183,43 @@ export default {
     guardarFormulario() {
 
       if (!this.formulario.descripcion) {
-        
+
         this.emptyFieldError = true;
         return;
       }
 
-
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        action: ''
+      SucursalAPI.create(
+        {
+          idSucursal: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion
+        }
+      ).then(() => {
+        this.ObtenerSucursal()
       })
-      localStorage.setItem('db-itemsSuc', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.dialogoFormulario = false
     },
+
+
     guardarFormularioEditar() {
+
       if (!this.formulario.descripcion) {
-        
+
         this.emptyFieldError = true;
         return;
       }
 
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
+      SucursalAPI.update(
+        this.formulario.codigo,
+        {
+          idSucursal: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion
         }
+      ).then(() => {
+        this.ObtenerSucursal()
       })
-      localStorage.setItem('db-itemsSuc', JSON.stringify(this.items))
+      this.formulario.descripcion = '';
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -218,21 +227,29 @@ export default {
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
     },
+
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      SucursalAPI.delete(parametro.id).then(() => this.ObtenerSucursal())
+    },
+    ObtenerSucursal() {
+      SucursalAPI.getAll().then(({ data }) => {
+        this.items = data.map(item => {
+          return {
+            id: item.idSucursal,
+            descripcion: item.Descripcion
+          }
+        })
       })
-      localStorage.setItem('db-itemsSuc', JSON.stringify(this.items))
-    }
+    },
 
   },
+
 
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsTipoDoc')) || []
-
+    this.ObtenerSucursal()
   },
 
 }
