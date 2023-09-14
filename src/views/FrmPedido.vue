@@ -112,6 +112,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { PedidoAPI } from '@/services/pedido.api'
+
 export default {
   components: {
     VDataTable
@@ -223,18 +225,31 @@ this.formulario.codigo = nuevoValor;
         return;
       }
 
-  const dateObject = new Date(this.formulario.fecha);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  const fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
+  // const dateObject = new Date(this.formulario.fecha);
+  // const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  // const fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
+  PedidoAPI.create(
+        {
+          idPedido: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Fecha_pedi: this.formulario.fecha
+        }
+      ).then(()=> {
+        this.ObtenerPedido()
+      })
 
-  this.items.push({
-    id: this.formulario.codigo,
-    descripcion: this.formulario.descripcion,
-    fecha: fechaFormatted, // Usa la fecha formateada aquí
-    action: '',
-  });
 
-  localStorage.setItem('db-itemsPedido', JSON.stringify(this.items));
+
+
+
+  // this.items.push({
+  //   id: this.formulario.codigo,
+  //   descripcion: this.formulario.descripcion,
+  //   fecha: fechaFormatted, // Usa la fecha formateada aquí
+  //   action: '',
+  // });
+
+  // localStorage.setItem('db-itemsPedido', JSON.stringify(this.items));
 
   this.formulario.descripcion = '';
   this.formulario.fecha = '';
@@ -246,14 +261,17 @@ this.formulario.codigo = nuevoValor;
         this.emptyFieldError = true;
         return;
       }
-
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
-          item.fecha = this.formulario.fecha
+      PedidoAPI.update(
+        this.formulario.codigo,
+        {
+          idPedido: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Fecha_pedi: this.formulario.fecha
         }
+      ).then(()=> {
+        this.ObtenerPedido()
       })
-      localStorage.setItem('db-itemsPedido', JSON.stringify(this.items))
+
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -263,21 +281,30 @@ this.formulario.codigo = nuevoValor;
       this.formulario.fecha = parametro.fecha
     },
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      PedidoAPI.delete(parametro.id).then(() => this.ObtenerPedido())
+    },
+    ObtenerPedido() {
+      PedidoAPI.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idPedido,
+            descripcion: item.Descripcion,
+            fecha: item.Fecha_pedi
+          }
+        })
       })
-      localStorage.setItem('db-itemsPedido', JSON.stringify(this.items))
-    }
+    },
 
   },
 
+  
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsPedido')) || []
-
+    this.ObtenerPedido()
   },
+
 
 }
 </script>

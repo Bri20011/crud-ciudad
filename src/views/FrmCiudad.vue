@@ -98,7 +98,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { CiudadAPI } from '@/services/ciudad.api'
+import { UsuarioAPI } from '@/services/usuario.api'
 export default {
   components: {
     VDataTable
@@ -251,7 +251,7 @@ export default {
   
 
   created() {
-    // Generar automáticamente el código al cargar el componente
+    // Generar automáticamente el código al cargar el componente  dd
     this.formulario.codigo = this.generarCodigo();
     this.obtenerCiudades()
   },

@@ -15,17 +15,17 @@
 
             <v-col cols="12" sm="5" md="5">
               <v-text-field variant="outlined" label="Numero de Expedicion" v-model="formulario.numero"
-              :error="excededLimitEstab" :error-messages="errorMessageE" required ></v-text-field>
+              :error="excededLimitExp" :error-messages="errorMessageE" required ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-              :disabled="excededLimit || !formulario.descripcion || excededLimitEstab || !formulario.numero">Guardar</v-btn>
+              :disabled="excededLimit || !formulario.descripcion || excededLimitExp || !formulario.numero">Guardar</v-btn>
             </v-col>
           </v-row>
-        </v-form>
+        </v-form>d
       </v-container>
     </v-card>
   </v-dialog>
@@ -45,14 +45,14 @@
             </v-col>
             <v-col cols="12" sm="5" md="5">
               <v-text-field variant="outlined" label="Numero de Expedicion" v-model="formulario.numero"
-              :error="excededLimitEstab" :error-messages="errorMessageE" required ></v-text-field>
+              :error="excededLimitExp" :error-messages="errorMessageE" required ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-              :disabled="excededLimit || !formulario.descripcion || excededLimitEstab || !formulario.numero">Guardar</v-btn>
+              :disabled="excededLimit || !formulario.descripcion || excededLimitExp || !formulario.numero">Guardar</v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -108,6 +108,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { PuntoExpAPI } from '@/services/punto_exp.api'
+
 export default {
   components: {
     VDataTable
@@ -160,7 +162,7 @@ export default {
     excededLimit() {
       return this.formulario.descripcion.length > this.limit;
     },
-    excededLimitEstab() {
+    excededLimitExp() {
       return isNaN(this.formulario.numero) || this.formulario.numero.length !== this.limiteE;
     },
     errorMessage() {
@@ -170,7 +172,7 @@ export default {
       return '';
     },
     errorMessageE() {
-      if (this.excededLimitEstab) {
+      if (this.excededLimitExp) {
         return 'Debe ser exactamente 3 "Numeros"';
       }
       return '';
@@ -204,17 +206,19 @@ export default {
       return nuevoCodigo;
     },
     guardarFormulario() {
-      if (!this.formulario.descripcion || !this.formulario.numero || this.excededLimit || this.excededLimitEstab) {
+      if (!this.formulario.descripcion || !this.formulario.numero || this.excededLimit || this.excededLimitExp) {
       this.emptyFieldError = true;
       return;
     }
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        numero: this.formulario.numero,
-        action: ''
+    PuntoExpAPI.create(
+        {
+          idPunto_exp: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Numer_punto_exp: this.formulario.numero
+        }
+      ).then(()=> {
+        this.ObtenerPuntoExp()
       })
-      localStorage.setItem('db-itemsExp', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.formulario.numero = '';
@@ -222,18 +226,21 @@ export default {
     },
     guardarFormularioEditar() {
 
-      if (!this.formulario.descripcion || !this.formulario.numero || this.excededLimit || this.excededLimitEstab) {
+      if (!this.formulario.descripcion || !this.formulario.numero || this.excededLimit || this.excededLimitExp) {
       this.emptyFieldError = true;
       return;
     }
 
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
-          item.numero = this.formulario.numero
+    PuntoExpAPI.update(
+        this.formulario.codigo,
+        {
+          idPunto_exp: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Numer_punto_exp: this.formulario.numero
         }
+      ).then(()=> {
+        this.ObtenerPuntoExp()
       })
-      localStorage.setItem('db-itemsExp', JSON.stringify(this.items))
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -243,20 +250,28 @@ export default {
       this.formulario.numero = parametro.numero
     },
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      PuntoExpAPI.delete(parametro.id).then(() => this.ObtenerPuntoExp())
+    },
+    ObtenerPuntoExp() {
+      PuntoExpAPI.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idPunto_exp,
+            descripcion: item.Descripcion,
+            numero: item.Numer_punto_exp
+          }
+        })
       })
-      localStorage.setItem('db-itemsExp', JSON.stringify(this.items))
-    }
+    },
 
   },
 
+  
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsExp')) || []
-
+    this.ObtenerPuntoExp()
   },
 
 }

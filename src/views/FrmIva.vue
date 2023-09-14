@@ -107,6 +107,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { IvaAPI } from '@/services/iva.api'
+
 export default {
   components: {
     VDataTable
@@ -211,13 +213,15 @@ export default {
       return;
     }
         
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        porcentaje: this.formulario.porcentaje,
-        action: ''
+    IvaAPI.create(
+        {
+          idIva: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Porcentaje: this.formulario.porcentaje    //VER NUMERO
+        }
+      ).then(()=> {
+        this.ObtenerIva()
       })
-      localStorage.setItem('db-itemsIvas', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.formulario.porcentaje = '';
@@ -230,13 +234,17 @@ export default {
       this.emptyFieldError = true;
       return;
       }
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
-          item.porcentaje = this.formulario.porcentaje
+      IvaAPI.update(
+        this.formulario.codigo,
+        {
+          idIva: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          Porcentaje: this.formulario.porcentaje
         }
+      ).then(()=> {
+        this.ObtenerIva()
       })
-      localStorage.setItem('db-itemsIvas', JSON.stringify(this.items))
+
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -246,22 +254,29 @@ export default {
       this.formulario.porcentaje = parametro.porcentaje
     },
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      IvaAPI.delete(parametro.id).then(() => this.ObtenerIva())
+    },
+    ObtenerIva() {
+      IvaAPI.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idIva,
+            descripcion: item.Descripcion,
+            porcentaje: item.Porcentaje
+          }
+        })
       })
-      localStorage.setItem('db-itemsIvas', JSON.stringify(this.items))
-    }
+    },
 
   },
 
+  
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsIvas')) || []
-
+    this.ObtenerIva()
   },
-
 }
 </script>
 <style></style>

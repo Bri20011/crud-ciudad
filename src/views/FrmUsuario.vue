@@ -123,6 +123,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { UsuarioAPI } from '@/services/usuario.api'
+
 export default {
   components: {
     VDataTable
@@ -229,13 +231,15 @@ export default {
         this.emptyFieldError = true;
         return;
       }
-      this.items.push({
-        id: this.formulario.codigo,
-        descripcion: this.formulario.descripcion,
-        password: this.formulario.password,
-        action: ''
+      UsuarioAPI.create(
+        {
+          idUsuario: this.formulario.codigo,
+          Nombre: this.formulario.descripcion,
+          Contrasehna: this.formulario.password
+        }
+      ).then(()=> {
+        this.ObtenerUsuario()
       })
-      localStorage.setItem('db-itemsUser', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.formulario.password = '';
@@ -250,14 +254,16 @@ export default {
       }
 
 
-      this.items.forEach(item => {
-        if (item.id === this.formulario.codigo) {
-          item.descripcion = this.formulario.descripcion
-          item.password = this.formulario.password
-
+      UsuarioAPI.update(
+        this.formulario.codigo,
+        {
+          idUsuario: this.formulario.codigo,
+          Nombre: this.formulario.descripcion,
+          Contrasehna: this.formulario.password
         }
+      ).then(()=> {
+        this.ObtenerUsuario()
       })
-      localStorage.setItem('db-itemsUser', JSON.stringify(this.items))
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
@@ -267,20 +273,28 @@ export default {
       this.formulario.password = parametro.password
     },
     eliminarCiudad(parametro) {
-      this.items = this.items.filter(item => {
-        return item.id != parametro.id
+      UsuarioAPI.delete(parametro.id).then(() => this.ObtenerUsuario())
+    },
+    ObtenerUsuario() {
+      UsuarioAPI.getAll().then(({data}) => {
+        this.items = data.map(item=> {
+          return {
+            id: item.idUsuario,
+            descripcion: item.Nombre,
+            password: item.Contrasehna
+          }
+        })
       })
-      localStorage.setItem('db-itemsUser', JSON.stringify(this.items))
-    }
+    },
 
   },
 
+  
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.items = JSON.parse(localStorage.getItem('db-itemsUser')) || []
-
+    this.ObtenerUsuario()
   },
 
 }
