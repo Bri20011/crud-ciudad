@@ -98,7 +98,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { UsuarioAPI } from '@/services/usuario.api'
+import { CiudadAPI } from '@/services/ciudad.api'
 export default {
   components: {
     VDataTable

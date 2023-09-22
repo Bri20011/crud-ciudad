@@ -16,13 +16,14 @@
             <v-col cols="12" sm="5" md="5">
               <input class="custom-input" v-model="formulario.fecha" type="date" placeholder="Fecha de Pedido"
                 @input="formatDate" />
+
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-              :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -50,7 +51,7 @@
               <v-text-field variant="outlined" label="Fecha de Pedido" v-model="formulario.fecha"></v-text-field>
             </v-col>
 
-            
+
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
@@ -67,8 +68,8 @@
     <v-row>
 
       <v-col cols="12" sm="5" md="5">
-        <v-text-field :loading="loading" density="compact" v-model="buscador" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
-          single-line hide-details rounded click:prependInner></v-text-field>
+        <v-text-field :loading="loading" density="compact" v-model="buscador" variant="solo" label="Buscar"
+          append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
@@ -125,7 +126,8 @@ export default {
       formulario: {
         codigo: '',
         descripcion: '',
-        fecha: ''
+        fecha: null,
+        fechaFormatted: ''
 
 
       },
@@ -177,15 +179,28 @@ export default {
   methods:
   {
     formatDate() {
-  if (this.formulario.fecha) {
-    const dateObject = new Date(this.formulario.fecha + "T00:00:00Z");
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    this.formulario.fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
-  } else {
-    this.formulario.fechaFormatted = '';
-  }
-},
-    
+    //   if (this.formulario.fecha) {
+    //     const dateObject = new Date(this.formulario.fecha);
+    //     const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    //     this.formulario.fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
+    //   } else {
+    //     this.formulario.fechaFormatted = '';
+    //   }
+    // },
+
+    if (this.formulario.fecha) {
+        const dateObject = new Date(this.formulario.fecha);
+        const day = dateObject.getDate();
+        const month = dateObject.toLocaleDateString('es-ES', { month: 'long' });
+        const year = dateObject.getFullYear();
+        
+        // Formatea la fecha como "Día/Mes/Año"
+        this.formulario.fechaFormatted = `${day}/${month}/${year}`;
+      } else {
+        this.formulario.fechaFormatted = '';
+      }
+    },
+
     showDatePicker() {
       this.showDatepicker = true;
     },
@@ -194,47 +209,47 @@ export default {
     },
 
     abrirDialogo() {
-     // Abrir el modal y cargar el código aquí
-    this.dialogoFormulario = true;
+      // Abrir el modal y cargar el código aquí
+      this.dialogoFormulario = true;
 
-// Recuperar datos del localStorage
-let datosGuardadoPedido = JSON.parse(localStorage.getItem('datosGuardadoPedido')) || [];
+      // Recuperar datos del localStorage
+      let datosGuardadoPedido = JSON.parse(localStorage.getItem('datosGuardadoPedido')) || [];
 
-// Encontrar el último valor guardado
-let ultimoValor = datosGuardadoPedido.length > 0 ? datosGuardadoPedido[datosGuardadoPedido.length - 1] : 0;
+      // Encontrar el último valor guardado
+      let ultimoValor = datosGuardadoPedido.length > 0 ? datosGuardadoPedido[datosGuardadoPedido.length - 1] : 0;
 
-// Incrementar el último valor para generar un nuevo código
-let nuevoValor = ultimoValor + 1;
+      // Incrementar el último valor para generar un nuevo código
+      let nuevoValor = ultimoValor + 1;
 
-// Verificar si el nuevo valor ya está en uso
-while (this.items.some(item => item.id === nuevoValor)) {
-  nuevoValor++; // Incrementar hasta encontrar un código no utilizado
-}
+      // Verificar si el nuevo valor ya está en uso
+      while (this.items.some(item => item.id === nuevoValor)) {
+        nuevoValor++; // Incrementar hasta encontrar un código no utilizado
+      }
 
-// Asignar el nuevo valor al formulario
-this.formulario.codigo = nuevoValor;
-},
+      // Asignar el nuevo valor al formulario
+      this.formulario.codigo = nuevoValor;
+    },
     generarCodigo() {
       const nuevoCodigo = this.contador++;
       return nuevoCodigo;
     },
     guardarFormulario() {
       if (!this.formulario.descripcion) {
-        
+
         this.emptyFieldError = true;
         return;
       }
 
-  // const dateObject = new Date(this.formulario.fecha);
-  // const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  // const fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
-  PedidoAPI.create(
+      // const dateObject = new Date(this.formulario.fecha);
+      // const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      // const fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
+      PedidoAPI.create(
         {
           idPedido: this.formulario.codigo,
           Descripcion: this.formulario.descripcion,
           Fecha_pedi: this.formulario.fecha
         }
-      ).then(()=> {
+      ).then(() => {
         this.ObtenerPedido()
       })
 
@@ -242,22 +257,22 @@ this.formulario.codigo = nuevoValor;
 
 
 
-  // this.items.push({
-  //   id: this.formulario.codigo,
-  //   descripcion: this.formulario.descripcion,
-  //   fecha: fechaFormatted, // Usa la fecha formateada aquí
-  //   action: '',
-  // });
+      // this.items.push({
+      //   id: this.formulario.codigo,
+      //   descripcion: this.formulario.descripcion,
+      //   fecha: fechaFormatted, // Usa la fecha formateada aquí
+      //   action: '',
+      // });
 
-  // localStorage.setItem('db-itemsPedido', JSON.stringify(this.items));
+      // localStorage.setItem('db-itemsPedido', JSON.stringify(this.items));
 
-  this.formulario.descripcion = '';
-  this.formulario.fecha = '';
-  this.dialogoFormulario = false;
-},
+      this.formulario.descripcion = '';
+      this.formulario.fecha = '';
+      this.dialogoFormulario = false;
+    },
     guardarFormularioEditar() {
       if (!this.formulario.descripcion) {
-        
+
         this.emptyFieldError = true;
         return;
       }
@@ -268,7 +283,7 @@ this.formulario.codigo = nuevoValor;
           Descripcion: this.formulario.descripcion,
           Fecha_pedi: this.formulario.fecha
         }
-      ).then(()=> {
+      ).then(() => {
         this.ObtenerPedido()
       })
 
@@ -284,8 +299,8 @@ this.formulario.codigo = nuevoValor;
       PedidoAPI.delete(parametro.id).then(() => this.ObtenerPedido())
     },
     ObtenerPedido() {
-      PedidoAPI.getAll().then(({data}) => {
-        this.items = data.map(item=> {
+      PedidoAPI.getAll().then(({ data }) => {
+        this.items = data.map(item => {
           return {
             id: item.idPedido,
             descripcion: item.Descripcion,
@@ -297,7 +312,7 @@ this.formulario.codigo = nuevoValor;
 
   },
 
-  
+
 
   created() {
     // Generar automáticamente el código al cargar el componente
@@ -325,6 +340,4 @@ this.formulario.codigo = nuevoValor;
   outline: none;
   /* Quitar el contorno al hacer clic */
 }
-
-
 </style>
