@@ -5,10 +5,7 @@
         <h1 class="mb-3">Crear Categorias</h1>
         <v-form>
           <v-row>
-            <v-col cols="12" sm="2" md="2">
-              <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="10" md="10">
+            <v-col cols="12" sm="12" md="12">
               <v-text-field variant="outlined" label="Descripcion de ciudad" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
@@ -30,6 +27,9 @@
         <h1 class="mb-3">Editar Categoria</h1>
         <v-form>
           <v-row>
+            <v-col cols="12" sm="2" md="2">
+              <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
+            </v-col>
             <v-col cols="12" sm="10" md="10">
               <v-text-field variant="outlined" label="Descripcion de ciudad" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
@@ -155,23 +155,7 @@ export default {
     abrirDialogo() {
       // Abrir el modal y cargar el código aquí
       this.dialogoFormulario = true;
-
-      // Recuperar datos del localStorage
-      let datosGuardadosCategorias = JSON.parse(localStorage.getItem('datosGuardadosCategorias')) || [];
-
-      // Encontrar el último valor guardado
-      let ultimoValor = datosGuardadosCategorias.length > 0 ? datosGuardadosCategorias[datosGuardadosCategorias.length - 1] : 0;
-
-      // Incrementar el último valor para generar un nuevo código
-      let nuevoValor = ultimoValor + 1;
-
-      // Verificar si el nuevo valor ya está en uso
-      while (this.items.some(item => item.id === nuevoValor)) {
-        nuevoValor++; // Incrementar hasta encontrar un código no utilizado
-      }
-
-      // Asignar el nuevo valor al formulario
-      this.formulario.codigo = nuevoValor;
+      this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
     },
     generarCodigo() {
       const nuevoCodigo = this.contador++;

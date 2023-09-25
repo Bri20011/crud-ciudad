@@ -5,21 +5,21 @@
         <h1 class="mb-3">Crear Usuario</h1>
         <v-form>
           <v-row>
-            <v-col cols="12" sm="2" md="2">
+            <!-- <v-col cols="12" sm="2" md="2">
               <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled></v-text-field>
-            </v-col>
+            </v-col> -->
 
-            <v-col cols="12" sm="5" md="5">
+            <v-col cols="12" sm="4" md="4">
               <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
             </v-col>
 
 
-            <v-col cols="12" sm="5" md="5">
+            <v-col cols="12" sm="4" md="4">
               <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="12" md="5">
+            <v-col cols="12" sm="4" md="4">
               <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
                 density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                 @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
@@ -46,20 +46,20 @@
         <h1 class="mb-3">Editar Usuario</h1>
         <v-form>
           <v-row>
-            <v-col cols="12" sm="2" md="2">
+            <v-col cols="12" sm="4" md="4">
               <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="5" md="5">
+            <v-col cols="12" sm="8" md="8">
               <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
             </v-col>
 
-            <v-col cols="12" sm="5" md="5">
+            <v-col cols="12" sm="6" md="6">
               <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="12" md="5">
+            <v-col cols="12" sm="6" md="6">
               <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
                 density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                 @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
@@ -217,26 +217,9 @@ export default {
     abrirDialogo() {
       // Abrir el modal y cargar el código aquí
       this.dialogoFormulario = true;
-
-      // Recuperar datos del localStorage
-      let datosGuardadosUser = JSON.parse(localStorage.getItem('datosGuardadosUser')) || [];
-
-      // Encontrar el último valor guardado
-      let ultimoValor = datosGuardadosUser.length > 0 ? datosGuardadosUser[datosGuardadosUser.length - 1] : 0;
-
-      // Incrementar el último valor para generar un nuevo código
-      let nuevoValor = ultimoValor + 1;
-
-      // Verificar si el nuevo valor ya está en uso
-      while (this.items.some(item => item.id === nuevoValor)) {
-        nuevoValor++; // Incrementar hasta encontrar un código no utilizado
-      }
-
       this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-
-      // Asignar el nuevo valor al formulario
-      this.formulario.codigo = nuevoValor;
     },
+
     ObtenerSucursal() {
       SucursalAPI.getAll().then(({ data }) => {
         this.listaSucursal = data.map(item => {
@@ -320,7 +303,7 @@ export default {
 
   },
 
-  
+
 
   created() {
     // Generar automáticamente el código al cargar el componente
