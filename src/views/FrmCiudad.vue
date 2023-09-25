@@ -117,6 +117,7 @@ export default {
         codigo: '',
         descripcion: ''
       },
+      listaCiudad: [],
       buscador: '',
       headers: [
         {
@@ -177,7 +178,16 @@ export default {
     // Asignar el nuevo valor al formulario
     this.formulario.codigo = nuevoValor;
   },
-
+  obtenerCiudades() {
+      CiudadAPI.getAll().then(({ data }) => {
+        this.listaCiudad = data.map(item => {
+          return {
+            id: item.idCiudad,
+            descripcion: item.descripcion
+          }
+        })
+      })
+    },
 
 
     generarCodigo() {

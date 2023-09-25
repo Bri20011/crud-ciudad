@@ -10,6 +10,11 @@
             </v-col>
 
             <v-col cols="12" sm="5" md="5">
+              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+            </v-col>
+
+
+            <v-col cols="12" sm="5" md="5">
               <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
@@ -43,6 +48,10 @@
           <v-row>
             <v-col cols="12" sm="2" md="2">
               <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
+            </v-col>
+
+            <v-col cols="12" sm="5" md="5">
+              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
             </v-col>
 
             <v-col cols="12" sm="5" md="5">
@@ -124,6 +133,7 @@
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { UsuarioAPI } from '@/services/usuario.api'
+import { SucursalAPI } from '@/services/sucursal.api'
 
 export default {
   components: {
@@ -137,7 +147,8 @@ export default {
       formulario: {
         codigo: '',
         descripcion: '',
-        password: ''
+        password: '',
+        sucursal: ''
       },
       limit: 45,
       limitePasswordMin: 6,
@@ -146,8 +157,10 @@ export default {
       defaultFormulario: {
         codigo: '',
         descripcion: '',
-        password: ''
+        password: '',
+        sucursal: ''
       },
+      listaSucursal: [],
       buscador: '',
       headers: [
         {
@@ -157,6 +170,7 @@ export default {
           key: 'id',
         },
         { title: 'Descripcion', key: 'descripcion' },
+        { title: 'Sucursal', key: 'nombreSucursal'},
         { title: 'Contraseña', key: 'password' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
@@ -218,8 +232,20 @@ export default {
         nuevoValor++; // Incrementar hasta encontrar un código no utilizado
       }
 
+      this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+
       // Asignar el nuevo valor al formulario
       this.formulario.codigo = nuevoValor;
+    },
+    ObtenerSucursal() {
+      SucursalAPI.getAll().then(({ data }) => {
+        this.listaSucursal = data.map(item => {
+          return {
+            id: item.idSucursal,
+            descripcion: item.Descripcion
+          }
+        })
+      })
     },
     generarCodigo() {
       const nuevoCodigo = this.contador++;
@@ -235,7 +261,8 @@ export default {
         {
           idUsuario: this.formulario.codigo,
           Nombre: this.formulario.descripcion,
-          Contrasehna: this.formulario.password
+          Contrasehna: this.formulario.password,
+          idSucursal: this.formulario.sucursal
         }
       ).then(()=> {
         this.ObtenerUsuario()
@@ -259,7 +286,8 @@ export default {
         {
           idUsuario: this.formulario.codigo,
           Nombre: this.formulario.descripcion,
-          Contrasehna: this.formulario.password
+          Contrasehna: this.formulario.password,
+          idSucursal: this.formulario.sucursal
         }
       ).then(()=> {
         this.ObtenerUsuario()
@@ -271,6 +299,7 @@ export default {
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
       this.formulario.password = parametro.password
+      this.formulario.sucursal = parametro.idSucursal
     },
     eliminarCiudad(parametro) {
       UsuarioAPI.delete(parametro.id).then(() => this.ObtenerUsuario())
@@ -281,7 +310,9 @@ export default {
           return {
             id: item.idUsuario,
             descripcion: item.Nombre,
-            password: item.Contrasehna
+            password: item.Contrasehna,
+            idSucursal: item.idSucursal,
+            nombreSucursal: item.nombreSucursal
           }
         })
       })
@@ -295,6 +326,7 @@ export default {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
     this.ObtenerUsuario()
+    this.ObtenerSucursal()
   },
 
 }
