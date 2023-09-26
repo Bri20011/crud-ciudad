@@ -77,11 +77,13 @@
 
           </v-toolbar>
         </template>
-        <template v-slot:item.action="{ item }">
+
+        <template
+        v-slot:item.action="{ item }">
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
             mdi-pencil
           </v-icon>
-          <v-icon color="#C62828" size="small" @click="eliminarCiudad(item.raw)">
+          <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
             mdi-trash-can-outline
           </v-icon>
         </template>
@@ -93,7 +95,33 @@
         <v-btn>Cancelar </v-btn>
       </v-col>
     </v-row>
+
+    <!-- Diálogo de confirmación -->
+    <v-dialog v-model="dialogoEliminar" max-width="400">
+      <v-card>
+        <v-container>
+        <v-card-title class="headline">Confirmar Eliminación</v-card-title>
+        <v-card-text>
+          ¿Está seguro de que desea eliminar este elemento?
+        </v-card-text>
+
+      
+          <v-row>
+         <v-col cols="12" class="d-flex justify-end">
+          <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
+          <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+         </v-col>
+        </v-row>
+        
+        
+      </v-container>
+      </v-card>
+      
+    </v-dialog>
+ 
+
   </v-container>
+  
 </template>
 
 <script>
@@ -135,7 +163,9 @@ export default {
           descripcion: 'Campo',
           action: ''
         }
-      ]
+      ],
+      dialogoEliminar: false,
+      elementoAEliminar: null,
     }
   },
 
@@ -231,9 +261,33 @@ export default {
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
     },
-    eliminarCiudad(parametro) {
-     BarrioAPI.delete(parametro.id).then(()=> this.ObtenerBarrio())
+
+
+
+   confirmarEliminarCiudad(elemento) {
+      // Abre el diálogo de confirmación y guarda el elemento a eliminar
+      this.elementoAEliminar = elemento;
+      this.dialogoEliminar = true;
     },
+    cancelarEliminarCiudad() {
+      // Cierra el diálogo de confirmación y restablece la variable
+      this.dialogoEliminar = false;
+      this.elementoAEliminar = null;
+    },
+    eliminarCiudad() {
+      if (this.elementoAEliminar) {
+        // Realiza la eliminación aquí
+        BarrioAPI.delete(this.elementoAEliminar.id).then(() => {
+          this.ObtenerBarrio();
+        });
+        // Cierra el diálogo de confirmación
+        this.dialogoEliminar = false;
+        this.elementoAEliminar = null;
+      }
+    },
+
+
+
 
     //Para pintar la base de datos en el formulario 
     ObtenerBarrio(){
