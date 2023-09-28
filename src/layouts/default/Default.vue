@@ -9,7 +9,15 @@
     </v-toolbar>
 
     <v-navigation-drawer v-model="showSecondCard" color="blue-grey" width="700px" theme="dark" temporary >
-
+     
+         
+          <v-container >
+            
+            <v-img class="bg-white" width="310" height="79" src="../default/logomenu2.JPG" cover></v-img>
+            
+          </v-container>
+          <v-divider class="ma-0" ></v-divider>
+        
       <v-list v-model:opened="open">
         <v-list-item prepend-icon="mdi-home" title="Menu Pricipal"></v-list-item>
 

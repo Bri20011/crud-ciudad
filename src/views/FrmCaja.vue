@@ -7,19 +7,19 @@
           <v-row>
            
             <v-col cols="12" sm="4" md="4">
-              <v-autocomplete variant="outlined" label="Caja" :items="listaCaja" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
             </v-col>
 
 
             <v-col cols="12" sm="4" md="4">
-              <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
+              <v-text-field variant="outlined" label="Descripcion de Caja" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="4" md="4">
-              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
+              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'numerCaja'"
+                density="default" label="Introduza el numero de caja" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                @click:append-inner="visible = !visible" v-model="formulario.numerCaja" :error="excededLimitPas"
                 :error-messages="errorMessageE" required></v-text-field>
 
             </v-col>
@@ -28,7 +28,7 @@
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.password">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.numerCaja">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -40,7 +40,7 @@
   <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Editar Usuario</h1>
+        <h1 class="mb-3">Editar Caja</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="4" md="4">
@@ -52,14 +52,14 @@
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
-              <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
+              <v-text-field variant="outlined" label="Descripcion de Caja" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
-              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
+              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'numerCaja'"
+                density="default" label="Introduza el numero de caja" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                @click:append-inner="visible = !visible" v-model="formulario.numerCaja" :error="excededLimitPas"
                 :error-messages="errorMessageE" required></v-text-field>
 
             </v-col>
@@ -68,7 +68,7 @@
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.password">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.numerCaja">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -85,7 +85,7 @@
 
       </v-col>
       <v-col cols="12" sm="6" md="6" class="d-flex justify-end align-center">
-        Cantidad de Usuario: {{ items.length }}
+        Cantidad de Caja: {{ items.length }}
       </v-col>
     </v-row>
 
@@ -94,7 +94,7 @@
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Usuarios</p>
+              <p class="font-weight-bold">Caja</p>
             </v-toolbar-title>
 
             <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -104,9 +104,9 @@
 
         </template>
 
-        <template v-slot:item.password="{ item }">
+        <template v-slot:item.numerCaja="{ item }">
           <span v-if="!dialogoFormularioEditar">********</span>
-          <span v-else>{{ item.password }}</span>
+          <span v-else>{{ item.numerCaja }}</span>
         </template>
         <template v-slot:item.action="{ item }">
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
@@ -152,7 +152,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { UsuarioAPI } from '@/services/usuario.api'
+import { CajaAPI } from '@/services/caja.api'
 import { SucursalAPI } from '@/services/sucursal.api'
 
 export default {
@@ -167,17 +167,17 @@ export default {
       formulario: {
         codigo: '',
         descripcion: '',
-        password: '',
+        numerCaja: '',
         sucursal: ''
       },
       limit: 45,
-      limitePasswordMin: 6,
-      limitePasswordMax: 10,
+      limiteNumerCajMin: 6,
+      limiteNumerCajMax: 10,
       contador: 1,
       defaultFormulario: {
         codigo: '',
         descripcion: '',
-        password: '',
+        numerCaja: '',
         sucursal: ''
       },
       listaSucursal: [],
@@ -191,14 +191,14 @@ export default {
         },
         { title: 'Descripcion', key: 'descripcion' },
         { title: 'Sucursal', key: 'nombreSucursal'},
-        { title: 'Contraseña', key: 'password' },
+        { title: 'Contraseña', key: 'numerCaja' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
         {
           id: '1',
           descripcion: 'Campo',
-          password: '123',
+          numerCaja: '123',
           action: ''
         }
       ], 
@@ -214,10 +214,11 @@ export default {
     },
     excededLimit() {
       return this.formulario.descripcion.length > this.limit;
+      
     },
     excededLimitPas() {
-      const password = this.formulario.password;
-      return isNaN(password) || password.length < this.limitePasswordMin || password.length > this.limitePasswordMax;
+      const numerCaja = this.formulario.numerCaja;
+      return isNaN(numerCaja) || numerCaja.length < this.limiteNumerCajMin || numerCaja.length > this.limiteNumerCajMax;
     },
     errorMessage() {
       if (this.excededLimit) {
@@ -227,7 +228,7 @@ export default {
     },
     errorMessageE() {
       if (this.excededLimitPas) {
-        return `Debe ser entre ${this.limitePasswordMin} y ${this.limitePasswordMax} caracteres alfanuméricos`;
+        return `Debe ser entre ${this.limiteNumerCajMin} y ${this.limiteNumerCajMax} caracteres alfanuméricos`;
       }
       return '';
     }
@@ -258,44 +259,44 @@ export default {
     },
     guardarFormulario() {
 
-      if (!this.formulario.descripcion || !this.formulario.password || this.excededLimit || this.excededLimitPas) {
+      if (!this.formulario.descripcion || !this.formulario.numerCaja || this.excededLimit || this.excededLimitPas) {
         this.emptyFieldError = true;
         return;
       }
-      UsuarioAPI.create(
+      CajaAPI.create(
         {
-          idUsuario: this.formulario.codigo,
-          Nombre: this.formulario.descripcion,
-          Contrasehna: this.formulario.password,
+          idCaja: this.formulario.codigo,
+          nombrecaja: this.formulario.descripcion,
+          Cajahabilitada: this.formulario.numerCaja,
           idSucursal: this.formulario.sucursal
         }
       ).then(()=> {
-        this.ObtenerUsuario()
+        this.ObtenerCaja()
       })
 
       this.formulario.descripcion = '';
-      this.formulario.password = '';
+      this.formulario.numerCaja = '';
       this.dialogoFormulario = false
     },
 
 
     guardarFormularioEditar() {
-      if (!this.formulario.descripcion || !this.formulario.password || this.excededLimit || this.excededLimitPas) {
+      if (!this.formulario.descripcion || !this.formulario.numerCaja || this.excededLimit || this.excededLimitPas) {
         this.emptyFieldError = true;
         return;
       }
 
 
-      UsuarioAPI.update(
+      CajaAPI.update(
         this.formulario.codigo,
         {
-          idUsuario: this.formulario.codigo,
-          Nombre: this.formulario.descripcion,
-          Contrasehna: this.formulario.password,
+          idCaja: this.formulario.codigo,
+          nombrecaja: this.formulario.descripcion,
+          Cajahabilitada: this.formulario.numerCaja,
           idSucursal: this.formulario.sucursal
         }
       ).then(()=> {
-        this.ObtenerUsuario()
+        this.ObtenerCaja()
       })
       this.dialogoFormularioEditar = false
     },
@@ -303,7 +304,7 @@ export default {
       this.dialogoFormularioEditar = true
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
-      this.formulario.password = parametro.password
+      this.formulario.numerCaja = parametro.numerCaja
       this.formulario.sucursal = parametro.idSucursal
     },
     confirmarEliminarCiudad(elemento) {
@@ -319,21 +320,21 @@ export default {
     eliminarCiudad() {
       if (this.elementoAEliminar) {
         // Realiza la eliminación aquí
-        UsuarioAPI.delete(this.elementoAEliminar.id).then(() => {
-          this.ObtenerUsuario();
+        CajaAPI.delete(this.elementoAEliminar.id).then(() => {
+          this.ObtenerCaja();
         });
         // Cierra el diálogo de confirmación
         this.dialogoEliminar = false;
         this.elementoAEliminar = null;
       }
     },
-    ObtenerUsuario() {
-      UsuarioAPI.getAll().then(({data}) => {
+    ObtenerCaja() {
+      CajaAPI.getAll().then(({data}) => {
         this.items = data.map(item=> {
           return {
-            id: item.idUsuario,
-            descripcion: item.Nombre,
-            password: item.Contrasehna,
+            id: item.idCaja,
+            descripcion: item.nombrecaja,
+            numerCaja: item.Cajahabilitada,
             idSucursal: item.idSucursal,
             nombreSucursal: item.nombreSucursal
           }
@@ -348,7 +349,7 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.ObtenerUsuario()
+    this.ObtenerCaja()
     this.ObtenerSucursal()
   },
 
