@@ -8,7 +8,7 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-navigation-drawer v-model="showSecondCard" color="blue-grey" theme="dark" temporary>
+    <v-navigation-drawer v-model="showSecondCard" color="blue-grey" width="700px" theme="dark" temporary >
 
       <v-list v-model:opened="open">
         <v-list-item prepend-icon="mdi-home" title="Menu Pricipal"></v-list-item>
@@ -106,6 +106,15 @@ export default {
         ['Barrio', 'mdi-cog-outline', '/frmbarrio'],
         ['Categoria', 'mdi-cog-outline', '/frmcategoria'],
         ['Pedido', 'mdi-cog-outline', '/frmpedido'],
+        ['Marca', 'mdi-cog-outline', '/frmmarca'],
+        ['Orden de Compra', 'mdi-cog-outline', '/frmorden_compra'],
+        ['Sucursal', 'mdi-cog-outline', '/frmsucursal'],
+        ['Tipo de Documento', 'mdi-cog-outline', '/frmtipo_documento'],
+        ['Numero de Establecimiento', 'mdi-cog-outline', '/frmnumero_establecimiento'],
+        ['Numero de Expedicion', 'mdi-cog-outline','/frmnumero_expedicion'],
+        ['Iva', 'mdi-cog-outline', '/frmiva'],
+        ['Usuario', 'mdi-cog-outline', '/frmusuario'],
+        ['Caja', 'mdi-cog-outline', '/frmcaja'],
       ],
     };
   },

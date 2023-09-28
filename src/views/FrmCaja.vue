@@ -2,24 +2,34 @@
   <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Crear Porcentaje de Iva</h1>
+        <h1 class="mb-3">Crear Caja</h1>
         <v-form>
           <v-row>
-            
-            <v-col cols="12" sm="6" md="6">
-              <v-text-field variant="outlined" label="Descripcion de Iva" v-model="formulario.descripcion"
+           
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Caja" :items="listaCaja" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+            </v-col>
+
+
+            <v-col cols="12" sm="4" md="4">
+              <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="6">
-              <v-text-field variant="outlined" label="Porcentaje (%)" v-model="formulario.porcentaje"
-              :error="excededLimitIva" :error-messages="errorMessageE" required ></v-text-field>
+
+            <v-col cols="12" sm="4" md="4">
+              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
+                density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
+                :error-messages="errorMessageE" required></v-text-field>
+
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-              :disabled="excededLimit || !formulario.descripcion || excededLimitIva || !formulario.porcentaje">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.password">Guardar</v-btn>
+
             </v-col>
           </v-row>
         </v-form>
@@ -30,26 +40,36 @@
   <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Editar Iva</h1>
+        <h1 class="mb-3">Editar Usuario</h1>
         <v-form>
           <v-row>
-            <v-col cols="12" sm="2" md="2">
+            <v-col cols="12" sm="4" md="4">
               <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
             </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Descripcion de Iva" v-model="formulario.descripcion"
+
+            <v-col cols="12" sm="8" md="8">
+              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12" sm="6" md="6">
+              <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Porcentaje (%)" v-model="formulario.porcentaje"
-              :error="excededLimitIva" :error-messages="errorMessageE" required ></v-text-field>
+
+            <v-col cols="12" sm="6" md="6">
+              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
+                density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
+                :error-messages="errorMessageE" required></v-text-field>
+
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-              :disabled="excededLimit || !formulario.descripcion || excededLimitIva || !formulario.porcentaje">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.password">Guardar</v-btn>
+
             </v-col>
           </v-row>
         </v-form>
@@ -58,16 +78,15 @@
   </v-dialog>
   <v-container>
     <v-row>
+      <v-col cols="12" sm="6" md="6">
 
-      <v-col cols="12" sm="5" md="5">
         <v-text-field :loading="loading" density="compact"  v-model="buscador" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
           single-line hide-details rounded click:prependInner></v-text-field>
-      </v-col>
 
-      <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-       Cantidad de Ivas: {{ items.length }}
       </v-col>
-      
+      <v-col cols="12" sm="6" md="6" class="d-flex justify-end align-center">
+        Cantidad de Usuario: {{ items.length }}
+      </v-col>
     </v-row>
 
     <v-card class="mt-5 rounded-xl">
@@ -75,14 +94,19 @@
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Registro de Ivas</p>
+              <p class="font-weight-bold">Usuarios</p>
             </v-toolbar-title>
 
             <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
               @click="abrirDialogo">Registrar
             </v-btn>
-
           </v-toolbar>
+
+        </template>
+
+        <template v-slot:item.password="{ item }">
+          <span v-if="!dialogoFormularioEditar">********</span>
+          <span v-else>{{ item.password }}</span>
         </template>
         <template v-slot:item.action="{ item }">
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
@@ -100,8 +124,8 @@
         <v-btn>Cancelar </v-btn>
       </v-col>
     </v-row>
- <!-- Diálogo de confirmación -->
- <v-dialog v-model="dialogoEliminar" max-width="400">
+    <!-- Diálogo de confirmación -->
+    <v-dialog v-model="dialogoEliminar" max-width="400">
       <v-card>
         <v-container>
         <v-card-title class="headline">Confirmar Eliminación</v-card-title>
@@ -123,13 +147,13 @@
       
     </v-dialog>
                         <!-- FIN DIALOGO -->
-
   </v-container>
 </template>
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { IvaAPI } from '@/services/iva.api'
+import { UsuarioAPI } from '@/services/usuario.api'
+import { SucursalAPI } from '@/services/sucursal.api'
 
 export default {
   components: {
@@ -137,21 +161,26 @@ export default {
   },
   data() {
     return {
+      visible: false,
       dialogoFormulario: false,
       dialogoFormularioEditar: false,
       formulario: {
         codigo: '',
         descripcion: '',
-        porcentaje:''
+        password: '',
+        sucursal: ''
       },
       limit: 45,
-      limiteE:2,
+      limitePasswordMin: 6,
+      limitePasswordMax: 10,
       contador: 1,
       defaultFormulario: {
         codigo: '',
         descripcion: '',
-        porcentaje:''
+        password: '',
+        sucursal: ''
       },
+      listaSucursal: [],
       buscador: '',
       headers: [
         {
@@ -161,17 +190,18 @@ export default {
           key: 'id',
         },
         { title: 'Descripcion', key: 'descripcion' },
-        { title: 'Porcentaje (%)', key: 'porcentaje' ,sortable: false, align: 'star'},
+        { title: 'Sucursal', key: 'nombreSucursal'},
+        { title: 'Contraseña', key: 'password' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
         {
           id: '1',
-          descripcion: 'Central',
-          porcentaje:'001',
+          descripcion: 'Campo',
+          password: '123',
           action: ''
         }
-      ],
+      ], 
       dialogoEliminar: false,
       elementoAEliminar: null,
     }
@@ -185,9 +215,9 @@ export default {
     excededLimit() {
       return this.formulario.descripcion.length > this.limit;
     },
-    excededLimitIva() {
-      const porcentaje = this.formulario.porcentaje;
-    return isNaN(porcentaje) || porcentaje < 1 || porcentaje > 99;
+    excededLimitPas() {
+      const password = this.formulario.password;
+      return isNaN(password) || password.length < this.limitePasswordMin || password.length > this.limitePasswordMax;
     },
     errorMessage() {
       if (this.excededLimit) {
@@ -196,70 +226,85 @@ export default {
       return '';
     },
     errorMessageE() {
-      if (this.excededLimitIva) {
-        return 'Solo puedes guardar hasta 2 Digitos"';
+      if (this.excededLimitPas) {
+        return `Debe ser entre ${this.limitePasswordMin} y ${this.limitePasswordMax} caracteres alfanuméricos`;
       }
       return '';
     }
   },
+
+
   methods:
   {
     abrirDialogo() {
-    // Abrir el modal y cargar el código aquí
-    this.dialogoFormulario = true;
-    this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-  },
+      // Abrir el modal y cargar el código aquí
+      this.dialogoFormulario = true;
+      this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+    },
+
+    ObtenerSucursal() {
+      SucursalAPI.getAll().then(({ data }) => {
+        this.listaSucursal = data.map(item => {
+          return {
+            id: item.idSucursal,
+            descripcion: item.Descripcion
+          }
+        })
+      })
+    },
     generarCodigo() {
       const nuevoCodigo = this.contador++;
       return nuevoCodigo;
     },
     guardarFormulario() {
 
-      if (!this.formulario.descripcion || !this.formulario.porcentaje || this.excededLimit || this.excededLimitIva || 
-        isNaN(this.formulario.porcentaje) || this.formulario.porcentaje === "" || this.formulario.porcentaje > 99 || this.formulario.porcentaje < 1) {
-      this.emptyFieldError = true;
-      return;
-    }
-        
-    IvaAPI.create(
+      if (!this.formulario.descripcion || !this.formulario.password || this.excededLimit || this.excededLimitPas) {
+        this.emptyFieldError = true;
+        return;
+      }
+      UsuarioAPI.create(
         {
-          idIva: this.formulario.codigo,
-          Descripcion: this.formulario.descripcion,
-          Porcentaje: this.formulario.porcentaje    //VER NUMERO
+          idUsuario: this.formulario.codigo,
+          Nombre: this.formulario.descripcion,
+          Contrasehna: this.formulario.password,
+          idSucursal: this.formulario.sucursal
         }
       ).then(()=> {
-        this.ObtenerIva()
+        this.ObtenerUsuario()
       })
 
       this.formulario.descripcion = '';
-      this.formulario.porcentaje = '';
+      this.formulario.password = '';
       this.dialogoFormulario = false
     },
-    guardarFormularioEditar() {
 
-      if (!this.formulario.descripcion || this.emptyFieldError || this.excededLimit || this.excededLimitIva || 
-        isNaN(this.formulario.porcentaje) || this.formulario.porcentaje === "" || this.formulario.porcentaje > 99) {
-      this.emptyFieldError = true;
-      return;
+
+    guardarFormularioEditar() {
+      if (!this.formulario.descripcion || !this.formulario.password || this.excededLimit || this.excededLimitPas) {
+        this.emptyFieldError = true;
+        return;
       }
-      IvaAPI.update(
+
+
+      UsuarioAPI.update(
         this.formulario.codigo,
         {
-          idIva: this.formulario.codigo,
-          Descripcion: this.formulario.descripcion,
-          Porcentaje: this.formulario.porcentaje
+          idUsuario: this.formulario.codigo,
+          Nombre: this.formulario.descripcion,
+          Contrasehna: this.formulario.password,
+          idSucursal: this.formulario.sucursal
         }
       ).then(()=> {
-        this.ObtenerIva()
+        this.ObtenerUsuario()
       })
-
       this.dialogoFormularioEditar = false
     },
     editarCiudad(parametro) {
       this.dialogoFormularioEditar = true
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
-      this.formulario.porcentaje = parametro.porcentaje
+      this.formulario.password = parametro.password
+      this.formulario.sucursal = parametro.idSucursal
     },
     confirmarEliminarCiudad(elemento) {
       // Abre el diálogo de confirmación y guarda el elemento a eliminar
@@ -274,22 +319,23 @@ export default {
     eliminarCiudad() {
       if (this.elementoAEliminar) {
         // Realiza la eliminación aquí
-        IvaAPI.delete(this.elementoAEliminar.id).then(() => {
-          this.ObtenerIva();
+        UsuarioAPI.delete(this.elementoAEliminar.id).then(() => {
+          this.ObtenerUsuario();
         });
         // Cierra el diálogo de confirmación
         this.dialogoEliminar = false;
         this.elementoAEliminar = null;
       }
     },
-
-    ObtenerIva() {
-      IvaAPI.getAll().then(({data}) => {
+    ObtenerUsuario() {
+      UsuarioAPI.getAll().then(({data}) => {
         this.items = data.map(item=> {
           return {
-            id: item.idIva,
-            descripcion: item.Descripcion,
-            porcentaje: item.Porcentaje
+            id: item.idUsuario,
+            descripcion: item.Nombre,
+            password: item.Contrasehna,
+            idSucursal: item.idSucursal,
+            nombreSucursal: item.nombreSucursal
           }
         })
       })
@@ -297,13 +343,15 @@ export default {
 
   },
 
-  
+
 
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.ObtenerIva()
+    this.ObtenerUsuario()
+    this.ObtenerSucursal()
   },
+
 }
 </script>
 <style></style>
