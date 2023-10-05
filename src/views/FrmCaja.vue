@@ -17,7 +17,7 @@
             </v-col>
 
             <v-col cols="12" sm="4" md="4">
-              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'numerCaja'"
+              <v-text-field
                 density="default" label="Introduza el numero de caja" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                 @click:append-inner="visible = !visible" v-model="formulario.numerCaja" :error="excededLimitPas"
                 :error-messages="errorMessageE" required></v-text-field>
@@ -57,7 +57,7 @@
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
-              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'numerCaja'"
+              <v-text-field 
                 density="default" label="Introduza el numero de caja" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                 @click:append-inner="visible = !visible" v-model="formulario.numerCaja" :error="excededLimitPas"
                 :error-messages="errorMessageE" required></v-text-field>
@@ -104,11 +104,8 @@
 
         </template>
 
-        <template v-slot:item.numerCaja="{ item }">
-          <span v-if="!dialogoFormularioEditar">********</span>
-          <span v-else>{{ item.numerCaja }}</span>
-        </template>
-        <template v-slot:item.action="{ item }">
+        <template
+         v-slot:item.action="{ item }">
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
             mdi-pencil
           </v-icon>
@@ -171,8 +168,7 @@ export default {
         sucursal: ''
       },
       limit: 45,
-      limiteNumerCajMin: 6,
-      limiteNumerCajMax: 10,
+      limiteNumerCajMax: 4,
       contador: 1,
       defaultFormulario: {
         codigo: '',
@@ -191,7 +187,7 @@ export default {
         },
         { title: 'Descripcion', key: 'descripcion' },
         { title: 'Sucursal', key: 'nombreSucursal'},
-        { title: 'Contraseña', key: 'numerCaja' },
+        { title: 'Numero de Caja', key: 'numerCaja' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
@@ -217,8 +213,8 @@ export default {
       
     },
     excededLimitPas() {
-      const numerCaja = this.formulario.numerCaja;
-      return isNaN(numerCaja) || numerCaja.length < this.limiteNumerCajMin || numerCaja.length > this.limiteNumerCajMax;
+      return this.formulario.numerCaja.length > this.limiteNumerCajMax;
+     
     },
     errorMessage() {
       if (this.excededLimit) {
@@ -228,7 +224,7 @@ export default {
     },
     errorMessageE() {
       if (this.excededLimitPas) {
-        return `Debe ser entre ${this.limiteNumerCajMin} y ${this.limiteNumerCajMax} caracteres alfanuméricos`;
+        return 'Superaste el límite de 4 letras';
       }
       return '';
     }
