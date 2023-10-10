@@ -6,8 +6,9 @@
       <v-toolbar-title>Inmobiliaria Digital BC</v-toolbar-title>
 
       <v-spacer></v-spacer>
+     
     </v-toolbar>
-
+ 
     <v-navigation-drawer v-model="showSecondCard" color="blue-grey" width="700px" theme="dark" temporary >
      
          
@@ -123,6 +124,7 @@ export default {
         ['Iva', 'mdi-cog-outline', '/frmiva'],
         ['Usuario', 'mdi-cog-outline', '/frmusuario'],
         ['Caja', 'mdi-cog-outline', '/frmcaja'],
+        ['Compras', 'mdi-cog-outline', '/compras'],
       ],
     };
   },

@@ -90,6 +90,9 @@
 
           </v-toolbar>
         </template>
+        <template v-slot:item.fecha="{ item }">
+          {{ formatearFecha(item.raw.fecha) }}
+        </template>
         <template v-slot:item.action="{ item }">
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
             mdi-pencil
@@ -135,6 +138,9 @@
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { PedidoAPI } from '@/services/pedido.api'
+import dayjs from 'dayjs'
+
+
 
 export default {
   components: {
@@ -201,29 +207,9 @@ export default {
   },
   methods:
   {
-    formatDate() {
-    //   if (this.formulario.fecha) {
-    //     const dateObject = new Date(this.formulario.fecha);
-    //     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    //     this.formulario.fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
-    //   } else {
-    //     this.formulario.fechaFormatted = '';
-    //   }
-    // },
-
-    if (this.formulario.fecha) {
-        const dateObject = new Date(this.formulario.fecha);
-        const day = dateObject.getDate();
-        const month = dateObject.toLocaleDateString('es-ES', { month: 'long' });
-        const year = dateObject.getFullYear();
-        
-        // Formatea la fecha como "Día/Mes/Año"
-        this.formulario.fechaFormatted = `${day}/${month}/${year}`;
-      } else {
-        this.formulario.fechaFormatted = '';
-      }
+    formatearFecha(fecha){
+      return dayjs(fecha).format('DD/MM/YYYY')
     },
-
     showDatePicker() {
       this.showDatepicker = true;
     },
@@ -247,9 +233,7 @@ export default {
         return;
       }
 
-      // const dateObject = new Date(this.formulario.fecha);
-      // const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      // const fechaFormatted = dateObject.toLocaleDateString('es-ES', options);
+    
       PedidoAPI.create(
         {
           idPedido: this.formulario.codigo,
@@ -259,19 +243,6 @@ export default {
       ).then(() => {
         this.ObtenerPedido()
       })
-
-
-
-
-
-      // this.items.push({
-      //   id: this.formulario.codigo,
-      //   descripcion: this.formulario.descripcion,
-      //   fecha: fechaFormatted, // Usa la fecha formateada aquí
-      //   action: '',
-      // });
-
-      // localStorage.setItem('db-itemsPedido', JSON.stringify(this.items));
 
       this.formulario.descripcion = '';
       this.formulario.fecha = '';
