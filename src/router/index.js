@@ -149,7 +149,16 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/compras.vue'),
+    },
+    {
+      path: 'proveedor',
+      name: 'Proveedor',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/proveedor.vue'),
     }
+
     ],
   },
 ]
