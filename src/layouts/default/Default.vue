@@ -126,6 +126,7 @@ export default {
         ['Caja', 'mdi-cog-outline', '/frmcaja'],
         ['Compras', 'mdi-cog-outline', '/compras'],
         ['Proveedor', 'mdi-cog-outline', '/proveedor'],
+        ['Producto', 'mdi-cog-outline', '/producto'],
       ],
     };
   },

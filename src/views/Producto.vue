@@ -2,39 +2,38 @@
     <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
       <v-card class="rounded-xl">
         <v-container>
-          <h1 class="mb-3">Crear Proveedor</h1>
+          <h1 class="mb-3">Crear Producto</h1>
           <v-form>
             <v-row>
               <v-col cols="12" sm="4" md="4">
                 <v-text-field
-                  density="default" label="Ruc o CI" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                  @click:append-inner="visible = !visible" v-model="formulario.ruc" :error="excededLimit4"
+                  density="default" label="Descripcion" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                  @click:append-inner="visible = !visible" v-model="formulario.descripcion" :error="excededLimit4"
                   :error-messages="errorMessage4" required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-text-field variant="outlined" label="Razon Social" v-model="formulario.razonsocial"
+                <v-text-field variant="outlined" label="Precio" v-model="formulario.precio"
                   :error="excededLimit1" :error-messages="errorMessage1" required></v-text-field>
               </v-col>
   
               <v-col cols="12" sm="4" md="4">
                 <v-text-field
-                  density="default" label="Direccion" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                  @click:append-inner="visible = !visible" v-model="formulario.direccion" :error="excededLimit3"
+                  density="default" label="Precio Compra" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                  @click:append-inner="visible = !visible" v-model="formulario.PrecioCompra" :error="excededLimit3"
                   :error-messages="errorMessage3" required></v-text-field>
               </v-col>
 
-                <v-col cols="12" sm="4" md="4">
-                <v-text-field variant="outlined" label="Telefono" v-model="formulario.telefono"
-                  :error="excededLimit2" :error-messages="errorMessage2" required></v-text-field>
+              <v-col cols="12" sm="4" md="4">
+                <v-autocomplete variant="outlined" label="Marca" :items="listaMarca" item-title="descripcionM" item-value="id" v-model="formulario.marca"></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio" item-title="descripcionB" item-value="id" v-model="formulario.barrio"></v-autocomplete>
+                <v-autocomplete variant="outlined" label="Categoria" :items="listaCategoria" item-title="descripcionC" item-value="id" v-model="formulario.categoria"></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC" item-value="id" v-model="formulario.ciudad"></v-autocomplete>
+                <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI" item-value="id" v-model="formulario.iva"></v-autocomplete>
               </v-col>
 
             </v-row>
@@ -42,8 +41,8 @@
               <v-col cols="12" class="d-flex justify-end">
                 <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                 <v-btn color="primary" @click="guardarFormulario"
-                  :disabled="excededLimit1 || !formulario.razonsocial || excededLimit3 || !formulario.direccion || excededLimit2 || !formulario.telefono || limit3 || !formulario.barrio
-                  || limit3 || !formulario.ciudad || excededLimit4 || !formulario.ruc">Guardar</v-btn>    <!-- CORREGIR VALIDACIONES  -->
+                  :disabled="excededLimit1 || !formulario.descripcion || excededLimit3 || !formulario.precio || excededLimit2 || !formulario.PrecioCompra || limit3 || !formulario.marca
+                  || limit3 || !formulario.categoria || limit3 || !formulario.iva">Guardar</v-btn>    <!-- CORREGIR VALIDACIONES  -->
   
               </v-col>
             </v-row>
@@ -55,7 +54,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
       <v-card class="rounded-xl">
         <v-container>
-          <h1 class="mb-3">Editar Proveedor</h1>
+          <h1 class="mb-3">Editar Producto</h1>
           <v-form>
             <v-row>
 
@@ -64,35 +63,32 @@
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-text-field variant="outlined" label="Ruc o CI" v-model="formulario.ruc"
+                <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
                   :error="excededLimit4" :error-messages="errorMessage4" required></v-text-field>
               </v-col>
   
               <v-col cols="12" sm="4" md="4">
                 <v-text-field 
-                  density="default" label="Razon Social" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                  @click:append-inner="visible = !visible" v-model="formulario.razonsocial" :error="excededLimit1"
+                  density="default" label="Precio" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                  @click:append-inner="visible = !visible" v-model="formulario.precio" :error="excededLimit1"
                   :error-messages="errorMessage1" required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-text-field variant="outlined" label="Direccion" v-model="formulario.direccion"
+                <v-text-field variant="outlined" label="Precio Compra" v-model="formulario.PrecioCompra"
                   :error="excededLimit3" :error-messages="errorMessage3" required></v-text-field>
               </v-col>
   
               <v-col cols="12" sm="4" md="4">
-                <v-text-field 
-                  density="default" label="Telefono" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                  @click:append-inner="visible = !visible" v-model="formulario.telefono" :error="excededLimit2"
-                  :error-messages="errorMessage2" required></v-text-field>
+                <v-autocomplete variant="outlined" label="Marca" :items="listaMarca" item-title="descripcionM" item-value="id" v-model="formulario.marca"></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio" item-title="descripcionB" item-value="id" v-model="formulario.barrio"></v-autocomplete>
+                <v-autocomplete variant="outlined" label="Categoria" :items="listaCategoria" item-title="descripcionC" item-value="id" v-model="formulario.categoria"></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC" item-value="id" v-model="formulario.ciudad"></v-autocomplete>
+                <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI" item-value="id" v-model="formulario.iva"></v-autocomplete>
               </v-col>
             </v-row>
 
@@ -100,8 +96,8 @@
               <v-col cols="12" class="d-flex justify-end">
                 <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
                 <v-btn color="primary" @click="guardarFormularioEditar"
-                :disabled="excededLimit1 || !formulario.razonsocial || excededLimit3 || !formulario.direccion || excededLimit2 || !formulario.telefono || limit3 || !formulario.barrio
-                  || limit3 || !formulario.ciudad || excededLimit4 || !formulario.ruc">Guardar</v-btn>  <!-- CORREGIR VALIDACIONES  -->
+                :disabled="excededLimit1 || !formulario.descripcion || excededLimit3 || !formulario.precio || excededLimit1 || !formulario.PrecioCompra || limit3 || !formulario.marca
+                  || limit3 || !formulario.categoria || limit3 || !formulario.iva">Guardar</v-btn>  <!-- CORREGIR VALIDACIONES  -->
               </v-col>
 
             </v-row>
@@ -120,7 +116,7 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="6" class="d-flex justify-end align-center">
-          Cantidad de Proveedor: {{ items.length }}
+          Cantidad de Producto: {{ items.length }}
         </v-col>
 
       </v-row>
@@ -130,7 +126,7 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <v-toolbar-title>
-                <p class="font-weight-bold">Proveedor</p>
+                <p class="font-weight-bold">Producto</p>
               </v-toolbar-title>
   
               <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -185,9 +181,10 @@
   
   <script>
   import { VDataTable } from 'vuetify/labs/VDataTable'
-  import { ProveedorAPI } from '@/services/proveedor.api'
-  import { BarrioAPI } from '@/services/barrio.api'
-  import { CiudadAPI } from '@/services/ciudad.api'
+  import { ProductoAPI } from '@/services/producto.api'
+  import { MarcaApi } from '@/services/marca.api'
+  import { CategoriaApi } from '@/services/Categoria.api'
+  import { IvaAPI } from '@/services/iva.api'
   
   export default {
     components: {
@@ -200,12 +197,12 @@
         dialogoFormularioEditar: false,
         formulario: {
           codigo: '',
-          ruc: '',
-          razonsocial: '',
-          direccion: '',
-          telefono: '',
-          barrio: '',
-          ciudad: ''
+          descripcion: '',
+          precio: '',
+          PrecioCompra: '',
+          marca: '',
+          categoria: '',
+          iva: ''
         },
         limit1: 45,
         limite2: 15,
@@ -213,34 +210,36 @@
         contador: 1,
         defaultFormulario: {
           codigo: '',
-          ruc: '',
-          razonsocial: '',
-          direccion: '',
-          telefono: '',
-          barrio: '',
-          ciudad: ''
+          descripcion: '',
+          precio: '',
+          PrecioCompra: '',
+          marca: '',
+          categoria: '',
+          iva: ''
         },
-        listaBarrio: [],
-        listaCiudad: [],
+        listaMarca: [],
+        listaCategoria: [],
+        listaIva: [],
         buscador: '',
         headers: [
           { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-          { title: 'Ruc o CI', key: 'ruc' },
-          { title: 'Razon Social', key: 'razonsocial' },
-          { title: 'Direccion', key: 'direccion' },
-          { title: 'Telefono', key: 'telefono' },
-          { title: 'Barrio', key: 'nombrebarrio'},
-          { title: 'Ciudad', key: 'nombreciudad'},
+          { title: 'Descripcion', key: 'descripcion' },
+          { title: 'Precio', key: 'precio' },
+          { title: 'Precio Compra', key: 'PrecioCompra' },
+          { title: 'Marca', key: 'nombremarca' },
+          { title: 'Categoria', key: 'nombrecategoria'},
+          { title: 'Iva', key: 'nombreiva'},
           { title: 'Accion', key: 'action', sortable: false, align: 'end' },
         ],
         items: [
           {
             id: '1',
-            ruc: '7586748',
-            razonsocial: 'Juan Perez',
-            direccion: 'Esq Flores',
-            telefono: '0975482412',
-
+            descripcion: '7586748',
+            precio: 'Juan Perez',
+            PrecioCompra: 'Esq Flores',
+            nombremarca: 'Lactolanda',
+            nombrecategoria: 'Insumos',
+            nombreiva: '10',
             action: ''
           }
         ], 
@@ -252,52 +251,10 @@
     computed: {
       itemsComputed() {
         if (!this.buscador) return this.items
-        return this.items.filter((element) => element.razonsocial.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
+        return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
       },
-      excededLimit1() {
-        return this.formulario.razonsocial.length > this.limit1;
-      },
-
-
-      excededLimit2() {
-        return this.formulario.telefono.length > this.limite2;
-       
-      },
-      excededLimit3() {
-        return this.formulario.direccion.length > this.limit1;
-      },
-
-      excededLimit4() {
-        return this.formulario.ruc.length > this.limite2;
-      },
-
-
-      errorMessage1() {
-        if (this.excededLimit1) {
-          return 'Superaste el límite de 45 letras';
-        }
-        return '';
-      },
-      errorMessage2() {
-        if (this.excededLimit2) {
-          return 'Superaste el límite de 15 letras';
-        }
-        return '';
-      },
-      errorMessage3() {
-        if (this.excededLimit3) {
-          return 'Superaste el límite de 45 letras';
-        }
-        return '';
-      },
-      errorMessage4() {
-        if (this.excededLimit4) {
-          return 'Superaste el límite de 15 letras';
-        }
-        return '';
-      }
+     
     },
-  
   
     methods:
     {
@@ -307,22 +264,34 @@
         this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
       },
   
-      ObtenerBarrio() {
-        BarrioAPI.getAll().then(({ data }) => {
-          this.listaBarrio = data.map(item => {
+      obtenerMarca() {
+        MarcaApi.getAll().then(({ data }) => {
+          this.listaMarca = data.map(item => {
             return {
-              id: item.idBarrio,
-              descripcionB: item.descripcion
+              id: item.idmarca,
+              descripcionM: item.Descripcion
             }
           })
         })
       },
-      obtenerCiudades() {
-        CiudadAPI.getAll().then(({ data }) => {
-          this.listaCiudad = data.map(item => {
+      ObtenerCategoria() {
+        CategoriaApi.getAll().then(({ data }) => {
+          this.listaCategoria = data.map(item => {
             return {
-              id: item.idCiudad,
+              id: item.idcategoria,
               descripcionC: item.Descripcion
+            }
+          })
+        })
+      },
+      ObtenerIva() {
+        IvaAPI.getAll().then(({ data }) => {
+          this.listaIva = data.map(item => {
+            return {
+              id: item.idIva,
+              descripcionI: item.Descripcion,
+              
+
             }
           })
         })
@@ -333,66 +302,66 @@
       },
 
       guardarFormulario() {
-        if (!this.formulario.razonsocial || !this.formulario.telefono || this.excededLimit || this.excededLimitPas) {
+        if (!this.formulario.descripcion || !this.formulario.precio || this.excededLimit || this.excededLimitPas) {
           this.emptyFieldError = true;
           return;
         }
-        ProveedorAPI.create(
+        ProductoAPI.create(
           {
-            idProveedor: this.formulario.codigo,
-            Ruc: this.formulario.ruc,
-            Razon_social: this.formulario.razonsocial,
-            Direccion: this.formulario.direccion,
-            Telefono: this.formulario.telefono,
-            idBarrio: this.formulario.barrio,
-            idCiudad: this.formulario.ciudad
+            idProducto: this.formulario.codigo,
+            Descripcion: this.formulario.descripcion,
+            Precio: this.formulario.precio,
+            PrecioCompra: this.formulario.PrecioCompra,
+            idmarca: this.formulario.marca,
+            idcategoria: this.formulario.categoria,
+            idIva: this.formulario.iva
           }
         ).then(()=> {
-          this.ObtenerProveedor()
+          this.ObtenerProducto()
         })
   
-        this.formulario.ruc = '';
-        this.formulario.razonsocial = '';
-        this.formulario.direccion = '';
-        this.formulario.telefono = '';
-        this.formulario.barrio = '';
-        this.formulario.ciudad = '';
+        this.formulario.descripcion = '';
+        this.formulario.precio = '';
+        this.formulario.PrecioCompra = '';
+        this.formulario.marca = '';
+        this.formulario.categoria = '';
+        this.formulario.iva = '';
         this.dialogoFormulario = false
       },
   
   
       guardarFormularioEditar() {
-        if (!this.formulario.razonsocial || !this.formulario.telefono || this.excededLimit || this.excededLimitPas) {
+        if (!this.formulario.descripcion || !this.formulario.precio || this.excededLimit || this.excededLimitPas) {
           this.emptyFieldError = true;
           return;
         }
   
   
-        ProveedorAPI.update(
+        ProductoAPI.update(
           this.formulario.codigo,
           {
-            idProveedor: this.formulario.codigo,
-            Ruc: this.formulario.ruc,
-            Razon_social: this.formulario.razonsocial,
-            Direccion: this.formulario.direccion,
-            Telefono: this.formulario.telefono,
-            idBarrio: this.formulario.barrio,
-            idCiudad: this.formulario.ciudad
+            idProducto: this.formulario.codigo,
+            Descripcion: this.formulario.descripcion,
+            Precio: this.formulario.precio,
+            PrecioCompra: this.formulario.PrecioCompra,
+            idmarca: this.formulario.marca,
+            idcategoria: this.formulario.categoria,
+            idIva: this.formulario.iva
           }
         ).then(()=> {
-          this.ObtenerProveedor()
+          this.ObtenerProducto()
         })
         this.dialogoFormularioEditar = false
       },
       editarCiudad(parametro) {
         this.dialogoFormularioEditar = true
         this.formulario.codigo = parametro.id
-        this.formulario.ruc = parametro.ruc
-        this.formulario.razonsocial = parametro.razonsocial
-        this.formulario.direccion = parametro.direccion
-        this.formulario.telefono = parametro.telefono
-        this.formulario.barrio = parametro.idBarrio
-        this.formulario.ciudad = parametro.idCiudad
+        this.formulario.descripcion = parametro.descripcion
+        this.formulario.precio = parametro.precio
+        this.formulario.PrecioCompra = parametro.PrecioCompra
+        this.formulario.marca = parametro.idmarca
+        this.formulario.categoria = parametro.idcategoria
+        this.formulario.iva = parametro.idIva
       },
       confirmarEliminarCiudad(elemento) {
         // Abre el diálogo de confirmación y guarda el elemento a eliminar
@@ -407,27 +376,30 @@
       eliminarCiudad() {
         if (this.elementoAEliminar) {
           // Realiza la eliminación aquí
-          ProveedorAPI.delete(this.elementoAEliminar.id).then(() => {
-            this.ObtenerProveedor();
+          ProductoAPI.delete(this.elementoAEliminar.id).then(() => {
+            this.ObtenerProducto();
           });
           // Cierra el diálogo de confirmación
           this.dialogoEliminar = false;
           this.elementoAEliminar = null;
         }
       },
-      ObtenerProveedor() {
-        ProveedorAPI.getAll().then(({data}) => {
+      ObtenerProducto() {
+        ProductoAPI.getAll().then(({data}) => {
           this.items = data.map(item=> {
             return {
-              id: item.idProveedor,
-              ruc: item.Ruc,
-              razonsocial: item.Razon_social,
-              direccion: item.Direccion,
-              telefono: item.Telefono,
-              idBarrio: item.idBarrio,
-              nombrebarrio: item.nombrebarrio,
-              idCiudad: item.idCiudad,
-              nombreciudad: item.nombreciudad,
+              id: item.idProducto,
+              descripcion: item.Descripcion,
+              precio: item.Precio,
+              PrecioCompra: item.PrecioCompra,
+              idmarca: item.idmarca,
+              nombremarca: item.nombremarca,
+              idcategoria: item.idcategoria,
+              nombrecategoria: item.nombrecategoria,
+              idIva: item.idIva,
+              nombreiva: item.nombreiva,
+            
+
              
             }
           })
@@ -441,9 +413,12 @@
     created() {
       // Generar automáticamente el código al cargar el componente
       this.formulario.codigo = this.generarCodigo();
-      this.ObtenerBarrio()
-      this.obtenerCiudades()
-      this.ObtenerProveedor()
+      this.ObtenerProducto()
+      this.obtenerMarca()
+      this.ObtenerCategoria()
+      this.ObtenerIva()
+
+      
     },
   
   }
