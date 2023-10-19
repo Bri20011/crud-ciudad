@@ -197,10 +197,6 @@
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ComprasAPI } from '@/services/compras.api'
-import { ProveedorAPI } from '@/services/proveedor.api'
-import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
-import { ProductoAPI } from '@/services/producto.api' 
-
 import dayjs from 'dayjs'
 
 
@@ -378,6 +374,8 @@ export default {
                     Timbrado: this.formulario.timbrado,
                     idTipo_Documento: this.formulario.documento,
                     idProveedor: this.formulario.proveedor,
+                    idTipo_Documento: this.formulario.documento,
+                    idProducto: this.formulario.producto,
                     Numero_fact: this.formulario.numero_factura,
                     Detalle: this.itemsDetalle
 
@@ -470,8 +468,6 @@ export default {
         this.ObtenerCompras()
         this.ObtenerProveedor()
         this.ObtenerTipoD()
-        this.ObtenerProducto()
-       
     },
 
 
