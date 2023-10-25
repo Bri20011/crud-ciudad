@@ -59,8 +59,6 @@
             <v-col ols="12" sm="5" md="5">
               <v-text-field variant="outlined" label="Fecha de Pedido" v-model="formulario.fecha"></v-text-field>
             </v-col>
-
-            
             <v-col cols="12" sm="6" md="6">
               <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"
                 required></v-text-field>
@@ -104,12 +102,12 @@
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Registro de Pedidos</p>
+              <p class="font-weight-bold">Pedidos para Generar Ordenes de Compra</p>
             </v-toolbar-title>
 
-            <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
+            <!-- <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
               @click="abrirDialogo">Registrar
-            </v-btn>
+            </v-btn> -->
 
           </v-toolbar>
         </template>
@@ -117,19 +115,28 @@
           {{ formatearFecha(item.raw.fecha) }}
         </template>
         <template v-slot:item.action="{ item }">
-          <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
-            mdi-pencil
-          </v-icon>
-          <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
-            mdi-trash-can-outline
-          </v-icon>
+         <v-row>
+          <v-col cols="12" sm="6" md="6">
+            <v-btn  color="primary"   @click="editarCiudad(item.raw)">
+              <span class="text-h8">Aceptar</span>
+
+            </v-btn>
+          </v-col>
+
+          <v-col cols="12" sm="6" md="6"> 
+            <v-btn color="#E0E0E0"  @click="confirmarEliminarCiudad(item.raw)">
+              Anular
+            </v-btn>
+          </v-col>
+         </v-row>
+
         </template>
       </v-data-table>
     </v-card>
 
     <v-row>
       <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
-        <v-btn>Cancelar </v-btn>
+      
       </v-col>
     </v-row>
     <!-- Diálogo de confirmación -->
@@ -155,7 +162,64 @@
       
     </v-dialog>
                         <!-- FIN DIALOGO -->
+
+                        <v-card class="mt-5 rounded-xl">
+        <v-data-table :headers="headers" :items="itemsComputed">
+          <template v-slot:top>
+            <v-toolbar flat color="white">
+              <v-toolbar-title>
+                <p class="font-weight-bold">Ordenes de Compras</p>
+              </v-toolbar-title>
+  
+              <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
+                @click="abrirDialogo">Registrar
+              </v-btn>
+            </v-toolbar>
+  
+          </template>
+  
+          <template
+           v-slot:item.action="{ item }">
+            <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
+              mdi-pencil
+            </v-icon>
+            <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+              mdi-trash-can-outline
+            </v-icon>
+          </template>
+        </v-data-table>
+      </v-card>
+  
+      <v-row>
+        <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
+          <v-btn>Cancelar </v-btn>
+        </v-col>
+      </v-row>
+      <!-- Diálogo de confirmación -->
+      <v-dialog v-model="dialogoEliminar" max-width="400">
+        <v-card>
+          <v-container>
+          <v-card-title class="headline">Confirmar Eliminación</v-card-title>
+          <v-card-text>
+            ¿Está seguro de que desea eliminar este elemento?
+          </v-card-text>
+  
+        
+            <v-row>
+           <v-col cols="12" class="d-flex justify-end">
+            <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
+            <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+           </v-col>
+          </v-row>
+          
+          
+        </v-container>
+        </v-card>
+        
+      </v-dialog>
   </v-container>
+
+  
 </template>
 
 <script>
@@ -209,8 +273,8 @@ export default {
         { title: 'Descripcion', key: 'descripcion' },
         { title: 'Fecha de Pedido', key: 'fecha', align: 'star' },
         { title: 'Cantidad', key: 'cantidad', align: 'star' },
-        { title: 'Producto', key: 'nombreproducto'},
-        { title: 'Marca', key: 'nombremarca'},
+        { title: 'Producto', key: 'nombreproducto', align: 'star' },
+        { title: 'Marca', key: 'nombremarca', align: 'star' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
