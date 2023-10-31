@@ -53,11 +53,9 @@
                         <v-col cols="12">
                             <v-btn @click="AgregarDetalle">Agregar detalle</v-btn>
                         </v-col>
-
-
+                        <!-- Fin DETALLE -->
 
                         
-                        <!-- INICIO DETALLE -->
                         <v-data-table :headers="headersCompra" :items="itemsDetalle">
 
 

@@ -96,8 +96,13 @@ export default {
       open: ['Users'],
     
       compras: [
-        ['Venta', 'mdi-file-outline', '/'],
-        ['Pedido', 'mdi-file-outline', '/'],
+       
+        ['Pedido', 'mdi-cog-outline', '/frmpedido'],
+        ['Orden de Compras', 'mdi-cog-outline', '/orden_compra'],
+        ['Presupuesto', 'mdi-cog-outline', '/fr'],
+        ['Compras', 'mdi-cog-outline', '/compras'],
+   
+        
 
       ],
       ventas: [
@@ -114,9 +119,7 @@ export default {
         ['Ciudad', 'mdi-cog-outline', '/frmciudad'],
         ['Barrio', 'mdi-cog-outline', '/frmbarrio'],
         ['Categoria', 'mdi-cog-outline', '/frmcategoria'],
-        ['Pedido', 'mdi-cog-outline', '/frmpedido'],
         ['Marca', 'mdi-cog-outline', '/frmmarca'],
-        // ['Orden de Compra', 'mdi-cog-outline', '/frmorden_compra'],
         ['Sucursal', 'mdi-cog-outline', '/frmsucursal'],
         ['Tipo de Documento', 'mdi-cog-outline', '/frmtipo_documento'],
         ['Numero de Establecimiento', 'mdi-cog-outline', '/frmnumero_establecimiento'],
@@ -124,10 +127,9 @@ export default {
         ['Iva', 'mdi-cog-outline', '/frmiva'],
         ['Usuario', 'mdi-cog-outline', '/frmusuario'],
         ['Caja', 'mdi-cog-outline', '/frmcaja'],
-        ['Compras', 'mdi-cog-outline', '/compras'],
         ['Proveedor', 'mdi-cog-outline', '/proveedor'],
         ['Producto', 'mdi-cog-outline', '/producto'],
-        ['Orden de Compras1', 'mdi-cog-outline', '/orden_compra'],
+
       ],
     };
   },
