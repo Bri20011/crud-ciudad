@@ -23,13 +23,13 @@
                     <v-row>
                         <v-col cols="12" sm="6" md="6" class="mt-5">
                             <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto" :error="excededLimit"
-                                :error-messages="errorMessage" required></v-autocomplete>
+                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
+                                required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="6" md="6" class="mt-5">
                             <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
                         </v-col>
 
 
@@ -59,7 +59,8 @@
                     <v-row class="mt-2">
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario"
+                                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -80,28 +81,38 @@
         </v-card>
     </v-dialog>
 
-    <v-dialog v-model="showModalVacio" persistent max-width="400">
+
+    <v-dialog v-model="showModalVacio" persistent max-width="350">
+
         <v-card>
-            <v-card-title>Campo Vacio</v-card-title>
-            <v-card-text>
-                Descripcion y fecha no pueden quedar vacio
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" @click="showModalVacio = false">Aceptar</v-btn>
-            </v-card-actions>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Descripcion y fecha no pueden quedar vacio
+                </v-card-text>
+
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="showModalVacio = false">Aceptar</v-btn>
+                </v-cols>
+            </v-container>
         </v-card>
+
     </v-dialog>
 
 
-    <v-dialog v-model="showModalDuplicado" persistent max-width="400">
+
+    <v-dialog v-model="showModalDuplicado" persistent max-width="350">
         <v-card>
-            <v-card-title>Campo Vacio</v-card-title>
-            <v-card-text>
-                Seleccionaste el mismo producto
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" @click="showModalDuplicado = false">Aceptar</v-btn>
-            </v-card-actions>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Seleccionaste el mismo producto
+                </v-card-text>
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="showModalDuplicado = false">Aceptar</v-btn>
+                </v-cols>
+
+            </v-container>
         </v-card>
     </v-dialog>
 
@@ -140,6 +151,61 @@
 
     <!-- FIN DETALLE -->
 
+    <!-- INICIO VISTA -->
+    <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Pedido Registrado</h1>
+                <v-form>
+                   
+                        <v-row>
+                            <v-col cols="12" sm="2" md="2" class="">
+                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo"
+                            disabled    required></v-text-field>
+                            </v-col>
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
+                            disabled    required></v-text-field>
+                        </v-col>
+
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD"
+                            disabled    required></v-text-field>
+                        </v-col>
+
+                        
+                    </v-row>
+                                 <v-divider></v-divider>
+                    <v-row class="d-flex justify-center mt-2">
+                        <v-col cols="12" sm="5" md="5">
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                disabled   required></v-autocomplete>
+                        </v-col>
+
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad" disabled></v-text-field>
+                        </v-col>
+                    </v-row>
+
+
+                    
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
+                           
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+    <!-- FIN VISTA -->
+
+
 
 
     <v-container>
@@ -174,10 +240,13 @@
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
                 <template v-slot:item.action="{ item }">
-
+                    <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
+                        mdi-file-eye-outline
+                    </v-icon>
                     <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                         mdi-trash-can-outline
                     </v-icon>
+
                 </template>
             </v-data-table>
         </v-card>
@@ -231,6 +300,7 @@ export default {
         return {
             dialogoFormulario: false,
             dialogoFormularioEditar: false,
+            dialogoFormularioVistaVista: false,
             showModal: false,
             showModalVacio: false,
             showModalDuplicado: false,
@@ -238,12 +308,13 @@ export default {
                 producto: '',
                 descripcion: '',
             },
+            limit: 45,
 
             formulario: {
                 descripcion: '',
                 fechaD: null,
-               
-                
+
+
 
 
             },
@@ -279,7 +350,7 @@ export default {
                 }
             ],
             itemsDetalle: [
-               
+
             ],
             dialogoEliminar: false,
             elementoAEliminar: null,
@@ -294,6 +365,22 @@ export default {
             if (!this.buscador) return this.items
             return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
+        excededLimit() {
+            return this.formulario.descripcion.length > this.limit;
+        },
+
+
+
+
+
+        errorMessage() {
+            if (this.excededLimit) {
+                return 'Superaste el límite de 45 letras';
+            }
+            return '';
+        },
+
+
     },
     methods:
     {
@@ -354,10 +441,13 @@ export default {
         },
 
 
+
+
+
         guardarFormulario() {
             // Verificar que todos los campos requeridos estén completos
             if (!this.formulario.descripcion || !this.formulario.fechaD) {
-                this.showModalVacio = true; 
+                this.showModalVacio = true;
             } else {
                 // Validar duplicados en los detalles
                 const productosSeleccionados = this.itemsDetalle.map((detalle) => detalle.producto);
@@ -384,16 +474,30 @@ export default {
                     this.formulario.fechaD = "";
                     this.detalle.producto = null;
                     this.detalle.cantidad = null;
-                    this.itemsDetalle = [ ]
-                    
-                    
+                    this.itemsDetalle = []
+
+
 
                     // Cierra el diálogo del formulario
                     this.dialogoFormulario = false;
                 }
             }
         },
+        MostrarPedido(item) {
+console.log(item); 
+            
+      this.dialogoFormularioVistaVista = true;
+      this.formulario.codigo = item.id
+      this.formulario.descripcion = item.descripcion
+      this.formulario.fechaD = this.formatearFecha(item.fechaD)
 
+      this.detalle.producto = item.producto
+      this.detalle.cantidad = item.cantidad
+
+     
+    },
+
+  
 
 
         guardarFormularioEditar() {
@@ -453,7 +557,14 @@ export default {
             }
         },
 
-
+dialogoVista(){
+    this.dialogoFormularioVistaVista= true
+      this.formulario.codigo = parametro.id
+      this.formulario.descripcion = parametro.descripcion
+      this.formulario.fechaD = parametro.fechaD
+      this.detalle.producto = parametro.producto
+      this.detalle.cantidad = parametro.cantidad
+},
 
         ObtenerPedido() {
             PedidoAPI.getAll().then(({ data }) => {
