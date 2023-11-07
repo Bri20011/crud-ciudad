@@ -2,7 +2,7 @@
     <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h2 class="mb-3">Registar Pedido</h2>
+                <h2 class="mb-3">Registrar Pedido</h2>
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="6" md="6" class="">
@@ -44,8 +44,8 @@
                     <!-- Fin DETALLE -->
 
 
-                    <v-card class="mt-5 rounded-xl">
-                        <v-data-table items-per-page-text="Articulo por pagina" :headers="headersCrear" :items="itemsDetalle">
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersCrear" :items="itemsDetalle">
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
                                     mdi-pencil
@@ -58,7 +58,7 @@
                     </v-card>
                     <v-row class="mt-2">
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" class="mt-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormulario"
                                 :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
                         </v-col>
@@ -179,14 +179,14 @@
                     </v-row>
                     <v-divider></v-divider>
 
-                    <v-card class="mt-5 rounded-xl">
+                    <v-card class="mt-5 rounded-x2">
                         <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
                           
                         </v-data-table>
                     </v-card>
 
                     <v-row>
-                        <v-col cols="12" class="d-flex justify-end mt-1">
+                        <v-col cols="12" class="d-flex justify-end mt-2">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
 
                         </v-col>
@@ -214,7 +214,7 @@
 
         </v-row>
 
-        <v-card class="mt-5 rounded-xl">
+        <v-card class="mt-5 rounded-x2">
             <v-data-table items-per-page-text="Articulo por pagina" :headers="headers" :items="itemsComputed">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
@@ -264,7 +264,7 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-                            <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
                         </v-col>
                     </v-row>
 
