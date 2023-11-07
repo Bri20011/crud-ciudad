@@ -45,7 +45,7 @@
 
 
                     <v-card class="mt-5 rounded-xl">
-                        <v-data-table :headers="headersPedido" :items="itemsDetalle">
+                        <v-data-table items-per-page-text="Articulo por pagina" :headers="headersCrear" :items="itemsDetalle">
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
                                     mdi-pencil
@@ -157,45 +157,38 @@
             <v-container>
                 <h1 class="mb-3">Pedido Registrado</h1>
                 <v-form>
-                   
-                        <v-row>
-                            <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo"
-                            disabled    required></v-text-field>
-                            </v-col>
 
-                        <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
-                            disabled    required></v-text-field>
-                        </v-col>
-
-
-                        <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD"
-                            disabled    required></v-text-field>
-                        </v-col>
-
-                        
-                    </v-row>
-                                 <v-divider></v-divider>
-                    <v-row class="d-flex justify-center mt-2">
-                        <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
-                                disabled   required></v-autocomplete>
-                        </v-col>
-
-                        <v-col ols="12" sm="5" md="5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad" disabled></v-text-field>
-                        </v-col>
-                    </v-row>
-
-
-                    
                     <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
+                        <v-col cols="12" sm="2" md="2" class="">
+                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
+                                required></v-text-field>
+                        </v-col>
+
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
+                                required></v-text-field>
+                        </v-col>
+
+
+                    </v-row>
+                    <v-divider></v-divider>
+
+                    <v-card class="mt-5 rounded-xl">
+                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
+                          
+                        </v-data-table>
+                    </v-card>
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end mt-1">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
-                           
+
                         </v-col>
                     </v-row>
                 </v-form>
@@ -222,7 +215,7 @@
         </v-row>
 
         <v-card class="mt-5 rounded-xl">
-            <v-data-table items-per-page-text="Item por pagina" :headers="headers" :items="itemsComputed">
+            <v-data-table items-per-page-text="Articulo por pagina" :headers="headers" :items="itemsComputed">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
@@ -239,13 +232,15 @@
                 <template v-slot:item.fechaD="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
-                <template v-slot:item.action="{ item }">
-                    <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
+                <template  v-slot:item.action="{ item }">
+                    
+                        <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
                         mdi-file-eye-outline
                     </v-icon>
                     <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                         mdi-trash-can-outline
                     </v-icon>
+                   
 
                 </template>
             </v-data-table>
@@ -314,6 +309,8 @@ export default {
                 descripcion: '',
                 fechaD: null,
 
+                // itemsDetalle debe ser un Array 
+                itemsDetalle: [],
 
 
 
@@ -337,7 +334,14 @@ export default {
             ],
             headersPedido: [
 
+                { title: 'Producto', key: 'idProducto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                
+            ],
+            headersCrear: [
+
                 { title: 'Producto', key: 'producto' },
+                { title: 'Producto', key: 'descripcionPr' },
                 { title: 'Cantidad', key: 'cantidad', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
@@ -398,10 +402,10 @@ export default {
 
         AgregarDetalle() {
             const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
-
             if (productoSeleccionado) {
                 this.itemsDetalle.push({
-                    producto: productoSeleccionado.descripcionPr, // Agrega la descripción del producto
+                    producto: productoSeleccionado.id, // Agrega la descripción del producto
+                    descripcionPr: productoSeleccionado.descripcionPr,
                     cantidad: this.detalle.cantidad,
                     action: '',
                 });
@@ -484,20 +488,27 @@ export default {
             }
         },
         MostrarPedido(item) {
-console.log(item); 
-            
-      this.dialogoFormularioVistaVista = true;
-      this.formulario.codigo = item.id
-      this.formulario.descripcion = item.descripcion
-      this.formulario.fechaD = this.formatearFecha(item.fechaD)
+            console.log(item);
 
-      this.detalle.producto = item.producto
-      this.detalle.cantidad = item.cantidad
+            this.dialogoFormularioVistaVista = true;
+            this.formulario.codigo = item.id
+            this.formulario.descripcion = item.descripcion
+            this.formulario.fechaD = this.formatearFecha(item.fechaD)
 
-     
-    },
+            this.formulario.itemsDetalle = [];
 
-  
+            item.detalleItems.forEach((detalle) => {
+                this.formulario.itemsDetalle.push({
+                    idProducto: detalle.nomnbreProducto,
+                    Cantidad: detalle.Cantidad,
+                });
+            })
+
+
+
+        },
+
+
 
 
         guardarFormularioEditar() {
@@ -557,22 +568,25 @@ console.log(item);
             }
         },
 
-dialogoVista(){
-    this.dialogoFormularioVistaVista= true
-      this.formulario.codigo = parametro.id
-      this.formulario.descripcion = parametro.descripcion
-      this.formulario.fechaD = parametro.fechaD
-      this.detalle.producto = parametro.producto
-      this.detalle.cantidad = parametro.cantidad
-},
+        dialogoVista() {
+            this.dialogoFormularioVistaVista = true
+            this.formulario.codigo = parametro.id
+            this.formulario.descripcion = parametro.descripcion
+            this.formulario.fechaD = parametro.fechaD
+            this.detalle.producto = parametro.producto
+            this.detalle.cantidad = parametro.cantidad
+        },
 
         ObtenerPedido() {
+
             PedidoAPI.getAll().then(({ data }) => {
+                console.log(data)
                 this.items = data.map(item => {
                     return {
                         id: item.idPedido,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
+                        detalleItems: item.detalle
 
                     }
                 })
