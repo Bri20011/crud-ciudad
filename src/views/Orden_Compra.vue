@@ -165,14 +165,14 @@
                         </v-col>
 
                         <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="descripcion" v-model="formulario.descripcion" disabled
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
                                 required></v-text-field>
                         </v-col>
 
 
                         <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
+                                disabled required></v-text-field>
                         </v-col>
 
 
@@ -245,9 +245,15 @@
                     <v-icon color="primary" size="small" @click="MostrarPedidoAprobar(item.raw)">
                         mdi-file-document-check
                     </v-icon>
-
-
                 </template>
+
+                <template v-slot:item.actionD="{ item }">
+                    <v-btn prepend-icon="mdi-progress-check" variant="text" :color="revisado ? 'success' : 'default'"
+                        @click="toggleRevisado(item)">
+                        <h5>Revisado</h5>
+                    </v-btn>
+                </template>
+
             </v-data-table>
         </v-card>
 
@@ -327,17 +333,13 @@
                         <v-col cols="12" class="d-flex justify-end mt-2">
                             <v-btn color="#E0E0E0" class="mx-2"
                                 @click="dialogoFormularioVistaAprobar = false">Cerrar</v-btn>
-                            <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC" >Guardar</v-btn>
+                            <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
             </v-container>
         </v-card>
     </v-dialog>
-
-
-
-    
 
     <!-- FIN APROBAR -->
 
@@ -370,6 +372,7 @@ export default {
             showModal: false,
             showModalVacio: false,
             showModalDuplicado: false,
+            revisado: false,
             detalle: {
                 producto: '',
                 descripcion: '',
@@ -379,7 +382,7 @@ export default {
             formulario: {
                 descripcion: '',
                 fechaD: null,
-                proveedor:'',
+                proveedor: '',
 
                 // itemsDetalle debe ser un Array 
                 itemsDetalle: [],
@@ -402,6 +405,7 @@ export default {
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Descripcion', key: 'descripcion', align: 'star' },
                 { title: 'Fecha de Pedido', key: 'fechaD', align: 'star' },
+                { title: 'Estado', key: 'actionD', sortable: false, align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersPedido: [
@@ -419,17 +423,17 @@ export default {
             ],
 
 
-           
+
 
             items: [
                 {
                     id: '1',
                     descripcion: 'Central',
-                    fechaD: '',
+                    fechaD: 'null',
                     action: ''
                 },
 
-              
+
 
             ],
             itemsDetalle: [
@@ -469,7 +473,10 @@ export default {
     },
     methods:
     {
-
+        toggleRevisado() {
+      this.revisado = !this.revisado;
+    },
+  
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
                 this.listaProducto = data.map(item => {
@@ -584,7 +591,7 @@ export default {
 
 
         MostrarPedido(item) {
-           
+
 
             this.dialogoFormularioVistaVista = true;
             this.formulario.codigo = item.id
@@ -605,12 +612,13 @@ export default {
         },
 
         MostrarPedidoAprobar(item) {
-           
-            
+
+
             this.dialogoFormularioVistaAprobar = true;
             this.formulario.codigo = item.id
             this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
+            this.formulario.fechaD = this.formatearFecha(item.fechaD);
+            this.formulario.fechaDOriginal = item.fechaD;  // Nueva propiedad para almacenar la fecha sin formato
 
             this.formulario.itemsDetalle = [];
 
@@ -698,7 +706,7 @@ export default {
         ObtenerPedido() {
 
             PedidoAPI.getAll().then(({ data }) => {
-               
+
                 this.items = data.map(item => {
                     return {
                         id: item.idPedido,
@@ -712,28 +720,29 @@ export default {
         },
 
         guardarFormularioOrdenC() {
-         console.log('Este console es al precionar boton de guardar: ',this.formulario)
+            console.log('Este console es al precionar boton de guardar: ', this.formulario)
             OrdenCompraApi.create({
                 idorden_compra: this.formulario.codigo,
                 Descripcion: this.formulario.descripcion,
-                Fecha_pedi: this.formulario.fechaD,
+                Fecha_pedi: this.formulario.fechaDOriginal,
                 idProveedor: this.formulario.proveedor,
                 Detalle: this.formulario.itemsDetalle,
             }).then(() => {
-             
+
                 // Limpia los campos del formulario después de guardar
                 this.formulario.codigo = "";
                 this.formulario.producto = "";
                 this.formulario.descripcion = "";
                 this.formulario.fechaD = "";
+                this.formulario.fechaDOriginal = "";
                 this.formulario.proveedor = "";
                 this.detalle.producto = null;
 
                 this.itemsDetalle = []
 
-             // Cierra el diálogo del formulario
-             this.dialogoFormularioVistaAprobar = false;
-             this.ObtenerOrdenCompra();
+                // Cierra el diálogo del formulario
+                this.dialogoFormularioVistaAprobar = false;
+                this.ObtenerOrdenCompra();
             });
 
         },
@@ -750,7 +759,6 @@ export default {
         this.ObtenerPedido()
         this.ObtenerProducto()
         this.ObtenerProveedor()
-        
 
 
 

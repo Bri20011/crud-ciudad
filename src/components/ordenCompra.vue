@@ -1,6 +1,4 @@
 <template>
-   
-
     <!-- TABLA VISUALIZAR ORDEN DE COMPRA -->
     <v-container>
         <v-row>
@@ -16,14 +14,14 @@
         </v-row>
 
         <v-card class="mt-5 rounded-x2">
-            <v-data-table items-per-page-text="Articulo por pagina" :headers="headersOrdenCompra" :itemsOrdeC="itemsComputed">
+            <v-data-table items-per-page-text="Articulo por pagina" :headers="headersOrdenCompra" :items="itemsComputed">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
                             <p class="font-weight-bold">Ordenes de Compras</p>
                         </v-toolbar-title>
 
-                 
+
                     </v-toolbar>
                 </template>
 
@@ -45,7 +43,7 @@
             </v-data-table>
         </v-card>
 
-      
+
         <v-dialog v-model="dialogoEliminar" max-width="400">
             <v-card>
                 <v-container>
@@ -69,9 +67,61 @@
         </v-dialog>
 
     </v-container>
-      
 
-        
+    <!-- INICIO VISTA -->
+    <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Ordenes de Compras</h1>
+                <v-form>
+
+                    <v-row class="d-flex justify-center">
+                        <v-col cols="12" sm="2" md="2" class="">
+                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="10" md="10" class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="6" class="">
+                            <v-text-field variant="outlined" label="Proveedor" v-model="formulario.proveedor" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
+                                disabled required></v-text-field>
+                        </v-col>
+
+
+
+                    </v-row>
+                    <v-divider></v-divider>
+
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
+
+                        </v-data-table>
+                    </v-card>
+
+                    <v-row class="d-flex justify-end mt-2">
+                        <v-row class="d-flex justify-end">
+                            <v-col cols="6" class="d-flex justify-end mt-2">
+                                <v-btn color="#E0E0E0" class="mx-2"
+                                    @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
+                                <v-btn color="primary" class="mx-2" @click="generarPDF">Imprimir</v-btn>
+                            </v-col>
+                        </v-row>
+
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+    <!-- FIN VISTA -->
 </template>
 
 <script>
@@ -80,7 +130,9 @@ import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { ProveedorAPI } from '@/services/proveedor.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
-
+import VueHtml2pdf from 'vue-html2pdf'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import dayjs from 'dayjs'
 
 
@@ -91,11 +143,11 @@ export default {
     },
     data() {
         return {
+            dialogoFormularioVistaVista: false,
 
-           
-          
-           
-           
+
+
+
 
             formulario: {
                 descripcion: '',
@@ -115,11 +167,11 @@ export default {
                 descripcion: '',
                 fechaD: '',
                 producto: null,
-                cantidad: null,
+                Cantida: null,
             },
             buscador: '',
-      
-         
+
+
 
 
 
@@ -149,7 +201,12 @@ export default {
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
             ],
+            headersPedido: [
 
+                { title: 'Producto', key: 'idProducto' },
+                { title: 'Cantidad', key: 'Cantida', align: 'star' },
+
+            ],
 
         }
     },
@@ -178,11 +235,6 @@ export default {
     },
     methods:
     {
-
-     
- 
-        
-
         formatearFecha(fechaD) {
             return dayjs(fechaD).format('DD/MM/YYYY')
         },
@@ -193,7 +245,7 @@ export default {
             this.showDatepicker = false;
         },
         validarYRegistrar() {
-            if (this.itemsComputed.length === 0) {
+            if (this.itemsComputedOrdenC.length === 0) {
                 alert("No se pueden registrar pedidos sin detalles. Agregue al menos un detalle.");
             } else {
                 // Continúa con la lógica de registro
@@ -202,7 +254,7 @@ export default {
         },
         abrirDialogo() {
             // Abrir el modal y cargar el código aquí
-            
+
             this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
             this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
         },
@@ -211,23 +263,97 @@ export default {
             return nuevoCodigo;
         },
 
+        eliminarDetalle(id) {
+            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
+        },
+
+        confirmarEliminarCiudad(elemento) {
+            // Abre el diálogo de confirmación y guarda el elemento a eliminar
+            this.elementoAEliminar = elemento;
+            this.dialogoEliminar = true;
+        },
+        cancelarEliminarCiudad() {
+            // Cierra el diálogo de confirmación y restablece la variable
+            this.dialogoEliminar = false;
+            this.elementoAEliminar = null;
+        },
+        eliminarCiudad() {
+            if (this.elementoAEliminar) {
+                // Realiza la eliminación aquí
+                OrdenCompraApi.delete(this.elementoAEliminar.id).then(() => {
+                    this.Obtenerorden_compra();
+                });
+                // Cierra el diálogo de confirmación
+                this.dialogoEliminar = false;
+                this.elementoAEliminar = null;
+            }
+        },
+
+        MostrarPedido(item) {
 
 
-       
+            this.dialogoFormularioVistaVista = true;
+            this.formulario.codigo = item.id
+            this.formulario.descripcion = item.descripcion
+            this.formulario.proveedor = item.proveedor
+            this.formulario.fechaD = this.formatearFecha(item.fechaD)
+            this.formulario.itemsDetalle = [];
 
+            
+            item.detalleItems.forEach((detalle) => {
+                this.formulario.itemsDetalle.push({
+                    idProducto: detalle.nomnbreProducto,
+                    Cantida: detalle.Cantida,
+                });
+            })
+
+
+
+        },
+
+        Obtenerorden_compra() {
+            OrdenCompraApi.getAll().then(({ data }) => {
+
+                this.items = data.map(item => {
+                    return {
+                        id: item.idorden_compra,
+                        descripcion: item.Descripcion,
+                        fechaD: item.Fecha_pedi,
+                        proveedor: item.idProveedor,
+                        detalleItems: item.detalle
+
+                    }
+                })
+            })
+
+
+        },
+
+        generatePDF() {
+      this.$html2pdf();
     },
+  },
+  directives: {
+    'html2pdf': VueHtml2pdf,
+  },
+
+
+
+
+    
 
 
     //NUEVO PARA REGISTRO ORDEN DE COMPRA
-   
-    
+
+
 
 
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
-      
-        
+        this.Obtenerorden_compra()
+
+
 
 
 
