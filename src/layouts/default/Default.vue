@@ -98,8 +98,8 @@ export default {
       compras: [
        
         ['Pedido', 'mdi-cog-outline', '/frmpedido'],
+        ['Presupuesto', 'mdi-cog-outline', '/presupuesto'],
         ['Orden de Compras', 'mdi-cog-outline', '/orden_compra'],
-        ['Presupuesto', 'mdi-cog-outline', '/fr'],
         ['Compras', 'mdi-cog-outline', '/compras'],
    
         

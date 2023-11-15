@@ -56,12 +56,13 @@
                             </template>
                         </v-data-table>
                     </v-card>
-                  
+                    <v-row class="mt-2">
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario" :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario"
+                                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
                         </v-col>
-                    
+                    </v-row>
                 </v-form>
             </v-container>
         </v-card>
@@ -170,8 +171,8 @@
 
 
                         <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
+                                disabled required></v-text-field>
                         </v-col>
 
 
@@ -180,7 +181,7 @@
 
                     <v-card class="mt-5 rounded-x2">
                         <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
-                          
+
                         </v-data-table>
                     </v-card>
 
@@ -200,11 +201,13 @@
 
 
 
+
+
     <v-container>
         <v-row>
             <v-col cols="12" sm="5" md="5">
                 <v-text-field :loading="loading" density="compact" v-model="buscador" variant="solo" label="Buscar"
-                    append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
+                    append-inner-icon="mdi-magnify" single-line hide-details click:prependInner></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
@@ -218,7 +221,7 @@
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
-                            <p class="font-weight-bold">Registro de Pedido</p>
+                            <p class="font-weight-bold">Solicitud de Pedidos</p>
                         </v-toolbar-title>
 
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -231,26 +234,30 @@
                 <template v-slot:item.fechaD="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
-                <template  v-slot:item.action="{ item }">
-                    
-                        <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
+                <template v-slot:item.action="{ item }">
+
+                    <v-icon color="#424242" size="small" @click="MostrarPedido(item.raw)">
                         mdi-file-eye-outline
                     </v-icon>
                     <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                         mdi-trash-can-outline
                     </v-icon>
-                   
-
+                    <v-icon color="primary" size="small" @click="MostrarPedidoAprobar(item.raw)">
+                        mdi-file-document-check
+                    </v-icon>
                 </template>
+
+                <template v-slot:item.actionD="{ item }">
+                    <v-btn prepend-icon="mdi-progress-check" variant="text" :color="revisado ? 'success' : 'default'"
+                        @click="toggleRevisado(item)">
+                        <h5>Revisado</h5>
+                    </v-btn>
+                </template>
+
             </v-data-table>
         </v-card>
 
-        <v-row>
-            <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
-                <v-btn>Cancelar </v-btn>
-            </v-col>
-        </v-row>
-        <!-- Diálogo de confirmación -->
+        
         <v-dialog v-model="dialogoEliminar" max-width="400">
             <v-card>
                 <v-container>
@@ -274,30 +281,99 @@
         </v-dialog>
         <!-- FIN DIALOGO -->
     </v-container>
+
+    <v-divider></v-divider>
+
+
+
+    <!-- INICIO VISTA APROBAR -->
+    <v-dialog max-width="700" v-model="dialogoFormularioVistaAprobar" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Aprobar Pedido</h1>
+                <v-form>
+
+                    <v-row>
+                        <v-col cols="12" sm="2" md="2" class="">
+                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="10" md="10" class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" 
+                                required></v-text-field>
+                        </v-col>
+
+
+                        <v-col cols="12" sm="8" md="8" class="">
+                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="4" md="4" class="">
+                            <v-text-field variant="outlined" label="Ingrese Precio" v-model="formulario.precio" 
+                                required></v-text-field>
+                        </v-col>
+                        
+                       
+
+                    </v-row>
+                    <v-divider></v-divider>
+
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
+
+                        </v-data-table>
+                    </v-card>
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end mt-2">
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioVistaAprobar = false">Cerrar</v-btn>
+                            <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+    <!-- FIN APROBAR -->
+
+
+
+    
+
+  
+    <presupuesto-c></presupuesto-c> <!-- Para importar aqui.. si hay 2 letras uno mayuscula otro minuscula, se puede poner - y seguido la letra siguiente pero ya en minuscula -->
 </template>
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
-
-
+import { PresupuestoApi } from '@/services/presupuesto.api'
+import presupuestoC from '@/components/presupuestoC.vue'  // Para importar aqui//
 import dayjs from 'dayjs'
+
 
 
 
 export default {
     components: {
-        VDataTable
+        VDataTable,
+        presupuestoC // Para importar aqui, se declara como componente//
     },
     data() {
         return {
             dialogoFormulario: false,
             dialogoFormularioEditar: false,
             dialogoFormularioVistaVista: false,
+            dialogoFormularioVistaAprobar: false,
             showModal: false,
             showModalVacio: false,
             showModalDuplicado: false,
+            revisado: false,
             detalle: {
                 producto: '',
                 descripcion: '',
@@ -307,6 +383,7 @@ export default {
             formulario: {
                 descripcion: '',
                 fechaD: null,
+               
 
                 // itemsDetalle debe ser un Array 
                 itemsDetalle: [],
@@ -329,13 +406,14 @@ export default {
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Descripcion', key: 'descripcion', align: 'star' },
                 { title: 'Fecha de Pedido', key: 'fechaD', align: 'star' },
+                { title: 'Estado', key: 'actionD', sortable: false, align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersPedido: [
 
                 { title: 'Producto', key: 'idProducto' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'star' },
-                
+
             ],
             headersCrear: [
 
@@ -344,13 +422,20 @@ export default {
                 { title: 'Cantidad', key: 'cantidad', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
+
+
+
+
             items: [
                 {
                     id: '1',
                     descripcion: 'Central',
-                    fechaD: '',
+                    fechaD: 'null',
                     action: ''
-                }
+                },
+
+
+
             ],
             itemsDetalle: [
 
@@ -359,6 +444,7 @@ export default {
             elementoAEliminar: null,
 
             listaProducto: [],
+
 
         }
     },
@@ -387,6 +473,10 @@ export default {
     },
     methods:
     {
+        toggleRevisado() {
+      this.revisado = !this.revisado;
+    },
+  
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
                 this.listaProducto = data.map(item => {
@@ -398,6 +488,7 @@ export default {
             })
         },
 
+     
 
         AgregarDetalle() {
             const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
@@ -486,8 +577,12 @@ export default {
                 }
             }
         },
+
+
+
+
         MostrarPedido(item) {
-            console.log(item);
+
 
             this.dialogoFormularioVistaVista = true;
             this.formulario.codigo = item.id
@@ -499,6 +594,28 @@ export default {
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
+                    Cantidad: detalle.Cantidad,
+                });
+            })
+
+
+
+        },
+
+        MostrarPedidoAprobar(item) {
+
+
+            this.dialogoFormularioVistaAprobar = true;
+            this.formulario.codigo = item.id
+            this.formulario.descripcion = item.descripcion
+            this.formulario.fechaD = this.formatearFecha(item.fechaD);
+            this.formulario.fechaDOriginal = item.fechaD;  // Nueva propiedad para almacenar la fecha sin formato
+
+            this.formulario.itemsDetalle = [];
+
+            item.detalleItems.forEach((detalle) => {
+                this.formulario.itemsDetalle.push({
+                    idProducto: detalle.idProducto,
                     Cantidad: detalle.Cantidad,
                 });
             })
@@ -569,17 +686,18 @@ export default {
 
         dialogoVista() {
             this.dialogoFormularioVistaVista = true
-            this.formulario.codigo = parametro.id
+            this.formulario.º = parametro.id
             this.formulario.descripcion = parametro.descripcion
             this.formulario.fechaD = parametro.fechaD
             this.detalle.producto = parametro.producto
             this.detalle.cantidad = parametro.cantidad
         },
 
+
         ObtenerPedido() {
 
             PedidoAPI.getAll().then(({ data }) => {
-                console.log(data)
+
                 this.items = data.map(item => {
                     return {
                         id: item.idPedido,
@@ -592,7 +710,37 @@ export default {
             })
         },
 
+        guardarFormularioOrdenC() {
+            console.log('Este console es al precionar boton de guardar: ', this.formulario)
+            PresupuestoApi.create({
+                idPresupuesto: this.formulario.codigo,
+                Descripcion: this.formulario.descripcion,
+                Fecha_pedi: this.formulario.fechaDOriginal,
+                Precio: this.formulario.precio,
+                Detalle: this.formulario.itemsDetalle,
+            }).then(() => {
+
+                // Limpia los campos del formulario después de guardar
+                this.formulario.codigo = "";
+                this.formulario.producto = "";
+                this.formulario.descripcion = "";
+                this.formulario.fechaD = "";
+                this.formulario.fechaDOriginal = "";
+                this.formulario.precio = "";
+                this.detalle.producto = null;
+
+                this.itemsDetalle = []
+
+                // Cierra el diálogo del formulario
+                this.dialogoFormularioVistaAprobar = false;
+                this.ObtenerPresupuesto();
+            });
+
+        },
+
+
     },
+
 
 
 
@@ -601,6 +749,8 @@ export default {
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerPedido()
         this.ObtenerProducto()
+      
+
 
 
 
