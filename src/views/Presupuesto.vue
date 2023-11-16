@@ -245,14 +245,9 @@
                     <v-icon color="primary" size="small" @click="MostrarPedidoAprobar(item.raw)">
                         mdi-file-document-check
                     </v-icon>
+                   
                 </template>
 
-                <template v-slot:item.actionD="{ item }">
-                    <v-btn prepend-icon="mdi-progress-check" variant="text" :color="revisado ? 'success' : 'default'"
-                        @click="toggleRevisado(item)">
-                        <h5>Revisado</h5>
-                    </v-btn>
-                </template>
 
             </v-data-table>
         </v-card>
@@ -406,7 +401,6 @@ export default {
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Descripcion', key: 'descripcion', align: 'star' },
                 { title: 'Fecha de Pedido', key: 'fechaD', align: 'star' },
-                { title: 'Estado', key: 'actionD', sortable: false, align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersPedido: [
@@ -473,9 +467,7 @@ export default {
     },
     methods:
     {
-        toggleRevisado() {
-      this.revisado = !this.revisado;
-    },
+       
   
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
