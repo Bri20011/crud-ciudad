@@ -1,6 +1,5 @@
 <template>
-    
-    <!-- TABLA VISUALIZAR ORDENES DE COMPRA-->
+    <!-- TABLA VISUALIZAR ORDEN DE COMPRA -->
     <v-container>
         <v-row>
             <v-col cols="12" sm="5" md="5">
@@ -9,20 +8,21 @@
             </v-col>
 
             <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de Ordenes de Compra: {{ items.length }}
+                Cantidad de Ordenes: {{ items.length }}
             </v-col>
 
         </v-row>
 
         <v-card class="mt-5 rounded-x2">
-            <v-data-table items-per-page-text="Articulo por pagina" :headers="headersOrdenes" :items="itemsComputed">
+            <v-data-table items-per-page-text="Articulo por pagina" :headers="headersOrdenCompra" :items="itemsComputed">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
                             <p class="font-weight-bold">Ordenes de Compras</p>
                         </v-toolbar-title>
-                    </v-toolbar>
 
+
+                    </v-toolbar>
                 </template>
 
                 <template v-slot:item.fechaD="{ item }">
@@ -30,12 +30,15 @@
                 </template>
                 <template v-slot:item.action="{ item }">
 
-                    <v-icon color="#424242" size="small" @click="MostrarOrdenesCompra(item.raw)">
+                    <v-icon color="#424242" size="small" @click="MostrarPedido(item.raw)">
                         mdi-file-eye-outline
                     </v-icon>
                     <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                         mdi-trash-can-outline
                     </v-icon>
+
+
+
                 </template>
             </v-data-table>
         </v-card>
@@ -53,9 +56,11 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-                            <v-btn color="#E0E0E0" uetext @click="cancelarEliminarCiudad">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
                         </v-col>
                     </v-row>
+
+
                 </v-container>
             </v-card>
 
@@ -67,7 +72,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Presupuesto</h1>
+                <h1 class="mb-3">Ordenes de Compras</h1>
                 <v-form>
 
                     <v-row class="d-flex justify-center">
@@ -81,19 +86,15 @@
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="6" class="">
-                            <v-text-field variant="outlined" label="Precio" v-model="formulario.precio" disabled
+                            <v-text-field variant="outlined" label="Proveedor" v-model="formulario.proveedor" disabled
                                 required></v-text-field>
                         </v-col>
-                        
 
                         <v-col cols="12" sm="5" md="5" class="">
                             <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
                                 disabled required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6" class="">
-                            <v-text-field variant="outlined" label="Proveedor" v-model="formulario.proveedor" disabled
-                                required></v-text-field>
-                        </v-col>
+
 
 
                     </v-row>
@@ -110,7 +111,7 @@
                             <v-col cols="6" class="d-flex justify-end mt-2">
                                 <v-btn color="#E0E0E0" class="mx-2"
                                     @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
-                                <v-btn color="primary" class="mx-2">Imprimir</v-btn>
+                                <v-btn color="primary" class="mx-2" @click="generarPDF">Imprimir</v-btn>
                             </v-col>
                         </v-row>
 
@@ -125,11 +126,10 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
-import { PresupuestoApi } from '@/services/presupuesto.api'
+import { ProveedorAPI } from '@/services/proveedor.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
-
-import dayjs from 'dayjs'
 
 
 
@@ -142,15 +142,20 @@ export default {
         return {
             dialogoFormularioVistaVista: false,
 
+
+
+
+
             formulario: {
                 descripcion: '',
                 fechaD: null,
 
                 // itemsDetalle debe ser un Array 
                 itemsDetalle: [],
+
+
+
             },
-
-
 
             contador: 1,
             limit: 45,
@@ -163,6 +168,10 @@ export default {
             },
             buscador: '',
 
+
+
+
+
             items: [
                 {
                     id: '1',
@@ -171,7 +180,6 @@ export default {
                     action: ''
                 }
             ],
-
             itemsDetalle: [
 
             ],
@@ -180,17 +188,16 @@ export default {
 
             listaProducto: [],
 
-           
+            listaProveedor: [],
 
-            headersOrdenes: [
+            headersOrdenCompra: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Descripcion', key: 'descripcion', align: 'star' },
-                { title: 'Precio', key: 'precio', align: 'star' },
-                { title: 'Fecha Presupuesto', key: 'fechaD', align: 'star' },
+                { title: 'Proveedor', key: 'proveedor', align: 'star' },
+                { title: 'Fecha Orden de Compra', key: 'fechaD', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
             ],
-
             headersPedido: [
 
                 { title: 'Producto', key: 'idProducto' },
@@ -211,14 +218,18 @@ export default {
         },
 
 
+
+
+
         errorMessage() {
             if (this.excededLimit) {
                 return 'Superaste el límite de 45 letras';
             }
             return '';
         },
-    },
 
+
+    },
     methods:
     {
         formatearFecha(fechaD) {
@@ -266,8 +277,8 @@ export default {
         eliminarCiudad() {
             if (this.elementoAEliminar) {
                 // Realiza la eliminación aquí
-                PresupuestoApi.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerPresupuesto();
+                OrdenCompraApi.delete(this.elementoAEliminar.id).then(() => {
+                    this.Obtenerorden_compra();
                 });
                 // Cierra el diálogo de confirmación
                 this.dialogoEliminar = false;
@@ -275,13 +286,14 @@ export default {
             }
         },
 
-        MostrarOrdenesCompra(item) {
+        MostrarPedido(item) {
+
+
             this.dialogoFormularioVistaVista = true;
             this.formulario.codigo = item.id
             this.formulario.descripcion = item.descripcion
-            this.formulario.precio = item.precio
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
             this.formulario.proveedor = item.proveedor
+            this.formulario.fechaD = this.formatearFecha(item.fechaD)
             this.formulario.itemsDetalle = [];
 
             
@@ -301,11 +313,10 @@ export default {
 
                 this.items = data.map(item => {
                     return {
-                        id: item.idPresupuesto,
+                        id: item.idorden_compra,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
-                        precio: item.Precio,
-                        proveedor: item.proveedor,
+                        proveedor: item.idProveedor,
                         detalleItems: item.detalle
 
                     }
@@ -315,9 +326,8 @@ export default {
 
         },
 
-     
+        
   },
-
 
 
 
@@ -325,7 +335,7 @@ export default {
     
 
 
-    //NUEVO PARA REGISTRO ORDEN DE Presupuesto
+    //NUEVO PARA REGISTRO ORDEN DE COMPRA
 
 
 
@@ -345,4 +355,3 @@ export default {
 
 }
 </script>
-   

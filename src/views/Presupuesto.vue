@@ -60,7 +60,7 @@
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormulario"
-                                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                                :disabled="excededLimit || !formulario.descripcion ">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
