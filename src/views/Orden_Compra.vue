@@ -141,7 +141,7 @@
                         </v-col>
 
 
-                        <v-col cols="12" sm="8" md="8" class="">
+                        <v-col cols="12" sm="3" md="3" class="">
                             <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
                                 required></v-text-field>
                         </v-col>
@@ -150,8 +150,8 @@
                             <v-text-field variant="outlined" label="Ingrese Precio" v-model="formulario.precio"
                                 required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
-                            <v-autocomplete variant="outlined" label="Proveedor" :items="listaProveedor" item-title="descripcionP"
+                        <v-col cols="12" sm="5" md="5">
+                            <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaProveedor" item-title="descripcionP"
                                 item-value="id" v-model="formulario.proveedor"></v-autocomplete>
                         </v-col>
 
@@ -222,7 +222,7 @@ export default {
                 descripcion: '',
                 fechaD: '',
                 producto: null,
-                Cantida: '',
+                cantidad: '',
             },
             buscador: '',
 
@@ -434,7 +434,7 @@ export default {
 
                 // Cierra el diálogo del formulario
                 this.dialogoFormularioVistaAprobar = false;
-                this.ObtenerPresupuesto();
+                this.Obtenerorden_compra();
             });
 
         },

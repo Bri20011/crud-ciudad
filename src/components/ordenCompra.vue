@@ -90,9 +90,10 @@
                             <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
                                 disabled required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6" class="">
-                            <v-text-field variant="outlined" label="Proveedor" v-model="formulario.proveedor" disabled
-                                required></v-text-field>
+                        
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Proveedor" :items="listaProveedor" item-title="descripcionP"
+                                item-value="id" v-model="formulario.proveedor"></v-autocomplete>
                         </v-col>
 
 
@@ -128,6 +129,8 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ProductoAPI } from '@/services/producto.api'
 import { PresupuestoApi } from '@/services/presupuesto.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
+import {ProveedorAPI} from '@/services/proveedor.api'
+
 
 import dayjs from 'dayjs'
 
@@ -266,14 +269,26 @@ export default {
         eliminarCiudad() {
             if (this.elementoAEliminar) {
                 // Realiza la eliminación aquí
-                PresupuestoApi.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerPresupuesto();
+                OrdenCompraApi.delete(this.elementoAEliminar.id).then(() => {
+                    this.Obtenerorden_compra();
                 });
                 // Cierra el diálogo de confirmación
                 this.dialogoEliminar = false;
                 this.elementoAEliminar = null;
             }
         },
+
+
+        ObtenerProveedor() {
+            ProveedorAPI.getAll().then(({ data }) => {
+          this.listaProveedor = data.map(item => {
+            return {
+              id: item.idProveedor,
+              descripcionP: item.Razon_social
+            }
+          })
+        })
+      },
 
         MostrarOrdenesCompra(item) {
             this.dialogoFormularioVistaVista = true;
@@ -305,7 +320,7 @@ export default {
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
                         precio: item.Precio,
-                        proveedor: item.proveedor,
+                        proveedor: item.idProveedor,
                         detalleItems: item.detalle
 
                     }
@@ -334,6 +349,7 @@ export default {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
         this.Obtenerorden_compra()
+        this.ObtenerProveedor()
 
 
 
