@@ -2,16 +2,21 @@
     <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Crear Compras</h1>
+                <h1 class="mb-3">Registrar Compras</h1>
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="6" md="6">
-                            <v-autocomplete variant="outlined" :items="listaProveedor"  label="Proveedor" item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
 
+                            <v-text-field variant="outlined" label="Nº Orden de Compra" v-model="formulario.numero_orden"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+                        <v-col class="mt-4">
+                            <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
+                        </v-col>
+                        
                         <v-col cols="12" sm="6" md="6">
-                            <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento" item-title="descripcionD" item-value="id" v-model="formulario.documento"
+                            <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
+                                item-title="descripcionD" item-value="id" v-model="formulario.documento"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
@@ -33,10 +38,14 @@
                             <v-text-field variant="outlined" label="Numero de Factura" v-model="formulario.numero_factura"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
-
+                        <v-col cols="12" sm="12" md="12">
+                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
+                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
 
                         <!-- INICIO DETALLE -->
-                        <v-col cols="12" sm="4" md="4">
+                        <!-- <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="detalle.producto" :error="excededLimit"
                                 :error-messages="errorMessage" required></v-autocomplete>
@@ -52,12 +61,11 @@
                         </v-col>
                         <v-col cols="12">
                             <v-btn @click="AgregarDetalle">Agregar detalle</v-btn>
-                        </v-col>
+                        </v-col> -->
                         <!-- Fin DETALLE -->
 
-                        
-                        <v-data-table :headers="headersCompra" :items="itemsDetalle">
 
+                        <v-data-table :headers="headersCompra" :items="itemsDetalle">
 
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
@@ -116,7 +124,7 @@
         </v-card>
     </v-dialog>
 
-<!-- FIN DETALLE -->
+    <!-- FIN DETALLE -->
 
 
 
@@ -197,7 +205,9 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ComprasAPI } from '@/services/compras.api'
 import { ProveedorAPI } from '@/services/proveedor.api'
 import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
-import { ProductoAPI } from '@/services/producto.api' 
+import { ProductoAPI } from '@/services/producto.api'
+import { OrdenCompraApi } from '@/services/orden_compra.api'  //Import a orden de compra
+
 
 import dayjs from 'dayjs'
 
@@ -211,12 +221,9 @@ export default {
         return {
             dialogoFormulario: false,
             dialogoFormularioEditar: false,
+            ordenCompraSeleccionada: null,
 
-            detalle: {
-                cantidad: '',
-                producto: '',
-                descripcion: '',
-            },
+           
 
             formulario: {
                 proveedor: '',
@@ -234,11 +241,14 @@ export default {
             defaultFormulario: {
                 codigo: '',
                 descripcion: '',
-                fecha: ''
+                fecha: '',
+                producto: null,
+                cantidad: '',
+
             },
             buscador: '',
             headers: [
-                { title: 'Codigo', align: 'start', sortable: false, key: 'id',},
+                { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Proveedor', key: 'proveedor' },
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
@@ -252,8 +262,8 @@ export default {
             ],
             items: [
                 {
-                    id: '1',
-                    descripcion: 'Central',
+                    id: '',
+                    descripcion: '',
                     fecha: '',
                     action: ''
                 }
@@ -288,43 +298,91 @@ export default {
     },
     methods:
     {
-        ObtenerProveedor(){
+        ObtenerProveedor() {
             ProveedorAPI.getAll().then(({ data }) => {
-          this.listaProveedor = data.map(item => {
-            return {
-              id: item.idProveedor,
-              descripcionP: item.Razon_social
-            }
-          })
-        })
+                this.listaProveedor = data.map(item => {
+                    return {
+                        id: item.idProveedor,
+                        descripcionP: item.Razon_social
+                    }
+                })
+            })
         },
 
-        ObtenerTipoD(){
+        ObtenerTipoD() {
             TipoDocumentoAPI.getAll().then(({ data }) => {
-          this.listaDocumento = data.map(item => {
-            return {
-              id: item.idTipo_Documento,
-              descripcionD: item.Descripcion
-            }
-          })
-        })
+                this.listaDocumento = data.map(item => {
+                    return {
+                        id: item.idTipo_Documento,
+                        descripcionD: item.Descripcion
+                    }
+                })
+            })
         },
 
-        ObtenerProducto(){
+        ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
-          this.listaProducto = data.map(item => {
-            return {
-              id: item.idProducto,
-              descripcionPr: item.Descripcion
-            }
-          })
-        })
+                this.listaProducto = data.map(item => {
+                    return {
+                        id: item.idProducto,
+                        descripcionPr: item.Descripcion
+                    }
+                })
+            })
         },
 
+        // INICIO NUEVO modificar, no debe ser getAll debe ser findOne
+        Obtenerorden_compra() {
+            OrdenCompraApi.getAll().then(({ data }) => {
+                this.listaOrden = data.map(item => {
+                    return {
+                        id: item.idorden_compra,
+                        descripcionPr: item.Descripcion,
+                        detalleItems: item.detalle 
+                    }
+                })
+            })
+        },
+
+    //     ObtenerOrdenCompra() {
+    //         console.log(ObtenerOrdenCompra);
+
+    //     // Realiza una solicitud a la API para obtener la información de la orden de compra
+    //     OrdenCompraApi.findOne(this.formulario.numero_orden).then(({ data }) => {
+    //         this.ordenCompraSeleccionada = {
+    //             proveedor: data.idProveedor,
+              
+
+    //             // Añade más campos según la información que desees mostrar
+    //             detalleItems: data.detalle, 
+    //         };
+    //     });
+    // },
+
+   
+    
+    ObtenerCodigoOrden() {
+        // Verifica que se haya ingresado un número de orden
+        if (!this.formulario.numero_orden) {
+            // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
+            return;
+        }
+
+        // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
+        OrdenCompraApi.getById(this.formulario.numero_orden).then(({ data }) => {
+            // Actualiza el estado con la información obtenida
+            this.detalle_orden_compra = data.detalle;  // Ajusta según la estructura de tus datos
+        });
+    },
+
+    // ...
+
+    // ...
 
 
 
 
+// FIN NUEVO 
 
         AgregarDetalle() {
             this.itemsDetalle.push({
@@ -377,6 +435,7 @@ export default {
                     idTipo_Documento: this.formulario.documento,
                     idProveedor: this.formulario.proveedor,
                     Numero_fact: this.formulario.numero_factura,
+                    idorden_compra: this.formulario.numero_orden, //nuevo 
                     Detalle: this.itemsDetalle
 
 
@@ -458,7 +517,11 @@ export default {
             })
         },
 
+
+
+
     },
+
 
 
 
@@ -469,7 +532,8 @@ export default {
         this.ObtenerProveedor()
         this.ObtenerTipoD()
         this.ObtenerProducto()
-       
+        this.Obtenerorden_compra()
+
     },
 
 

@@ -316,7 +316,7 @@ export default {
 
                 this.items = data.map(item => {
                     return {
-                        id: item.idPresupuesto,
+                        id: item.idorden_compra,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
                         precio: item.Precio,

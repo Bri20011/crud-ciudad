@@ -101,6 +101,11 @@ export default {
         ['Presupuesto', 'mdi-cog-outline', '/presupuesto'],
         ['Orden de Compras', 'mdi-cog-outline', '/orden_compra'],
         ['Compras', 'mdi-cog-outline', '/compras'],
+        ['x-Nota de Credito', 'mdi-cog-outline', ''],
+        ['x-Nota de Debito', 'mdi-cog-outline',''],
+        ['x-Nota de Remision', 'mdi-cog-outline',''],
+        ['x-Obtener Libro de Compras', 'mdi-cog-outline', ''],
+        ['x-Informes Web', 'mdi-cog-outline', ''],
    
         
 
