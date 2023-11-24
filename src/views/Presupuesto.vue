@@ -60,7 +60,7 @@
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormulario"
-                                :disabled="excededLimit || !formulario.descripcion ">Guardar</v-btn>
+                                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -245,14 +245,14 @@
                     <v-icon color="primary" size="small" @click="MostrarPedidoAprobar(item.raw)">
                         mdi-file-document-check
                     </v-icon>
-                   
+
                 </template>
 
 
             </v-data-table>
         </v-card>
 
-        
+
         <v-dialog v-model="dialogoEliminar" max-width="400">
             <v-card>
                 <v-container>
@@ -285,7 +285,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioVistaAprobar" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Aprobar Pedido</h1>
+                <h1 class="mb-3">Registrar Presupuesto</h1>
                 <v-form>
 
                     <v-row>
@@ -294,30 +294,35 @@
                                 required></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="10" md="10" class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" 
+                        <v-col cols="12" sm="6" md="6 " class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
                                 required></v-text-field>
                         </v-col>
 
 
-                        <v-col cols="12" sm="8" md="8" class="">
+                        <v-col cols="12" sm="4" md="4" class="">
                             <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
                                 required></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="4" md="4" class="">
-                            <v-text-field variant="outlined" label="Ingrese Precio" v-model="formulario.precio" 
-                                required></v-text-field>
-                        </v-col>
-                        
-                       
+                      
 
                     </v-row>
+
+
                     <v-divider></v-divider>
 
-                    <v-card class="mt-5 rounded-x2">
-                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
 
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersPedidoApr" :items="formulario.itemsDetalle">
+                            <template v-slot:item.action="{ item }">
+                                <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
+                                    mdi-pencil
+                                </v-icon>
+                                <v-icon color="#C62828" size="small" @click="eliminarDetalle(item.raw.producto)">
+                                    mdi-trash-can-outline
+                                </v-icon>
+                            </template>
                         </v-data-table>
                     </v-card>
 
@@ -332,15 +337,48 @@
             </v-container>
         </v-card>
     </v-dialog>
+    <v-dialog max-width="700" v-model="dialogoFormularioEditarDetalle" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Ingresar Precio</h1>
+                <v-form>
+                    <v-row class="justify-center">
+
+
+                        <v-col cols="12" sm="5" md="5">
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
+
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
+                        </v-col>
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Inserte Precio" v-model="formulario.precio"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
 
     <!-- FIN APROBAR -->
 
 
 
-    
 
-  
-    <presupuesto-c></presupuesto-c> <!-- Para importar aqui.. si hay 2 letras uno mayuscula otro minuscula, se puede poner - y seguido la letra siguiente pero ya en minuscula -->
+
+
+    <presupuesto-c></presupuesto-c>
+    <!-- Para importar aqui.. si hay 2 letras uno mayuscula otro minuscula, se puede poner - y seguido la letra siguiente pero ya en minuscula -->
 </template>
 
 <script>
@@ -363,6 +401,7 @@ export default {
         return {
             dialogoFormulario: false,
             dialogoFormularioEditar: false,
+            dialogoFormularioEditarDetalle: false,
             dialogoFormularioVistaVista: false,
             dialogoFormularioVistaAprobar: false,
             showModal: false,
@@ -378,7 +417,10 @@ export default {
             formulario: {
                 descripcion: '',
                 fechaD: null,
-               
+                producto: '',
+                cantidad:'',
+                precio:'',
+
 
                 // itemsDetalle debe ser un Array 
                 itemsDetalle: [],
@@ -408,7 +450,18 @@ export default {
                 { title: 'Producto', key: 'idProducto' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'star' },
 
+
             ],
+            headersPedidoApr: [
+
+                { title: 'Producto', key: 'idProducto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Ingrese Precio', key: 'Precio', align: 'star' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+
+            ],
+
+
             headersCrear: [
 
                 { title: 'Producto', key: 'producto' },
@@ -467,8 +520,8 @@ export default {
     },
     methods:
     {
-       
-  
+
+
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
                 this.listaProducto = data.map(item => {
@@ -480,7 +533,7 @@ export default {
             })
         },
 
-     
+
 
         AgregarDetalle() {
             const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
@@ -587,6 +640,7 @@ export default {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
                     Cantidad: detalle.Cantidad,
+                 
                 });
             })
 
@@ -618,7 +672,12 @@ export default {
 
 
 
+        editarCiudad(parametro) {
+            this.dialogoFormularioEditar = true
+            this.formulario.producto = parametro.producto
+            this.formulario.cantidad = parametro.cantidad
 
+        },
         guardarFormularioEditar() {
             if (!this.formulario.producto || !this.formulario.cantidad) {
                 this.emptyFieldError = true;
@@ -648,12 +707,50 @@ export default {
 
 
 
-        editarCiudad(parametro) {
-            this.dialogoFormularioEditar = true
-            this.formulario.producto = parametro.producto
-            this.formulario.cantidad = parametro.cantidad
+
+
+
+        editarDetalle(parametro) {
+            this.dialogoFormularioEditarDetalle = true
+            this.formulario.producto = parametro.idProducto
+            this.formulario.cantidad = parametro.Cantidad
+            this.formulario.precio = parametro.Precio
 
         },
+        guardarFormularioEditarDetalle() {
+            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.precio) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
+            console.log(index)
+            console.log(this.formulario.itemsDetalle)
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
+                this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
+
+
+             }  else {
+                // Si no se encontró el elemento, agrega uno nuevo
+                this.itemsDetalle.push({
+                    producto: this.formulario.producto,
+                    cantidad: this.formulario.cantidad,
+                    precio: this.formulario.precio,
+                    action: '',
+                });
+            }
+             
+            this.dialogoFormularioEditarDetalle = false;
+        },
+
+
+        eliminarDetalle(id) {
+            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
+        },
+
         confirmarEliminarCiudad(elemento) {
             // Abre el diálogo de confirmación y guarda el elemento a eliminar
             this.elementoAEliminar = elemento;
@@ -708,7 +805,6 @@ export default {
                 idPresupuesto: this.formulario.codigo,
                 Descripcion: this.formulario.descripcion,
                 Fecha_pedi: this.formulario.fechaDOriginal,
-                Precio: this.formulario.precio,
                 Detalle: this.formulario.itemsDetalle,
             }).then(() => {
 
@@ -718,7 +814,6 @@ export default {
                 this.formulario.descripcion = "";
                 this.formulario.fechaD = "";
                 this.formulario.fechaDOriginal = "";
-                this.formulario.precio = "";
                 this.detalle.producto = null;
 
                 this.itemsDetalle = []
@@ -741,7 +836,7 @@ export default {
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerPedido()
         this.ObtenerProducto()
-      
+
 
 
 
@@ -768,5 +863,4 @@ export default {
     /* Incluir el borde en el tamaño total */
     outline: none;
     /* Quitar el contorno al hacer clic */
-}
-</style>
+}</style>

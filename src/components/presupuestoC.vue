@@ -76,16 +76,12 @@
                                 required></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="10" md="10" class="">
+                        <v-col cols="12" sm="6" md="6" class="">
                             <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
                                 required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6" class="">
-                            <v-text-field variant="outlined" label="Precio" v-model="formulario.precio" disabled
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="5" md="5" class="">
+                        
+                        <v-col cols="12" sm="4" md="4" class="">
                             <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
                                 disabled required></v-text-field>
                         </v-col>
@@ -154,7 +150,7 @@ export default {
                 descripcion: '',
                 fechaD: '',
                 producto: null,
-                Cantida: null,
+                Cantidad: null,
             },
             buscador: '',
 
@@ -180,7 +176,6 @@ export default {
             headersPresupuesto: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Descripcion', key: 'descripcion', align: 'star' },
-                { title: 'Precio', key: 'precio', align: 'star' },
                 { title: 'Fecha Presupuesto', key: 'fechaD', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
@@ -189,7 +184,8 @@ export default {
             headersPedido: [
 
                 { title: 'Producto', key: 'idProducto' },
-                { title: 'Cantidad', key: 'Cantida', align: 'star' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Precio', key: 'Precio', align: 'star' },
 
             ],
 
@@ -276,7 +272,7 @@ export default {
             this.dialogoFormularioVistaVista = true;
             this.formulario.codigo = item.id
             this.formulario.descripcion = item.descripcion
-            this.formulario.precio = item.precio
+            // this.formulario.precio = item.precio
             this.formulario.fechaD = this.formatearFecha(item.fechaD)
             this.formulario.itemsDetalle = [];
 
@@ -284,7 +280,8 @@ export default {
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
-                    Cantida: detalle.Cantida,
+                    Cantidad: detalle.Cantidad,
+                    Precio:detalle.Precio,
                 });
             })
 
@@ -300,7 +297,6 @@ export default {
                         id: item.idPresupuesto,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
-                        precio: item.Precio,
                         detalleItems: item.detalle
 
                     }

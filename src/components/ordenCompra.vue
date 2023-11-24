@@ -188,7 +188,6 @@ export default {
             headersOrdenes: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Descripcion', key: 'descripcion', align: 'star' },
-                { title: 'Precio', key: 'precio', align: 'star' },
                 { title: 'Fecha Presupuesto', key: 'fechaD', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
@@ -198,6 +197,7 @@ export default {
 
                 { title: 'Producto', key: 'idProducto' },
                 { title: 'Cantidad', key: 'Cantida', align: 'star' },
+                { title: 'Cantidad', key: 'Precio', align: 'star' },
 
             ],
 
@@ -294,7 +294,6 @@ export default {
             this.dialogoFormularioVistaVista = true;
             this.formulario.codigo = item.id
             this.formulario.descripcion = item.descripcion
-            this.formulario.precio = item.precio
             this.formulario.fechaD = this.formatearFecha(item.fechaD)
             this.formulario.proveedor = item.proveedor
             this.formulario.itemsDetalle = [];
@@ -304,6 +303,7 @@ export default {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
                     Cantida: detalle.Cantida,
+                    Precio: detalle.Precio
                 });
             })
 
@@ -319,7 +319,6 @@ export default {
                         id: item.idorden_compra,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
-                        precio: item.Precio,
                         proveedor: item.idProveedor,
                         detalleItems: item.detalle
 
