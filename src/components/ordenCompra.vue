@@ -80,10 +80,7 @@
                             <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
                                 required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6" class="">
-                            <v-text-field variant="outlined" label="Precio" v-model="formulario.precio" disabled
-                                required></v-text-field>
-                        </v-col>
+                     
                         
 
                         <v-col cols="12" sm="5" md="5" class="">
@@ -196,7 +193,7 @@ export default {
             headersPedido: [
 
                 { title: 'Producto', key: 'idProducto' },
-                { title: 'Cantidad', key: 'Cantida', align: 'star' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
                 { title: 'Precio', key: 'Precio', align: 'star' },
 
             ],
@@ -302,7 +299,7 @@ export default {
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
-                    Cantida: detalle.Cantida,
+                    Cantidad: detalle.Cantidad,
                     Precio: detalle.Precio
                 });
             })

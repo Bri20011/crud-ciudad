@@ -227,7 +227,8 @@ export default {
                 fecha: '',
                 producto: null,
                 cantidad: '',
-                precio: ''
+                precio: '',
+                nomnbreProducto: ''
 
             },
             buscador: '',
@@ -240,8 +241,9 @@ export default {
             headersCompra: [
 
                 { title: 'Producto', key: 'idProducto' },
+                { title: 'Producto', key: 'nomnbreProducto' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'star' },
-                { title: 'Precio', key: 'precio', align: 'star' },
+                { title: 'Precio', key: 'Precio', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
@@ -416,7 +418,6 @@ export default {
                     idTipo_Documento: this.formulario.documento,
                     idProveedor: this.formulario.proveedor,
                     Numero_fact: this.formulario.numero_factura,
-                    Precio: this.formulario.precio,
                     idorden_compra: this.formulario.numero_orden, //nuevo 
                     Detalle: this.itemsDetalle
 

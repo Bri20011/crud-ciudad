@@ -86,7 +86,10 @@
                                 disabled required></v-text-field>
                         </v-col>
 
-
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Proveedor" :items="listaProveedor" item-title="descripcionP"
+                            disabled   item-value="id" v-model="formulario.proveedor"></v-autocomplete>
+                        </v-col>
 
                     </v-row>
                     <v-divider></v-divider>
@@ -120,6 +123,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { PresupuestoApi } from '@/services/presupuesto.api'
+import {ProveedorAPI} from '@/services/proveedor.api'
 import dayjs from 'dayjs'
 
 
@@ -153,7 +157,7 @@ export default {
                 Cantidad: null,
             },
             buscador: '',
-
+            listaProducto: [],
             items: [
                 {
                     id: '1',
@@ -272,8 +276,8 @@ export default {
             this.dialogoFormularioVistaVista = true;
             this.formulario.codigo = item.id
             this.formulario.descripcion = item.descripcion
-            // this.formulario.precio = item.precio
             this.formulario.fechaD = this.formatearFecha(item.fechaD)
+            this.formulario.proveedor = item.proveedor
             this.formulario.itemsDetalle = [];
 
             
@@ -297,6 +301,7 @@ export default {
                         id: item.idPresupuesto,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
+                        proveedor: item.idProveedor,
                         detalleItems: item.detalle
 
                     }
@@ -306,7 +311,16 @@ export default {
 
         },
 
-     
+        ObtenerProveedor() {
+            ProveedorAPI.getAll().then(({ data }) => {
+          this.listaProveedor = data.map(item => {
+            return {
+              id: item.idProveedor,
+              descripcionP: item.Razon_social
+            }
+          })
+        })
+      },
   },
 
 
@@ -325,6 +339,8 @@ export default {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerPresupuesto()
+        this.ObtenerProveedor()
+
 
 
 

@@ -294,18 +294,21 @@
                                 required></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="6" md="6 " class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
-                                required></v-text-field>
-                        </v-col>
-
-
                         <v-col cols="12" sm="4" md="4" class="">
                             <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
                                 required></v-text-field>
                         </v-col>
 
-                      
+                        <v-col cols="12" sm="6" md="6 " class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaProveedor"
+                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"></v-autocomplete>
+                        </v-col>
+
 
                     </v-row>
 
@@ -330,7 +333,7 @@
                         <v-col cols="12" class="d-flex justify-end mt-2">
                             <v-btn color="#E0E0E0" class="mx-2"
                                 @click="dialogoFormularioVistaAprobar = false">Cerrar</v-btn>
-                            <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC">Guardar</v-btn>
+                            <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC">Guardars</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -355,7 +358,8 @@
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="5" md="5">
-                            <v-text-field variant="outlined" label="Inserte Precio" v-model="formulario.precio"></v-text-field>
+                            <v-text-field variant="outlined" label="Inserte Precio"
+                                v-model="formulario.precio"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -386,6 +390,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { PresupuestoApi } from '@/services/presupuesto.api'
+import { ProveedorAPI } from '@/services/proveedor.api'
 import presupuestoC from '@/components/presupuestoC.vue'  // Para importar aqui//
 import dayjs from 'dayjs'
 
@@ -411,6 +416,7 @@ export default {
             detalle: {
                 producto: '',
                 descripcion: '',
+
             },
             limit: 45,
 
@@ -418,8 +424,9 @@ export default {
                 descripcion: '',
                 fechaD: null,
                 producto: '',
-                cantidad:'',
-                precio:'',
+                cantidad: '',
+                precio: '',
+
 
 
                 // itemsDetalle debe ser un Array 
@@ -428,6 +435,7 @@ export default {
 
 
             },
+            listaProveedor: [],
 
             contador: 1,
             limit: 45,
@@ -533,7 +541,16 @@ export default {
             })
         },
 
-
+        ObtenerProveedor() {
+            ProveedorAPI.getAll().then(({ data }) => {
+                this.listaProveedor = data.map(item => {
+                    return {
+                        id: item.idProveedor,
+                        descripcionP: item.Razon_social
+                    }
+                })
+            })
+        },
 
         AgregarDetalle() {
             const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
@@ -640,7 +657,7 @@ export default {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
                     Cantidad: detalle.Cantidad,
-                 
+
                 });
             })
 
@@ -733,7 +750,7 @@ export default {
                 this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
 
 
-             }  else {
+            } else {
                 // Si no se encontró el elemento, agrega uno nuevo
                 this.itemsDetalle.push({
                     producto: this.formulario.producto,
@@ -742,7 +759,7 @@ export default {
                     action: '',
                 });
             }
-             
+
             this.dialogoFormularioEditarDetalle = false;
         },
 
@@ -800,12 +817,13 @@ export default {
         },
 
         guardarFormularioOrdenC() {
-            console.log('Este console es al precionar boton de guardar: ', this.formulario)
             PresupuestoApi.create({
                 idPresupuesto: this.formulario.codigo,
                 Descripcion: this.formulario.descripcion,
                 Fecha_pedi: this.formulario.fechaDOriginal,
+                idProveedor: this.formulario.proveedor,
                 Detalle: this.formulario.itemsDetalle,
+
             }).then(() => {
 
                 // Limpia los campos del formulario después de guardar
@@ -814,9 +832,10 @@ export default {
                 this.formulario.descripcion = "";
                 this.formulario.fechaD = "";
                 this.formulario.fechaDOriginal = "";
-                this.detalle.producto = null;
+                this.formulario.proveedor = "";
+                // this.detalle.producto = null;
 
-                this.itemsDetalle = []
+                this.itemsDetalle = [];
 
                 // Cierra el diálogo del formulario
                 this.dialogoFormularioVistaAprobar = false;
@@ -836,6 +855,7 @@ export default {
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerPedido()
         this.ObtenerProducto()
+        this.ObtenerProveedor()
 
 
 
@@ -863,4 +883,5 @@ export default {
     /* Incluir el borde en el tamaño total */
     outline: none;
     /* Quitar el contorno al hacer clic */
-}</style>
+}
+</style>

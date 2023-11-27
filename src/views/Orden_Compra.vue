@@ -82,7 +82,7 @@
                             <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
                                 required></v-text-field>
                         </v-col>
-                      
+
 
                         <v-col cols="12" sm="4" md="4" class="">
                             <v-text-field variant="outlined" label="Fecha" @input="formatDate" v-model="formulario.fechaD"
@@ -131,22 +131,19 @@
                             <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
                                 required></v-text-field>
                         </v-col>
-
-                        <v-col cols="12" sm="10" md="10" class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
-                                required></v-text-field>
-                        </v-col>
-
-
                         <v-col cols="12" sm="3" md="3" class="">
                             <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
                                 required></v-text-field>
                         </v-col>
 
-                        
-                        <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaProveedor" item-title="descripcionP"
-                                item-value="id" v-model="formulario.proveedor"></v-autocomplete>
+                        <v-col cols="12" sm="6" md="6" class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaProveedor"
+                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"></v-autocomplete>
                         </v-col>
 
 
@@ -156,7 +153,14 @@
 
                     <v-card class="mt-5 rounded-x2">
                         <v-data-table items-per-page-text="" :headers="headersPedidoApr" :items="formulario.itemsDetalle">
-
+                            <template v-slot:item.action="{ item }">
+                                <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
+                                    mdi-pencil
+                                </v-icon>
+                                <v-icon color="#C62828" size="small" @click="eliminarDetalle(item.raw.producto)">
+                                    mdi-trash-can-outline
+                                </v-icon>
+                            </template>
                         </v-data-table>
                     </v-card>
 
@@ -165,6 +169,39 @@
                             <v-btn color="#E0E0E0" class="mx-2"
                                 @click="dialogoFormularioVistaAprobar = false">Cerrar</v-btn>
                             <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+    <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Editar Pedido</h1>
+                <v-form>
+                    <v-row class="justify-center">
+
+
+                        <v-col cols="12" sm="4" md="4">
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
+
+                        <v-col ols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.Cantidad"></v-text-field>
+                        </v-col>
+                        <v-col ols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Precio" v-model="formulario.Precio"></v-text-field>
+                        </v-col>
+
+
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditar">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -182,7 +219,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ProductoAPI } from '@/services/producto.api'
 import { PresupuestoApi } from '@/services/presupuesto.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
-import {ProveedorAPI} from '@/services/proveedor.api'
+import { ProveedorAPI } from '@/services/proveedor.api'
 import ordenCompra from '@/components/ordenCompra.vue'  // Para importar aqui//
 import dayjs from 'dayjs'
 
@@ -198,6 +235,7 @@ export default {
         return {
             dialogoFormularioVistaVista: false,
             dialogoFormularioVistaAprobar: false,
+            dialogoFormularioEditar: false,
 
             formulario: {
                 descripcion: '',
@@ -207,7 +245,7 @@ export default {
                 itemsDetalle: [],
             },
 
-           listaProveedor:[],
+            listaProveedor: [],
 
             contador: 1,
             limit: 45,
@@ -256,12 +294,12 @@ export default {
             ],
             headersPedidoApr: [
 
-{ title: 'Producto', key: 'idProducto' },
-{ title: 'Cantidad', key: 'Cantidad', align: 'star' },
-{ title: 'Ingrese Precio', key: 'Precio', align: 'star' },
-{ title: 'Accion', key: 'action', sortable: false, align: 'end' },
+                { title: 'Producto', key: 'idProducto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Ingrese Precio', key: 'Precio', align: 'star' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
-],
+            ],
 
         }
     },
@@ -339,139 +377,170 @@ export default {
                 this.elementoAEliminar = null;
             }
         },
+    
 
-        ObtenerProveedor() {
-            ProveedorAPI.getAll().then(({ data }) => {
-          this.listaProveedor = data.map(item => {
-            return {
-              id: item.idProveedor,
-              descripcionP: item.Razon_social
-            }
-          })
+
+    ObtenerProveedor() {
+        ProveedorAPI.getAll().then(({ data }) => {
+            this.listaProveedor = data.map(item => {
+                return {
+                    id: item.idProveedor,
+                    descripcionP: item.Razon_social
+                }
+            })
         })
-      },
+    },
 
-      
-      ObtenerProducto() {
-            ProductoAPI.getAll().then(({ data }) => {
-                this.listaProducto = data.map(item => {
-                    return {
-                        id: item.idProducto,
-                        descripcionPr: item.Descripcion
-                    }
-                })
+
+    ObtenerProducto() {
+        ProductoAPI.getAll().then(({ data }) => {
+            this.listaProducto = data.map(item => {
+                return {
+                    id: item.idProducto,
+                    descripcionPr: item.Descripcion
+                }
             })
-        },
+        })
+    },
 
 
-        ObtenerPresupuesto() {
-            PresupuestoApi.getAll().then(({ data }) => {
+    ObtenerPresupuesto() {
+        PresupuestoApi.getAll().then(({ data }) => {
 
-                this.items = data.map(item => {
-                    return {
-                        id: item.idPresupuesto,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        detalleItems: item.detalle
+            this.items = data.map(item => {
+                return {
+                    id: item.idPresupuesto,
+                    descripcion: item.Descripcion,
+                    fechaD: item.Fecha_pedi,
+                    proveedor: item.idProveedor,
+                    detalleItems: item.detalle
 
-                    }
-                })
+                }
             })
+        })
 
 
-        },
+    },
 
-        MostrarPresupuesto(item) {
-
-
-            this.dialogoFormularioVistaVista = true;
-            this.formulario.codigo = item.id
-            this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
-            this.formulario.itemsDetalle = [];
+    MostrarPresupuesto(item) {
 
 
-            item.detalleItems.forEach((detalle) => {
-                this.formulario.itemsDetalle.push({
-                    idProducto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
-                    Precio: detalle.Precio
-                });
-            })
+        this.dialogoFormularioVistaVista = true;
+        this.formulario.codigo = item.id
+        this.formulario.descripcion = item.descripcion
+        this.formulario.fechaD = this.formatearFecha(item.fechaD)
+        this.formulario.proveedor = item.proveedor
+        this.formulario.itemsDetalle = [];
 
 
-
-        },
-        MostrarPresupuestoAprobar(item) {
-
-
-            this.dialogoFormularioVistaAprobar = true;
-            this.formulario.codigo = item.id
-            this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD);
-            this.formulario.fechaDOriginal = item.fechaD;  // Nueva propiedad para almacenar la fecha sin formato
-
-            this.formulario.itemsDetalle = [];
-
-            item.detalleItems.forEach((detalle) => {
-                this.formulario.itemsDetalle.push({
-                    idProducto: detalle.idProducto,
-                    Cantidad: detalle.Cantidad,
-                    Precio:detalle.Precio
-                });
-            })
-
-
-
-        },
-        guardarFormularioOrdenC() {
-            console.log('Este console es al precionar boton de guardar: ', this.formulario)
-            OrdenCompraApi.create({
-               
-                idorden_compra: this.formulario.codigo,
-                Descripcion: this.formulario.descripcion,
-                Fecha_pedi: this.formulario.fechaDOriginal,
-                idProveedor: this.formulario.proveedor,
-                Detalle: this.formulario.itemsDetalle,
-            }).then(() => {
-
-                // Limpia los campos del formulario después de guardar
-                this.formulario.codigo = "";
-                this.formulario.producto = "";
-                this.formulario.descripcion = "";
-                this.formulario.fechaD = "";
-                this.formulario.fechaDOriginal = "";
-                this.detalle.producto = null;
-
-                this.itemsDetalle = []
-                // Cierra el diálogo del formulario
-                this.dialogoFormularioVistaAprobar = false;
-                this.Obtenerorden_compra();
+        item.detalleItems.forEach((detalle) => {
+            this.formulario.itemsDetalle.push({
+                idProducto: detalle.nomnbreProducto,
+                Cantidad: detalle.Cantidad,
+                Precio: detalle.Precio
             });
+        })
+
+
+
+    },
+    MostrarPresupuestoAprobar(item) {
+
+
+        this.dialogoFormularioVistaAprobar = true;
+        this.formulario.codigo = item.id
+        this.formulario.descripcion = item.descripcion
+        this.formulario.fechaD = this.formatearFecha(item.fechaD);
+        this.formulario.proveedor = item.proveedor
+        this.formulario.fechaDOriginal = item.fechaD;  // Nueva propiedad para almacenar la fecha sin formato
+
+        this.formulario.itemsDetalle = [];
+
+        item.detalleItems.forEach((detalle) => {
+            this.formulario.itemsDetalle.push({
+                idProducto: detalle.idProducto,
+                Cantidad: detalle.Cantidad,
+                Precio: detalle.Precio
+            });
+        })
+
+
+
+    },
+
+
+
+
+
+    guardarFormularioEditar() {
+            if (!this.formulario.producto || !this.formulario.Cantidad) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.itemsDetalle.findIndex(item => item.producto === this.formulario.producto);
+
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.itemsDetalle[index].cantidad = this.formulario.cantidad;
+            } else {
+                // Si no se encontró el elemento, agrega uno nuevo
+                this.itemsDetalle.push({
+                    producto: this.formulario.producto,
+                    Cantidad: this.formulario.Cantidad,
+                    action: '',
+                });
+            }
+
+            this.dialogoFormularioEditar = false;
+        },
+        eliminarDetalle(id) {
+            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
+        },
+
+
+
+        editarCiudad(parametro) {
+            this.dialogoFormularioEditar = true
+            this.formulario.producto = parametro.producto
+            this.formulario.cantidad = parametro.cantidad
 
         },
 
 
+
+
+    guardarFormularioOrdenC() {
+        console.log('Este console es al precionar boton de guardar: ', this.formulario)
+        OrdenCompraApi.create({
+
+            idorden_compra: this.formulario.codigo,
+            Descripcion: this.formulario.descripcion,
+            Fecha_pedi: this.formulario.fechaDOriginal,
+            idProveedor: this.formulario.proveedor,
+            Detalle: this.formulario.itemsDetalle,
+        }).then(() => {
+
+            // Limpia los campos del formulario después de guardar
+            this.formulario.codigo = "";
+            this.formulario.producto = "";
+            this.formulario.descripcion = "";
+            this.formulario.fechaD = "";
+            this.formulario.fechaDOriginal = "";
+            this.formulario.proveedor = "";
+            // this.detalle.producto = null;
+
+            this.itemsDetalle = [];
+            // Cierra el diálogo del formulario
+            this.dialogoFormularioVistaAprobar = false;
+            this.Obtenerorden_compra();
+        });
+
     },
 
 
-
-
-
-
-
-
-    //NUEVO PARA REGISTRO ORDEN DE Presupuesto
-
-
-
-
-    created() {
-        // Generar automáticamente el código al cargar el componente
-        this.formulario.codigo = this.generarCodigo();
-        this.ObtenerPresupuesto()
-        this.ObtenerProveedor()
-        this.ObtenerProducto()
+},
 
 
 
@@ -480,7 +549,26 @@ export default {
 
 
 
-    },
+//NUEVO PARA REGISTRO ORDEN DE Presupuesto
+
+
+
+
+created() {
+    // Generar automáticamente el código al cargar el componente
+    this.formulario.codigo = this.generarCodigo();
+    this.ObtenerPresupuesto()
+    this.ObtenerProveedor()
+    this.ObtenerProducto()
+
+
+
+
+
+
+
+
+},
 
 
 }
