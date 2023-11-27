@@ -155,7 +155,7 @@
                     <v-divider></v-divider>
 
                     <v-card class="mt-5 rounded-x2">
-                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
+                        <v-data-table items-per-page-text="" :headers="headersPedidoApr" :items="formulario.itemsDetalle">
 
                         </v-data-table>
                     </v-card>
@@ -216,7 +216,7 @@ export default {
                 descripcion: '',
                 fechaD: '',
                 producto: null,
-                cantidad: '',
+                Cantidad: '',
             },
             buscador: '',
 
@@ -254,6 +254,14 @@ export default {
                 { title: 'Precio', key: 'Precio', align: 'star' },
 
             ],
+            headersPedidoApr: [
+
+{ title: 'Producto', key: 'idProducto' },
+{ title: 'Cantidad', key: 'Cantidad', align: 'star' },
+{ title: 'Ingrese Precio', key: 'Precio', align: 'star' },
+{ title: 'Accion', key: 'action', sortable: false, align: 'end' },
+
+],
 
         }
     },
@@ -343,6 +351,19 @@ export default {
         })
       },
 
+      
+      ObtenerProducto() {
+            ProductoAPI.getAll().then(({ data }) => {
+                this.listaProducto = data.map(item => {
+                    return {
+                        id: item.idProducto,
+                        descripcionPr: item.Descripcion
+                    }
+                })
+            })
+        },
+
+
         ObtenerPresupuesto() {
             PresupuestoApi.getAll().then(({ data }) => {
 
@@ -374,7 +395,7 @@ export default {
                 this.formulario.itemsDetalle.push({
                     idProducto: detalle.nomnbreProducto,
                     Cantidad: detalle.Cantidad,
-                    Precio:detalle.Precio
+                    Precio: detalle.Precio
                 });
             })
 
@@ -394,7 +415,7 @@ export default {
 
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
-                    idProducto: detalle.nomnbreProducto,
+                    idProducto: detalle.idProducto,
                     Cantidad: detalle.Cantidad,
                     Precio:detalle.Precio
                 });
@@ -406,7 +427,7 @@ export default {
         guardarFormularioOrdenC() {
             console.log('Este console es al precionar boton de guardar: ', this.formulario)
             OrdenCompraApi.create({
-                idPresupuesto:this.formulario.codigo,
+               
                 idorden_compra: this.formulario.codigo,
                 Descripcion: this.formulario.descripcion,
                 Fecha_pedi: this.formulario.fechaDOriginal,
@@ -423,7 +444,6 @@ export default {
                 this.detalle.producto = null;
 
                 this.itemsDetalle = []
-
                 // Cierra el diálogo del formulario
                 this.dialogoFormularioVistaAprobar = false;
                 this.Obtenerorden_compra();
@@ -451,6 +471,8 @@ export default {
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerPresupuesto()
         this.ObtenerProveedor()
+        this.ObtenerProducto()
+
 
 
 

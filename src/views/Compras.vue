@@ -38,9 +38,11 @@
                             <v-text-field variant="outlined" label="Numero de Factura" v-model="formulario.numero_factura"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
+                        <v-col cols="12" sm="6" md="6">
                         <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
                             item-title="descripcionP" item-value="id" v-model="formulario.proveedor" :error="excededLimit"
                             :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
 
 
 
@@ -238,7 +240,7 @@ export default {
             headersCompra: [
 
                 { title: 'Producto', key: 'idProducto' },
-                { title: 'Cantidad', key: 'Cantida', align: 'star' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
                 { title: 'Precio', key: 'precio', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],

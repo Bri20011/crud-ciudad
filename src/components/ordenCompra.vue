@@ -162,7 +162,7 @@ export default {
                 descripcion: '',
                 fechaD: '',
                 producto: null,
-                Cantida: null,
+                Cantidad: null,
             },
             buscador: '',
 
@@ -197,7 +197,7 @@ export default {
 
                 { title: 'Producto', key: 'idProducto' },
                 { title: 'Cantidad', key: 'Cantida', align: 'star' },
-                { title: 'Cantidad', key: 'Precio', align: 'star' },
+                { title: 'Precio', key: 'Precio', align: 'star' },
 
             ],
 
