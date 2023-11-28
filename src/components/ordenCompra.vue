@@ -67,7 +67,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Presupuesto</h1>
+                <h1 class="mb-3">Ordenes de Compras</h1>
                 <v-form>
 
                     <v-row class="d-flex justify-center">
@@ -90,7 +90,7 @@
                         
                         <v-col cols="12" sm="6" md="6">
                             <v-autocomplete variant="outlined" label="Proveedor" :items="listaProveedor" item-title="descripcionP"
-                                item-value="id" v-model="formulario.proveedor"></v-autocomplete>
+                            disabled   item-value="id" v-model="formulario.proveedor"></v-autocomplete>
                         </v-col>
 
 
