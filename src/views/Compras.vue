@@ -6,12 +6,18 @@
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Nº Orden de Compra" v-model="formulario.numero_orden"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                            <v-text-field variant="outlined" label="Nº Orden de Compras" v-model="formulario.numero_orden"
+                              required></v-text-field>
                         </v-col>
-                        <v-col class="mt-4" sm="2">
+
+                        <!-- <v-col cols="12" sm="2" md="2">
+                            <v-text-field variant="outlined" label="Codigo" 
+                                v-model="formulario.codigo"></v-text-field>
+                        </v-col> -->
+                        <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
                         </v-col>
+
                         <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Numero de Factura" v-model="formulario.numero_factura"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
@@ -42,11 +48,30 @@
 
 
 
-                        <v-data-table :headers="headersCompra" :items="formulario.itemsDetalle">
+                        <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
+                            :items="formulario.itemsDetalle">
+
+
+                            <template v-slot:tfoot>
+
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
+                                    <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
+                                    <td></td>
+                                </tr>
+                            </template>
+
+
+
 
                             <template v-slot:item.action="{ item }">
-
-
                                 <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
                                     mdi-pencil
                                 </v-icon>
@@ -54,8 +79,11 @@
                                     mdi-trash-can-outline
                                 </v-icon>
                             </template>
+
                         </v-data-table>
+
                     </v-row>
+
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
@@ -67,7 +95,7 @@
             </v-container>
         </v-card>
     </v-dialog>
-
+<!-- 
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
         <v-card class="rounded-xl">
             <v-container>
@@ -101,7 +129,7 @@
                 </v-form>
             </v-container>
         </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- FIN DETALLE -->
 
@@ -113,7 +141,7 @@
                 <v-form>
                     <v-row class="justify-center">
 
-                         
+
                         <v-col cols="12" sm="5" md="5">
                             <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="formulario.producto"
@@ -133,11 +161,11 @@
                                 readonly></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
-                        <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI"
-                            item-value="id" v-model="formulario.iva"  :error="excededLimit"
-                            :error-messages="errorMessage" required>
-                        </v-autocomplete>
-                      </v-col>
+                            <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI"
+                                item-value="id" v-model="formulario.iva" :error="excededLimit"
+                                :error-messages="errorMessage" required>
+                            </v-autocomplete>
+                        </v-col>
                         <!-- <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Exenta" v-model="formulario.exenta"
                                 readonly></v-text-field>
@@ -282,6 +310,7 @@ export default {
                 codigo: '',
                 descripcion: '',
                 fecha: '',
+                timbrado:'',
                 producto: null,
                 cantidad: '',
                 precio: '',
@@ -292,12 +321,14 @@ export default {
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Proveedor', key: 'proveedor' },
+                { title: 'Numero de Factura', key: 'numero_factura' },
+                { title: 'Tipo Documento', key: 'documento' },
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
+                { title: 'Timbrado', key: 'timbrado', align: 'star' },
+                { title: 'Proveedor', key: 'proveedor', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersCompra: [
-
                 { title: 'Producto', key: 'idProducto', align: 'center' },
                 { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'center' },
@@ -308,13 +339,19 @@ export default {
                 { title: 'Iva 10%', key: 'iva10', align: 'center' },
                 { title: 'Total', key: 'total', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+
+
+
             ],
             items: [
                 {
                     id: '',
                     descripcion: '',
                     fecha: '',
-                    action: ''
+                    action: '',
+                    timbrado:'',
+                    numero_factura:'',
+                    proveedor:''
                 }
             ],
             itemsDetalle: [],
@@ -395,15 +432,16 @@ export default {
         Obtenerorden_compra() {
             OrdenCompraApi.getAll().then(({ data }) => {
 
-                this.items = data.map(item => {
-                    return {
-                        id: item.idorden_compra,
-                        descripcionPr: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        proveedor: item.idProveedor,
-                        itemsDetalle: item.Detalle
-                    }
-                })
+                // this.items = data.map(item => {
+                //     return {
+                //         id: item.idorden_compra,
+                //         descripcionPr: item.Descripcion,
+                //         fechaD: item.Fecha_pedi,
+                //         proveedor: item.idProveedor,
+                //         itemsDetalle: item.Detalle
+                //     }
+                // }
+                // )
             })
         },
 
@@ -470,6 +508,8 @@ export default {
             // Abrir el modal y cargar el código aquí
             this.dialogoFormulario = true;
             this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+
         },
         generarCodigo() {
             const nuevoCodigo = this.contador++;
@@ -477,24 +517,23 @@ export default {
         },
 
         guardarFormulario() {
-            // if (!this.formulario.descripcion) {
+            if (!this.formulario.numero_factura) {
 
-            //     this.emptyFieldError = true;
-            //     return;
-            // }
+                this.emptyFieldError = true;
+                return;
+            }
 
 
-            ComprasAPI.create(
-                {
+            ComprasAPI.create({
+
                     idCompras: this.formulario.codigo,
                     Fecha_doc: this.formulario.fechaD,
-                    Fecha_operacion: this.formulario.fechaO,
                     Timbrado: this.formulario.timbrado,
+                    Numero_fact: this.formulario.numero_factura,
                     idTipo_Documento: this.formulario.documento,
                     idProveedor: this.formulario.proveedor,
-                    Numero_fact: this.formulario.numero_factura,
                     idorden_compra: this.formulario.numero_orden, //nuevo 
-                    Detalle: this.itemsDetalle
+                    Detalle: this.formulario.itemsDetalle
 
 
                 },
@@ -504,11 +543,10 @@ export default {
 
             this.formulario.codigo = '';
             this.formulario.fechaD = '';
-            this.formulario.fechaO = '';
             this.formulario.timbrado = '';
+            this.formulario.numero_factura = '';
             this.formulario.documento = '';
             this.formulario.proveedor = '';
-            this.formulario.numero_factura = '';
             this.dialogoFormulario = false;
         },
 
@@ -525,9 +563,10 @@ export default {
             ComprasAPI.update(
                 this.formulario.codigo,
                 {
-                    idPedido: this.formulario.codigo,
+                    idCompras: this.formulario.codigo,
                     Descripcion: this.formulario.descripcion,
-                    Fecha_pedi: this.formulario.fecha
+                    Fecha_pedi: this.formulario.fecha,
+                    Timbrado:this.formulario.timbrado
                 }
             ).then(() => {
                 this.ObtenerCompras()
@@ -569,6 +608,10 @@ export default {
                     return {
                         id: item.idCompras,
                         proveedor: item.idProveedor,
+                        numero_factura: item.Numero_fact,
+                        documento:item.idTipo_Documento,
+                        proveedor:item.idProveedor,
+                        timbrado:item.Timbrado,
                         fechaD: item.Fecha_doc,
                     }
                 })
@@ -606,7 +649,7 @@ export default {
         //         default:
         //             // Manejar otro caso si es necesario
         //             break;
-                    
+
         //     }
         // }
         // },
@@ -619,7 +662,7 @@ export default {
             // Calcula el total al abrir el diálogo
             this.formulario.total = this.formulario.cantidad * this.formulario.precio;
             this.formulario.iva = parametro.idIva
-     
+
 
 
         },
@@ -680,11 +723,30 @@ export default {
             this.dialogoFormularioEditarDetalle = false;
         },
 
+        //     sumarColumna(columna) {
+        //   return this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0);
+        // },
 
+        sumarIva(columna) {
+            // Verifica que this.formulario.itemsDetalle tenga un valor
+            if (this.formulario.itemsDetalle) {
+                // Redondea cada valor de IVA antes de sumarlos
+                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
+            } else {
+                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
+            }
+        },
 
+        sumarTotal(columna) {
+            // Verifica que this.formulario.itemsDetalle tenga un valor y sea un array
+            if (this.formulario.itemsDetalle && Array.isArray(this.formulario.itemsDetalle)) {
+                // Redondea cada valor de la columna antes de sumarlos
+                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
+            } else {
+                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
+            }
+        },
     },
-
-
 
 
     created() {
@@ -718,4 +780,5 @@ export default {
     /* Incluir el borde en el tamaño total */
     outline: none;
     /* Quitar el contorno al hacer clic */
-}</style>
+}
+</style>
