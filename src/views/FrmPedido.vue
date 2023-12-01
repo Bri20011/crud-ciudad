@@ -56,12 +56,13 @@
                             </template>
                         </v-data-table>
                     </v-card>
-                  
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario" :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
-                        </v-col>
-                    
+
+                    <v-col cols="12" class="d-flex justify-end">
+                        <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
+                        <v-btn color="primary" @click="guardarFormulario"
+                            :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                    </v-col>
+
                 </v-form>
             </v-container>
         </v-card>
@@ -180,7 +181,7 @@
 
                     <v-card class="mt-5 rounded-x2">
                         <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
-                          
+
                         </v-data-table>
                     </v-card>
 
@@ -231,15 +232,18 @@
                 <template v-slot:item.fechaD="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
-                <template  v-slot:item.action="{ item }">
-                    
-                        <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
+                <template v-slot:item.action="{ item }">
+
+                    <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
                         mdi-file-eye-outline
+                    </v-icon>
+                    <v-icon color="black" size="small" @click="editarPedidog(item.raw)">
+                        mdi-pencil
                     </v-icon>
                     <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                         mdi-trash-can-outline
                     </v-icon>
-                   
+
 
                 </template>
             </v-data-table>
@@ -273,6 +277,91 @@
 
         </v-dialog>
         <!-- FIN DIALOGO -->
+
+
+        <!-- iNICIO EDITAR GUARDADO  -->
+        <v-dialog max-width="700" v-model="dialogoFormularioEditarGuardado" persistent>
+            <v-card class="rounded-xl">
+                <v-container>
+                    <h1 class="mb-3">Editar Pedido</h1>
+                    <v-form>
+                        <v-row>
+                            <v-col cols="12" sm="2" md="2">
+                                <v-text-field variant="outlined" label="Codigo" disabled
+                                    v-model="formulario.codigo"></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="5" md="5">
+                                <v-text-field variant="outlined" label="Producto" v-model="formulario.descripcion"
+                                    :error="excededLimit" :error-messages="errorMessage" required>
+                                </v-text-field>
+
+                            </v-col>
+                            <v-col cols="12" sm="5" md="5">
+                                <v-text-field variant="outlined" label="Cantidad" v-model="formulario.fechaD">
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+
+                        <v-divider></v-divider>
+
+                        <v-card class="mt-5 rounded-x2">
+                            <v-data-table items-per-page-text="" :headers="headersPedidoG" :items="formulario.itemsDetalle">
+                                <template v-slot:item.action="{ item }">
+                                    <v-icon size="small" class="me-2" @click="editarPedidoDetalle(item.raw)">
+                                        mdi-pencil
+                                    </v-icon>
+                                    <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+                                        mdi-trash-can-outline
+                                    </v-icon>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                        <v-row>
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="#E0E0E0" class="mx-4 mt-2"
+                                    @click="dialogoFormularioEditarGuardado = false">Cancelar</v-btn>
+                                <v-btn color="primary" class="mt-2" @click="guardarFormularioEditarG">Guardar</v-btn>
+                            </v-col>
+                        </v-row>
+
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
+
+        <!-- Fin Editar Guarddo  -->
+
+        <v-dialog max-width="700" v-model="dialogoFormularioEditarDe" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Editar Detalle</h1>
+                <v-form>
+                    <v-row class="justify-center">
+
+
+                        <v-col cols="12" sm="5" md="5">
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
+
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
+                        </v-col>
+
+
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditarDe = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarC">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
     </v-container>
 </template>
 
@@ -298,6 +387,8 @@ export default {
             showModal: false,
             showModalVacio: false,
             showModalDuplicado: false,
+            dialogoFormularioEditarGuardado: false,
+            dialogoFormularioEditarDe:false,
             detalle: {
                 producto: '',
                 descripcion: '',
@@ -335,8 +426,18 @@ export default {
 
                 { title: 'Producto', key: 'idProducto' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'star' },
-                
+
             ],
+
+            headersPedidoG: [
+                { title: 'Codigo', key: 'idProducto' },
+                { title: 'Descripcion', key: 'nombre_producto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+
+
+            ],
+
             headersCrear: [
 
                 { title: 'Producto', key: 'producto' },
@@ -576,6 +677,91 @@ export default {
             this.detalle.cantidad = parametro.cantidad
         },
 
+
+        //Inicio editar guardado //
+        editarPedidog(item) {
+            this.dialogoFormularioEditarGuardado = true
+            this.formulario.codigo = item.id
+            this.formulario.descripcion = item.descripcion
+            this.formulario.fechaD = this.formatearFecha(item.fechaD)
+
+            this.formulario.itemsDetalle = [];
+
+            item.detalleItems.forEach((detalle) => {
+                this.formulario.itemsDetalle.push({
+                    idPedido:detalle.idPedido,
+                    idProducto: detalle.idProducto,
+                    nombre_producto: detalle.nomnbreProducto,
+                    Cantidad: detalle.Cantidad,
+                });
+            })
+
+
+
+        },
+
+        guardarFormularioEditarG() {
+            PedidoAPI.update(
+                this.formulario.codigo,
+                {
+                    idIva: this.formulario.codigo,
+                    Descripcion: this.formulario.descripcion,
+                    Fecha_pedi: this.formulario.fechaD,
+                    Detalle: this.itemsDetalle,
+                }
+            ).then(() => {
+                this.ObtenerPedido()
+            })
+            this.formulario.codigo = "";
+                    this.formulario.producto = "";
+                    this.formulario.descripcion = "";
+                    this.formulario.fechaD = "";
+                    this.detalle.producto = null;
+                    this.detalle.cantidad = null;
+                    this.itemsDetalle = []
+            this.dialogoFormularioEditarGuardado = false
+        },
+
+        //Fin editar guardado //
+
+
+        //EDITAR DETALLE Guardado //
+
+
+        guardarFormularioEditarC() {
+            console.log('Antes de guardar:', this.formulario.itemsDetalle);
+            console.log ('Ver producto', this.formulario.producto);
+
+            if (!this.formulario.producto || !this.formulario.cantidad) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto == this.formulario.producto);
+
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
+            } 
+            console.log('Después de guardar:', this.formulario.itemsDetalle);
+
+            this.dialogoFormularioEditarDe = false;
+        },
+        eliminarDetalle(id) {
+            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
+        },
+
+        editarPedidoDetalle(item) {
+            this.dialogoFormularioEditarDe = true;
+
+            // this.formulario.codigo = item.producto
+            this.formulario.producto = item.idProducto;
+            this.formulario.cantidad = item.Cantidad;
+
+
+        },
+        
         ObtenerPedido() {
 
             PedidoAPI.getAll().then(({ data }) => {
