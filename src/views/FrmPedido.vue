@@ -219,7 +219,7 @@
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
-                            <p class="font-weight-bold">Registro de Pedido</p>
+                            <p class="font-weight-bold">Pedidos Registrados</p>
                         </v-toolbar-title>
 
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -283,7 +283,7 @@
         <v-dialog max-width="700" v-model="dialogoFormularioEditarGuardado" persistent>
             <v-card class="rounded-xl">
                 <v-container>
-                    <h1 class="mb-3">Editar Pedido</h1>
+                    <h1 class="mb-3">Editar Pedidott</h1>
                     <v-form>
                         <v-row>
                             <v-col cols="12" sm="2" md="2">
@@ -298,7 +298,7 @@
 
                             </v-col>
                             <v-col cols="12" sm="5" md="5">
-                                <v-text-field variant="outlined" label="Cantidad" v-model="formulario.fechaD">
+                                <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD">
                                 </v-text-field>
                             </v-col>
                         </v-row>
@@ -369,8 +369,6 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
-
-
 import dayjs from 'dayjs'
 
 
@@ -701,13 +699,17 @@ export default {
         },
 
         guardarFormularioEditarG() {
+            console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
+
             PedidoAPI.update(
+             
                 this.formulario.codigo,
                 {
-                    idIva: this.formulario.codigo,
+                    idPedido: this.formulario.codigo,
                     Descripcion: this.formulario.descripcion,
                     Fecha_pedi: this.formulario.fechaD,
-                    Detalle: this.itemsDetalle,
+                    Detalle: this.formulario.itemsDetalle,
+                  
                 }
             ).then(() => {
                 this.ObtenerPedido()

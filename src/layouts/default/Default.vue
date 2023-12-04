@@ -3,7 +3,7 @@
     <v-toolbar color="blue-grey">
       <v-app-bar-nav-icon @click="toggleSecondCard"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Inmobiliaria Digital BC</v-toolbar-title>
+      <v-toolbar-title>Inmobiliaria Nuevo Horizonte</v-toolbar-title>
 
       <v-spacer></v-spacer>
      
@@ -101,7 +101,7 @@ export default {
         ['Presupuesto', 'mdi-cog-outline', '/presupuesto'],
         ['Orden de Compras', 'mdi-cog-outline', '/orden_compra'],
         ['Compras', 'mdi-cog-outline', '/compras'],
-        ['x-Nota de Credito', 'mdi-cog-outline', ''],
+        ['Nota de Credito', 'mdi-cog-outline', '/nota_credito_compras'],
         ['x-Nota de Debito', 'mdi-cog-outline',''],
         ['x-Nota de Remision', 'mdi-cog-outline',''],
         ['x-Obtener Libro de Compras', 'mdi-cog-outline', ''],

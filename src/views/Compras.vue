@@ -225,12 +225,14 @@
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
                 <template v-slot:item.action="{ item }">
-                    <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
+                    <!-- <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
                         mdi-pencil
-                    </v-icon>
-                    <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
-                        mdi-trash-can-outline
-                    </v-icon>
+                    </v-icon> -->
+
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary"  @click="confirmarEliminarCiudad(item.raw)">
+                           Anular
+                        </v-btn>
+                   
                 </template>
             </v-data-table>
         </v-card>
@@ -409,7 +411,8 @@ export default {
                 this.listaProducto = data.map(item => {
                     return {
                         id: item.idProducto,
-                        descripcionPr: item.Descripcion
+                        descripcionPr: item.Descripcion,
+                        producto:idIva
                     }
                 })
             })
@@ -459,6 +462,7 @@ export default {
                     proveedor: data.idProveedor,
                     fechaD: data.Fecha_pedi,
                     itemsDetalle: data.detalle,
+                  
 
 
 
