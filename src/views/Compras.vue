@@ -7,7 +7,7 @@
                     <v-row>
                         <v-col cols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Nº Orden de Compras" v-model="formulario.numero_orden"
-                              required></v-text-field>
+                                required></v-text-field>
                         </v-col>
 
                         <!-- <v-col cols="12" sm="2" md="2">
@@ -75,9 +75,9 @@
                                 <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
                                     mdi-pencil
                                 </v-icon>
-                                <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                                     mdi-trash-can-outline
-                                </v-icon>
+                                </v-icon> -->
                             </template>
 
                         </v-data-table>
@@ -95,7 +95,7 @@
             </v-container>
         </v-card>
     </v-dialog>
-<!-- 
+    <!-- 
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
         <v-card class="rounded-xl">
             <v-container>
@@ -229,10 +229,10 @@
                         mdi-pencil
                     </v-icon> -->
 
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary"  @click="confirmarEliminarCiudad(item.raw)">
-                           Anular
-                        </v-btn>
-                   
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
+                        Anular1
+                    </v-btn>
+
                 </template>
             </v-data-table>
         </v-card>
@@ -243,19 +243,19 @@
             </v-col>
         </v-row>
         <!-- Diálogo de confirmación -->
-        <v-dialog v-model="dialogoEliminar" max-width="400">
+        <v-dialog v-model="dialogoCambiarEstado" max-width="400">
             <v-card>
                 <v-container>
                     <v-card-title class="headline">Confirmar Eliminación</v-card-title>
                     <v-card-text>
-                        ¿Está seguro de que desea eliminar este elemento?
+                        ¿Está seguro de que desea Anular este elemento?
                     </v-card-text>
 
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-                            <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2" text @click="cambiarEstadoCompra">Anular</v-btn>
+                            <v-btn color="primary" text @click="cancelarCambiarEstado">Cancelar</v-btn>
                         </v-col>
                     </v-row>
 
@@ -289,6 +289,8 @@ export default {
     data() {
         return {
             dialogoFormulario: false,
+            dialogoCambiarEstado: false,
+
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
             ordenCompraSeleccionada: null,
@@ -312,7 +314,7 @@ export default {
                 codigo: '',
                 descripcion: '',
                 fecha: '',
-                timbrado:'',
+                timbrado: '',
                 producto: null,
                 cantidad: '',
                 precio: '',
@@ -351,9 +353,9 @@ export default {
                     descripcion: '',
                     fecha: '',
                     action: '',
-                    timbrado:'',
-                    numero_factura:'',
-                    proveedor:''
+                    timbrado: '',
+                    numero_factura: '',
+                    proveedor: ''
                 }
             ],
             itemsDetalle: [],
@@ -412,7 +414,7 @@ export default {
                     return {
                         id: item.idProducto,
                         descripcionPr: item.Descripcion,
-                        producto:idIva
+
                     }
                 })
             })
@@ -462,7 +464,7 @@ export default {
                     proveedor: data.idProveedor,
                     fechaD: data.Fecha_pedi,
                     itemsDetalle: data.detalle,
-                  
+
 
 
 
@@ -530,17 +532,17 @@ export default {
 
             ComprasAPI.create({
 
-                    idCompras: this.formulario.codigo,
-                    Fecha_doc: this.formulario.fechaD,
-                    Timbrado: this.formulario.timbrado,
-                    Numero_fact: this.formulario.numero_factura,
-                    idTipo_Documento: this.formulario.documento,
-                    idProveedor: this.formulario.proveedor,
-                    idorden_compra: this.formulario.numero_orden, //nuevo 
-                    Detalle: this.formulario.itemsDetalle
+                idCompras: this.formulario.codigo,
+                Fecha_doc: this.formulario.fechaD,
+                Timbrado: this.formulario.timbrado,
+                Numero_fact: this.formulario.numero_factura,
+                idTipo_Documento: this.formulario.documento,
+                idProveedor: this.formulario.proveedor,
+                idorden_compra: this.formulario.numero_orden, //nuevo 
+                Detalle: this.formulario.itemsDetalle
 
 
-                },
+            },
             ).then(() => {
                 this.ObtenerCompras()
             })
@@ -558,52 +560,87 @@ export default {
 
 
 
-        guardarFormularioEditar() {
-            if (!this.formulario.descripcion) {
+        // guardarFormularioEditar() {
+        //     if (!this.formulario.descripcion) {
 
-                this.emptyFieldError = true;
-                return;
-            }
-            ComprasAPI.update(
-                this.formulario.codigo,
-                {
-                    idCompras: this.formulario.codigo,
-                    Descripcion: this.formulario.descripcion,
-                    Fecha_pedi: this.formulario.fecha,
-                    Timbrado:this.formulario.timbrado
-                }
-            ).then(() => {
-                this.ObtenerCompras()
-            })
+        //         this.emptyFieldError = true;
+        //         return;
+        //     }
+        //     ComprasAPI.update(
+        //         this.formulario.codigo,
+        //         {
+        //             idCompras: this.formulario.codigo,
+        //             Descripcion: this.formulario.descripcion,
+        //             Fecha_pedi: this.formulario.fecha,
+        //             Timbrado:this.formulario.timbrado,
+        //             idProveedor:this.formulario.proveedor
+        //         }
+        //     ).then(() => {
+        //         this.ObtenerCompras()
+        //     })
 
-            this.dialogoFormularioEditar = false
+        //     this.dialogoFormularioEditar = false
+        // },
+        // editarCiudad(parametro) {
+        //     this.dialogoFormularioEditar = true
+        //     this.formulario.codigo = parametro.id
+        //     this.formulario.descripcion = parametro.descripcion
+        //     this.formulario.fecha = parametro.fecha
+        // },
+        // confirmarEliminarCiudad(elemento) {
+        //     // Abre el diálogo de confirmación y guarda el elemento a eliminar
+        //     this.elementoAEliminar = elemento;
+        //     this.dialogoEliminar = true;
+        // },
+        // cancelarEliminarCiudad() {
+        //     // Cierra el diálogo de confirmación y restablece la variable
+        //     this.dialogoEliminar = false;
+        //     this.elementoAEliminar = null;
+        // },
+        // eliminarCiudad() {
+        //     if (this.elementoAEliminar) {
+        //         // Realiza la eliminación aquí
+        //         ComprasAPI.delete(this.elementoAEliminar.id).then(() => {
+        //             this.ObtenerCompras();
+        //         });
+        //         // Cierra el diálogo de confirmación
+        //         this.dialogoEliminar = false;
+        //         this.elementoAEliminar = null;
+        //     }
+        // },
+
+
+        confirmarCambiarEstado(elemento) {
+            // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
+            this.elementoACambiarEstado = elemento;
+            this.dialogoCambiarEstado = true;
         },
-        editarCiudad(parametro) {
-            this.dialogoFormularioEditar = true
-            this.formulario.codigo = parametro.id
-            this.formulario.descripcion = parametro.descripcion
-            this.formulario.fecha = parametro.fecha
-        },
-        confirmarEliminarCiudad(elemento) {
-            // Abre el diálogo de confirmación y guarda el elemento a eliminar
-            this.elementoAEliminar = elemento;
-            this.dialogoEliminar = true;
-        },
-        cancelarEliminarCiudad() {
+        cancelarCambiarEstado() {
             // Cierra el diálogo de confirmación y restablece la variable
-            this.dialogoEliminar = false;
-            this.elementoAEliminar = null;
+            this.dialogoCambiarEstado = false;
+            this.elementoACambiarEstado = null;
         },
-        eliminarCiudad() {
-            if (this.elementoAEliminar) {
-                // Realiza la eliminación aquí
-                ComprasAPI.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerCompras();
-                });
-                // Cierra el diálogo de confirmación
-                this.dialogoEliminar = false;
-                this.elementoAEliminar = null;
+        cambiarEstadoCompra() {
+            if (this.elementoACambiarEstado) {
+                // Realiza la actualización aquí para cambiar el estado
+                ComprasAPI.update(this.elementoACambiarEstado.id, { estado_compras: true }
+                ).then(()=> {
+                        // Actualiza la tabla después de que la actualización se haya completado
+                        this.items = [];
+                        this.ObtenerCompras();
+                        
+                    })
+                   
+                   
+                        // Cierra el diálogo de confirmación
+                        this.dialogoCambiarEstado = false;
+                        this.elementoACambiarEstado = null;
+                      
+                    
+
+
             }
+
         },
 
         ObtenerCompras() {
@@ -613,9 +650,9 @@ export default {
                         id: item.idCompras,
                         proveedor: item.idProveedor,
                         numero_factura: item.Numero_fact,
-                        documento:item.idTipo_Documento,
-                        proveedor:item.idProveedor,
-                        timbrado:item.Timbrado,
+                        documento: item.idTipo_Documento,
+                        proveedor: item.idProveedor,
+                        timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
                     }
                 })
