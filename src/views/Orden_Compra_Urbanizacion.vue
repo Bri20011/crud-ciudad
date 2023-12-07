@@ -199,6 +199,73 @@
     <!-- FIN VISTA -->
 
 
+    <!-- INICIO VISTA APROBAR -->
+    <v-dialog max-width="700" v-model="dialogoFormularioVistaAprobar" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Aprobar Presupuesto</h1>
+                <v-form>
+
+                    <v-row>
+                        <v-col cols="12" sm="2" md="2" class="">
+                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3" class="">
+                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="6" class="">
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
+                                required></v-text-field>
+                        </v-col>
+                        
+                        <v-col cols="12" sm="6" md="6" class="">
+                            <v-text-field variant="outlined" label="Ingrese Precio Total" v-model="formulario.preciototal"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaProveedor"
+                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"></v-autocomplete>
+                        </v-col>
+
+
+
+                    </v-row>
+                    <v-divider></v-divider>
+
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersPedidoApr" :items="formulario.itemsDetalle">
+                            <template v-slot:item.action="{ item }">
+                                <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
+                                    mdi-pencil
+                                </v-icon>
+                                <v-icon color="#C62828" size="small" @click="eliminarDetalle(item.raw.producto)">
+                                    mdi-trash-can-outline
+                                </v-icon>
+                            </template>
+                        </v-data-table>
+                    </v-card>
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end mt-2">
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioVistaAprobar = false">Cerrar</v-btn>
+                            <v-btn color="primary" class="mx-2" @click="guardarFormularioOrdenC">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+
+    <!-- FIN APROBAR -->
+
+
+
 
 
     <v-container>
@@ -237,13 +304,16 @@
                     <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
                         mdi-file-eye-outline
                     </v-icon>
+
                     <v-icon color="black" size="small" @click="editarPedidog(item.raw)">
                         mdi-pencil
                     </v-icon>
                     <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                         mdi-trash-can-outline
                     </v-icon>
-
+                    <v-icon color="primary" size="small" @click="MostrarPresupuestoAprobar(item.raw)">
+                        mdi-file-document-check
+                    </v-icon>
 
                 </template>
             </v-data-table>
@@ -333,9 +403,43 @@
         <!-- Fin Editar Guarddo  -->
 
         <v-dialog max-width="700" v-model="dialogoFormularioEditarDe" persistent>
+            <v-card class="rounded-xl">
+                <v-container>
+                    <h1 class="mb-3">Editar Detalle </h1>
+                    <v-form>
+                        <v-row class="justify-center">
+
+
+                            <v-col cols="12" sm="5" md="5">
+                                <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                    item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                    :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                            </v-col>
+
+                            <v-col ols="12" sm="5" md="5">
+                                <v-text-field variant="outlined" label="Cantidad"
+                                    v-model="formulario.cantidad"></v-text-field>
+                            </v-col>
+
+
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="#E0E0E0" class="mx-2"
+                                    @click="dialogoFormularioEditarDe = false">Cancelar</v-btn>
+                                <v-btn color="primary" @click="guardarFormularioEditarC">Guardar</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
+
+         <!-- INICIO EDITAR DETALLE -->
+     <v-dialog max-width="700" v-model="dialogoFormularioEditarDetalle" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Editar Detalle </h1>
+                <h1 class="mb-3">Ingresar Precio</h1>
                 <v-form>
                     <v-row class="justify-center">
 
@@ -346,36 +450,47 @@
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
-                        <v-col ols="12" sm="5" md="5">
+                        <v-col ols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
                         </v-col>
-
-
+                        <v-col ols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Inserte Precio"
+                                v-model="formulario.precio"></v-text-field>
+                        </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditarDe = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarC">Guardar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
             </v-container>
         </v-card>
     </v-dialog>
+
+      <!-- FIN EDITAR DETALLE -->
     </v-container>
+    <orden-compra-urb></orden-compra-urb>
+
 </template>
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ProductoAPI } from '@/services/producto.api'
 import { PedidoUrbanizacionAPI } from '@/services/pedido_urbanizacion.api'
+import { OrdenUrbApi } from '@/services/orden_compra_urbanizacion.api'
+import { ProveedorAPI } from '@/services/proveedor.api'
+import ordenCompraUrb from '@/components/ordenCompraUrb.vue'  // Para importar aqui//
 import dayjs from 'dayjs'
 
 
 
 export default {
     components: {
-        VDataTable
+        VDataTable,
+        ordenCompraUrb
     },
     data() {
         return {
@@ -386,7 +501,10 @@ export default {
             showModalVacio: false,
             showModalDuplicado: false,
             dialogoFormularioEditarGuardado: false,
-            dialogoFormularioEditarDe:false,
+            dialogoFormularioEditarDe: false,
+            dialogoFormularioVistaAprobar: false,
+            dialogoFormularioEditarDetalle:false,
+            
             detalle: {
                 producto: '',
                 descripcion: '',
@@ -403,12 +521,14 @@ export default {
 
 
             },
+            listaProveedor: [],
 
             contador: 1,
             limit: 45,
             defaultFormulario: {
                 codigo: '',
                 descripcion: '',
+                preciototal:'',
                 fechaD: '',
                 producto: null,
                 cantidad: null,
@@ -433,6 +553,14 @@ export default {
                 { title: 'Cantidad', key: 'Cantidad', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
+
+            ],
+            headersPedidoApr: [
+
+                { title: 'Producto', key: 'idProducto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Ingrese Precio', key: 'Precio', align: 'star' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
             ],
 
@@ -496,6 +624,17 @@ export default {
                 })
             })
         },
+        
+    ObtenerProveedor() {
+        ProveedorAPI.getAll().then(({ data }) => {
+            this.listaProveedor = data.map(item => {
+                return {
+                    id: item.idProveedor,
+                    descripcionP: item.Razon_social
+                }
+            })
+        })
+    },
 
 
         AgregarDetalle() {
@@ -606,6 +745,65 @@ export default {
 
         },
 
+        MostrarPresupuestoAprobar(item) {
+
+
+this.dialogoFormularioVistaAprobar = true;
+this.formulario.codigo = item.id
+this.formulario.descripcion = item.descripcion
+this.formulario.fechaD = this.formatearFecha(item.fechaD);
+this.formulario.fechaDOriginal = item.fechaD;  // Nueva propiedad para almacenar la fecha sin formato
+
+this.formulario.itemsDetalle = [];
+
+item.detalleItems.forEach((detalle) => {
+    this.formulario.itemsDetalle.push({
+        idProducto: detalle.idProducto,
+        Cantidad: detalle.Cantidad,
+   
+    });
+})
+
+
+
+},
+editarDetalle(parametro) {
+            this.dialogoFormularioEditarDetalle = true
+            this.formulario.producto = parametro.idProducto
+            this.formulario.cantidad = parametro.Cantidad
+            this.formulario.precio = parametro.Precio
+
+        },
+        guardarFormularioEditarDetalle() {
+            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.precio) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
+            console.log(index)
+            console.log(this.formulario.itemsDetalle)
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
+                this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
+
+
+            } else {
+                // Si no se encontró el elemento, agrega uno nuevo
+                this.itemsDetalle.push({
+                    producto: this.formulario.producto,
+                    cantidad: this.formulario.cantidad,
+                    precio: this.formulario.precio,
+                    action: '',
+                });
+            }
+
+            this.dialogoFormularioEditarDetalle = false;
+        },
+
+
 
 
 
@@ -687,7 +885,7 @@ export default {
 
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
-                    idPedido_Urbanizacion:detalle.idPedido_Urbanizacion,
+                    idPedido_Urbanizacion: detalle.idPedido_Urbanizacion,
                     idProducto: detalle.idProducto,
                     nombre_producto: detalle.nomnbreProducto,
                     Cantidad: detalle.Cantidad,
@@ -702,25 +900,25 @@ export default {
             console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
 
             PedidoUrbanizacionAPI.update(
-             
+
                 this.formulario.codigo,
                 {
                     idPedido_Urbanizacion: this.formulario.codigo,
                     Descripcion: this.formulario.descripcion,
                     Fecha_pedi: this.formulario.fechaD,
                     Detalle: this.formulario.itemsDetalle,
-                  
+
                 }
             ).then(() => {
                 this.ObtenerPedidoUrbanizacion()
             })
             this.formulario.codigo = "";
-                    this.formulario.producto = "";
-                    this.formulario.descripcion = "";
-                    this.formulario.fechaD = "";
-                    this.detalle.producto = null;
-                    this.detalle.cantidad = null;
-                    this.itemsDetalle = []
+            this.formulario.producto = "";
+            this.formulario.descripcion = "";
+            this.formulario.fechaD = "";
+            this.detalle.producto = null;
+            this.detalle.cantidad = null;
+            this.itemsDetalle = []
             this.dialogoFormularioEditarGuardado = false
         },
 
@@ -732,7 +930,7 @@ export default {
 
         guardarFormularioEditarC() {
             console.log('Antes de guardar:', this.formulario.itemsDetalle);
-            console.log ('Ver producto', this.formulario.producto);
+            console.log('Ver producto', this.formulario.producto);
 
             if (!this.formulario.producto || !this.formulario.cantidad) {
                 this.emptyFieldError = true;
@@ -745,7 +943,7 @@ export default {
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
                 this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
-            } 
+            }
             console.log('Después de guardar:', this.formulario.itemsDetalle);
 
             this.dialogoFormularioEditarDe = false;
@@ -763,7 +961,7 @@ export default {
 
 
         },
-        
+
         ObtenerPedidoUrbanizacion() {
 
             PedidoUrbanizacionAPI.getAll().then(({ data }) => {
@@ -779,6 +977,35 @@ export default {
                 })
             })
         },
+        guardarFormularioOrdenC() {
+        console.log('Este console es al precionar boton de guardar: ', this.formulario)
+        OrdenUrbApi.create({
+
+            idOrden_Compra_Urb: this.formulario.codigo,
+            Descripcion: this.formulario.descripcion,
+            Fecha_pedi: this.formulario.fechaDOriginal,
+            idProveedor: this.formulario.proveedor,
+            PrecioT: this.formulario.preciototal,
+            Detalle: this.formulario.itemsDetalle,
+        }).then(() => {
+
+            // Limpia los campos del formulario después de guardar
+            this.formulario.codigo = "";
+            this.formulario.producto = "";
+            this.formulario.descripcion = "";
+            this.formulario.fechaD = "";
+            this.formulario.fechaDOriginal = "";
+            this.formulario.proveedor = "";
+            this.formulario.preciototal = "";
+            // this.detalle.producto = null;
+
+            this.itemsDetalle = [];
+            // Cierra el diálogo del formulario
+            this.dialogoFormularioVistaAprobar = false;
+            this.Obtenerorden_compra_urb();
+        });
+
+    },
 
     },
 
@@ -789,6 +1016,7 @@ export default {
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerProducto()
         this.ObtenerPedidoUrbanizacion()
+        this.ObtenerProveedor()
 
 
 
