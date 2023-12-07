@@ -1,102 +1,117 @@
 <template>
-    <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
+    <v-dialog max-width="1200" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h2 class="mb-3">Registrar Pedido</h2>
+                <h1 class="mb-3">Registrar Nota de Credito Proveedor</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="6" md="6" class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Nº de factura Asociado" v-model="formulario.numero_orden"
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="mt-4" sm="2" md="2">
+                            <v-btn @click="ObtenerCodigoCompra">Calcular</v-btn>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Numero de Nota de Credito" v-model="formulario.numero_nc"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <input class="custom-input" v-model="formulario.fechaO" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="6" md="6">
-                            <input class="custom-input" v-model="formulario.fechaD" type="date"
-                                placeholder="Fecha de Pedido" @input="formatDate" />
-                        </v-col>
-                    </v-row>
-
-
-
-                    <v-divider class="mt-0"></v-divider>
-                    <!-- INICIO DETALLE -->
-                    <v-row>
-                        <v-col cols="12" sm="6" md="6" class="mt-5">
-                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
-                                required></v-autocomplete>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
+                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
-                        <v-col cols="12" sm="6" md="6" class="mt-5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
-                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
-                        </v-col>
+               
 
-
-
-                    </v-row>
-                    <v-row class="mt-0">
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
-                                @click="AgregarDetalle">Añadir</v-btn>
-                        </v-col>
-                    </v-row>
-                    <!-- Fin DETALLE -->
-
-
-                    <v-card class="mt-5 rounded-x2">
-                        <v-data-table items-per-page-text="" :headers="headersCrear" :items="itemsDetalle">
+                        <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
+                            :items="formulario.itemsDetalle">
+                            <template v-slot:tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
+                                    <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
+                                    <td></td>
+                                </tr>
+                            </template>
                             <template v-slot:item.action="{ item }">
-                                <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
+                                <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
                                     mdi-pencil
                                 </v-icon>
-                                <v-icon color="#C62828" size="small" @click="eliminarDetalle(item.raw.producto)">
+                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                                     mdi-trash-can-outline
-                                </v-icon>
+                                </v-icon> -->
                             </template>
                         </v-data-table>
-                    </v-card>
 
-                    <v-col cols="12" class="d-flex justify-end">
-                        <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                        <v-btn color="primary" @click="guardarFormulario"
-                            :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
-                    </v-col>
+                    </v-row>
 
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+
+                        </v-col>
+                    </v-row>
                 </v-form>
             </v-container>
         </v-card>
     </v-dialog>
-
-
    
-
-<!-- EDITAR ANTES DE GUARDAR DETALLE -->
-
-    <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
+    <!-- INICIO EDITAR DETALLE -->
+    <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Editar Pedido</h1>
+                <h1 class="mb-3">Ingresar Precio</h1>
                 <v-form>
                     <v-row class="justify-center">
 
 
                         <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                            <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="formulario.producto"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
-                        <v-col ols="12" sm="5" md="5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
+                        <v-col ols="12" sm="2" md="2">
+                            <v-text-field variant="outlined" label="Cantidad" @input="recalcularTotal"
+                                v-model="formulario.cantidad"></v-text-field>
                         </v-col>
-
-
+                        <v-col ols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Precio Unitario" @input="recalcularTotal"
+                                v-model="formulario.precio"></v-text-field>
+                        </v-col>
+                        <v-col ols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Total" v-model="formulario.total"
+                                readonly></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI"
+                                item-value="id" v-model="formulario.iva" :error="excededLimit"
+                                :error-messages="errorMessage" required>
+                            </v-autocomplete>
+                        </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditar">Guardar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -104,57 +119,7 @@
         </v-card>
     </v-dialog>
 
-    <!--  IN EDITAR ANTES DE GUARDAR DETALLE -->
-
-    <!-- INICIO VISTA REGISTRADOS -->
-    <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
-        <v-card class="rounded-xl">
-            <v-container>
-                <h1 class="mb-3">Notas de Credito Registrado</h1>
-                <v-form>
-
-                    <v-row>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
-                                required></v-text-field>
-                        </v-col>
-
-
-                        <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
-                                required></v-text-field>
-                        </v-col>
-
-
-                    </v-row>
-                    <v-divider></v-divider>
-
-                    <v-card class="mt-5 rounded-x2">
-                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
-
-                        </v-data-table>
-                    </v-card>
-
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end mt-2">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
-
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-        </v-card>
-    </v-dialog>
-
-    <!-- FIN VISTA -->
-
-
-
+    <!-- FIN EDITAR DETALLE -->
 
     <v-container>
         <v-row>
@@ -164,39 +129,36 @@
             </v-col>
 
             <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de Pedido: {{ items.length }}
+                Cantidad de NC: {{ items.length }}
             </v-col>
 
         </v-row>
 
-        <v-card class="mt-5 rounded-x2">
-            <v-data-table items-per-page-text="Articulo por pagina" :headers="headers" :items="itemsComputed">
+        <v-card class="mt-5 rounded-xl">
+            <v-data-table items-per-page-text="Item por pagina" :headers="headers" :items="itemsComputed">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
-                            <p class="font-weight-bold">Notas de Credito Registrado</p>
+                            <p class="font-weight-bold">Registro de Notas de Credito Proveedor</p>
                         </v-toolbar-title>
 
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
-                            @click="validarYRegistrar">Registrar
+                            @click="abrirDialogo">Registrar
                         </v-btn>
 
                     </v-toolbar>
                 </template>
-
-                <template v-slot:item.fechaD="{ item }">
+                <template v-slot:item.fecha="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
                 <template v-slot:item.action="{ item }">
+                    <!-- <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
+                        mdi-pencil
+                    </v-icon> -->
 
-                    <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
-                        mdi-file-eye-outline
-                    </v-icon>
-                   
-                    <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
-                        mdi-trash-can-outline
-                    </v-icon>
-
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
+                        Anular
+                    </v-btn>
 
                 </template>
             </v-data-table>
@@ -207,22 +169,20 @@
                 <v-btn>Cancelar </v-btn>
             </v-col>
         </v-row>
-
-
-        <!-- Diálogo de confirmar Eliminar -->
-        <v-dialog v-model="dialogoEliminar" max-width="400">
+        <!-- Diálogo de confirmación -->
+        <v-dialog v-model="dialogoCambiarEstado" max-width="400">
             <v-card>
                 <v-container>
                     <v-card-title class="headline">Confirmar Eliminación</v-card-title>
                     <v-card-text>
-                        ¿Está seguro de que desea eliminar este elemento?
+                        ¿Está seguro de que desea Anular este elemento?
                     </v-card-text>
 
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-                            <v-btn color="#E0E0E0" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2" text @click="cambiarEstadoCompra">Anular</v-btn>
+                            <v-btn color="primary" text @click="cancelarCambiarEstado">Cancelar</v-btn>
                         </v-col>
                     </v-row>
 
@@ -231,14 +191,19 @@
             </v-card>
 
         </v-dialog>
-        <!-- FIN DIALOGO confirmar Eliminacion -->
+        <!-- FIN DIALOGO -->
     </v-container>
 </template>
-
+  
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { NCCompraApi } from '@/services/nota_credito_compras.api'
+import { NCCompraApi } from '@/services/nota_credito_compra.api'
+import { ProveedorAPI } from '@/services/proveedor.api'
 import { ProductoAPI } from '@/services/producto.api'
+import { IvaAPI } from '@/services/iva.api'
+import { ComprasAPI } from '@/services/compras.api'
+
+
 import dayjs from 'dayjs'
 
 
@@ -249,27 +214,24 @@ export default {
     },
     data() {
         return {
+            VARIABLE_PARA_GUARDAR_ID_COMPRA: '',
             dialogoFormulario: false,
-            dialogoFormularioEditar: false,
-            dialogoFormularioVistaVista: false,
-            showModal: false,
-            showModalVacio: false,
-            showModalDuplicado: false,
-            dialogoFormularioEditarGuardado: false,
-            dialogoFormularioEditarDe:false,
-            detalle: {
-                producto: '',
-                descripcion: '',
-            },
-            limit: 45,
+            dialogoCambiarEstado: false,
+
+        
+            
+            dialogoFormularioEditarDetalle: false,
+            ordenCompraSeleccionada: null,
+
+
 
             formulario: {
-                descripcion: '',
+                proveedor: '',
+                documento: '',
+                fechaO: null,
                 fechaD: null,
-
-                // itemsDetalle debe ser un Array 
-                itemsDetalle: [],
-
+                timbrado: '',
+                numero_nc: '',
 
 
             },
@@ -279,54 +241,56 @@ export default {
             defaultFormulario: {
                 codigo: '',
                 descripcion: '',
-                fechaD: '',
+                fecha: '',
+                timbrado: '',
                 producto: null,
-                cantidad: null,
+                cantidad: '',
+                precio: '',
+                nomnbreProducto: '',
+                descripcionI: ''
+
             },
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Descripcion', key: 'descripcion', align: 'star' },
-                { title: 'Fecha de Pedido', key: 'fechaD', align: 'star' },
+                { title: 'Numero de Nota de Credito', key: 'numero_nc' },
+                { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
+                { title: 'Timbrado', key: 'timbrado', align: 'star' },
+                { title: 'Proveedor', key: 'proveedor', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
-            headersPedido: [
-
-                { title: 'Producto', key: 'idProducto' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
-
-            ],
-
-            headersPedidoG: [
-                { title: 'Codigo', key: 'idProducto' },
-                { title: 'Descripcion', key: 'nombre_producto' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+            headersCompra: [
+                { title: 'Producto', key: 'idProducto', align: 'center' },
+                { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'center' },
+                { title: 'Precio Unitario', key: 'Precio', align: 'center' },
+                { title: 'Iva', key: 'iva', align: 'center' },
+                { title: 'Exenta', key: 'exenta', align: 'center' },
+                { title: 'Iva 5%', key: 'iva5', align: 'center' },
+                { title: 'Iva 10%', key: 'iva10', align: 'center' },
+                { title: 'Total', key: 'total', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
-            ],
 
-            headersCrear: [
-
-                { title: 'Producto', key: 'producto' },
-                { title: 'Producto', key: 'descripcionPr' },
-                { title: 'Cantidad', key: 'cantidad', align: 'star' },
-                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
                 {
-                    id: '1',
-                    descripcion: 'Central',
-                    fechaD: '',
-                    action: ''
+                    id: '',
+                    descripcion: '',
+                    fecha: '',
+                    action: '',
+                    timbrado: '',
+                    numero_nc: '',
+                    proveedor: ''
                 }
             ],
-            itemsDetalle: [
-
-            ],
+            itemsDetalle: [],
             dialogoEliminar: false,
             elementoAEliminar: null,
 
+            listaProveedor: [],
+            listaDocumento: [],
             listaProducto: [],
 
         }
@@ -337,42 +301,86 @@ export default {
             if (!this.buscador) return this.items
             return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
-     
-
+        // excededLimit() {
+        //     return this.formulario.descripcion.length > this.limit;
+        // },
+        // errorMessage() {
+        //     if (this.excededLimit) {
+        //         return 'Superaste el límite de 45 letras';
+        //     }
+        //     return '';
+        // }
     },
-    
     methods:
     {
+        ObtenerProveedor() {
+            ProveedorAPI.getAll().then(({ data }) => {
+                this.listaProveedor = data.map(item => {
+                    return {
+                        id: item.idProveedor,
+                        descripcionP: item.Razon_social
+                    }
+                })
+            })
+        },
+
+       
+
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
                 this.listaProducto = data.map(item => {
                     return {
                         id: item.idProducto,
-                        descripcionPr: item.Descripcion
+                        descripcionPr: item.Descripcion,
+
+                    }
+                })
+            })
+        },
+
+        ObtenerIva() {
+            IvaAPI.getAll().then(({ data }) => {
+                this.listaIva = data.map(item => {
+                    return {
+                        id: item.idIva,
+                        descripcion: item.Descripcion,
+                        descripcionI: item.Porcentaje
                     }
                 })
             })
         },
 
 
-        AgregarDetalle() {
-            const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
-            if (productoSeleccionado) {
-                this.itemsDetalle.push({
-                    producto: productoSeleccionado.id, // Agrega la descripción del producto
-                    descripcionPr: productoSeleccionado.descripcionPr,
-                    cantidad: this.detalle.cantidad,
-                    action: '',
-                });
+     
 
-                this.detalle.producto = '';
-                this.detalle.cantidad = '';
+        ObtenerCodigoCompra() {
+            // Verifica que se haya ingresado un número de orden
+            if (!this.formulario.numero_orden) {
+                // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
+                return;
             }
+
+            // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
+            ComprasAPI.getById(this.formulario.numero_orden).then(({ data }) => {
+                this.VARIABLE_PARA_GUARDAR_ID_COMPRA = data.idCompras
+                this.formulario = {
+                    ...this.formulario,
+                    proveedor: data.idProveedor,
+                    fechaD: data.Fecha_doc,
+                    itemsDetalle: data.detalle,
+
+
+
+                };
+            });
+
+            this.dialogoFormulario = true;
         },
 
 
-        formatearFecha(fechaD) {
-            return dayjs(fechaD).format('DD/MM/YYYY')
+
+        formatearFecha(fecha) {
+            return dayjs(fecha).format('DD/MM/YYYY')
         },
         showDatePicker() {
             this.showDatepicker = true;
@@ -380,275 +388,215 @@ export default {
         hideDatePicker() {
             this.showDatepicker = false;
         },
-        validarYRegistrar() {
-            if (this.itemsComputed.length === 0) {
-                alert("No se pueden registrar pedidos sin detalles. Agregue al menos un detalle.");
-            } else {
-                // Continúa con la lógica de registro
-                this.abrirDialogo();
-            }
-        },
+
         abrirDialogo() {
             // Abrir el modal y cargar el código aquí
             this.dialogoFormulario = true;
             this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
             this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+
         },
         generarCodigo() {
             const nuevoCodigo = this.contador++;
             return nuevoCodigo;
         },
 
-
-
-
-
         guardarFormulario() {
-            // Verificar que todos los campos requeridos estén completos
-            if (!this.formulario.descripcion || !this.formulario.fechaD) {
-                this.showModalVacio = true;
-            } else {
-                // Validar duplicados en los detalles
-                const productosSeleccionados = this.itemsDetalle.map((detalle) => detalle.producto);
+            if (!this.formulario.numero_nc) {
 
-                if (new Set(productosSeleccionados).size !== productosSeleccionados.length) {
-                    // Si hay elementos duplicados en la lista de productos seleccionados, muestra un mensaje de error
-                    this.showModalDuplicado = true;
-
-                } else {
-                    // Todos los campos requeridos están completos y no hay duplicados, puedes proceder a guardar
-                    NCCompraApi.create({
-                        idPedido: this.formulario.codigo,
-                        Descripcion: this.formulario.descripcion,
-                        Fecha_pedi: this.formulario.fechaD,
-                        Detalle: this.itemsDetalle,
-                    }).then(() => {
-                        this.ObtenerNotaCreditoCompra();
-                    });
-
-                    // Limpia los campos del formulario después de guardar
-                    this.formulario.codigo = "";
-                    this.formulario.producto = "";
-                    this.formulario.descripcion = "";
-                    this.formulario.fechaD = "";
-                    this.detalle.producto = null;
-                    this.detalle.cantidad = null;
-                    this.itemsDetalle = []
-
-
-
-                    // Cierra el diálogo del formulario
-                    this.dialogoFormulario = false;
-                }
-            }
-        },
-        MostrarPedido(item) {
-            console.log(item);
-
-            this.dialogoFormularioVistaVista = true;
-            this.formulario.codigo = item.id
-            this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
-
-            this.formulario.itemsDetalle = [];
-
-            item.detalleItems.forEach((detalle) => {
-                this.formulario.itemsDetalle.push({
-                    idProducto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
-                });
-            })
-
-
-
-        },
-
-
-
-
-        guardarFormularioEditar() {
-            if (!this.formulario.producto || !this.formulario.cantidad) {
                 this.emptyFieldError = true;
                 return;
             }
 
-            // Busca el índice del elemento que se va a editar
-            const index = this.itemsDetalle.findIndex(item => item.producto === this.formulario.producto);
 
-            if (index !== -1) {
-                // Si se encontró el elemento, actualiza sus datos
-                this.itemsDetalle[index].cantidad = this.formulario.cantidad;
-            } else {
-                // Si no se encontró el elemento, agrega uno nuevo
-                this.itemsDetalle.push({
-                    producto: this.formulario.producto,
-                    cantidad: this.formulario.cantidad,
-                    action: '',
-                });
-            }
+            NCCompraApi.create({
 
-            this.dialogoFormularioEditar = false;
-        },
-        eliminarDetalle(id) {
-            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
-        },
+                idNota_CreditoCompra: this.formulario.codigo,
+                Fecha_doc: this.formulario.fechaD,
+                Timbrado: this.formulario.timbrado,
+                Numero_doc: this.formulario.numero_nc,
+                idProveedor: this.formulario.proveedor,
+                idCompras: this.VARIABLE_PARA_GUARDAR_ID_COMPRA,
+                Detalle: this.formulario.itemsDetalle
 
 
-
-        editarCiudad(parametro) {
-            this.dialogoFormularioEditar = true
-            this.formulario.producto = parametro.producto
-            this.formulario.cantidad = parametro.cantidad
-
-        },
-        confirmarEliminarCiudad(elemento) {
-            // Abre el diálogo de confirmación y guarda el elemento a eliminar
-            this.elementoAEliminar = elemento;
-            this.dialogoEliminar = true;
-        },
-        cancelarEliminarCiudad() {
-            // Cierra el diálogo de confirmación y restablece la variable
-            this.dialogoEliminar = false;
-            this.elementoAEliminar = null;
-        },
-        eliminarCiudad() {
-            if (this.elementoAEliminar) {
-                // Realiza la eliminación aquí
-                NCCompraApi.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerNotaCreditoCompra();
-                });
-                // Cierra el diálogo de confirmación
-                this.dialogoEliminar = false;
-                this.elementoAEliminar = null;
-            }
-        },
-
-        dialogoVista() {
-            this.dialogoFormularioVistaVista = true
-            this.formulario.codigo = parametro.id
-            this.formulario.descripcion = parametro.descripcion
-            this.formulario.fechaD = parametro.fechaD
-            this.detalle.producto = parametro.producto
-            this.detalle.cantidad = parametro.cantidad
-        },
-
-
-        //Inicio editar guardado //
-        editarPedidog(item) {
-            this.dialogoFormularioEditarGuardado = true
-            this.formulario.codigo = item.id
-            this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
-
-            this.formulario.itemsDetalle = [];
-
-            item.detalleItems.forEach((detalle) => {
-                this.formulario.itemsDetalle.push({
-                    idPedido:detalle.idPedido,
-                    idProducto: detalle.idProducto,
-                    nombre_producto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
-                });
-            })
-
-
-
-        },
-
-        guardarFormularioEditarG() {
-            console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
-
-            NCCompraApi.update(
-             
-                this.formulario.codigo,
-                {
-                    idPedido: this.formulario.codigo,
-                    Descripcion: this.formulario.descripcion,
-                    Fecha_pedi: this.formulario.fechaD,
-                    Detalle: this.formulario.itemsDetalle,
-                  
-                }
+            },
             ).then(() => {
-                this.ObtenerNotaCreditoCompra()
+                this.ObtenerNota_Credito_C()
             })
-            this.formulario.codigo = "";
-                    this.formulario.producto = "";
-                    this.formulario.descripcion = "";
-                    this.formulario.fechaD = "";
-                    this.detalle.producto = null;
-                    this.detalle.cantidad = null;
-                    this.itemsDetalle = []
-            this.dialogoFormularioEditarGuardado = false
+
+            this.formulario.codigo = '';
+            this.formulario.fechaD = '';
+            this.formulario.timbrado = '';
+            this.formulario.numero_nc = '';
+            this.formulario.documento = '';
+            this.formulario.proveedor = '';
+            this.dialogoFormulario = false;
         },
 
-        //Fin editar guardado //
 
 
-        //EDITAR DETALLE Guardado //
 
 
-        guardarFormularioEditarC() {
-            console.log('Antes de guardar:', this.formulario.itemsDetalle);
-            console.log ('Ver producto', this.formulario.producto);
+        confirmarCambiarEstado(elemento) {
+            // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
+            this.elementoACambiarEstado = elemento;
+            this.dialogoCambiarEstado = true;
+        },
+        cancelarCambiarEstado() {
+            // Cierra el diálogo de confirmación y restablece la variable
+            this.dialogoCambiarEstado = false;
+            this.elementoACambiarEstado = null;
+        },
+        cambiarEstadoCompra() {
+            if (this.elementoACambiarEstado) {
+                // Realiza la actualización aquí para cambiar el estado
+                NCCompraApi.update(this.elementoACambiarEstado.id, { estado_nc: true }
+                ).then(()=> {
+                        // Actualiza la tabla después de que la actualización se haya completado
+                        this.items = [];
+                        this.ObtenerNota_Credito_C();
+                        
+                    })
+                   
+                   
+                        // Cierra el diálogo de confirmación
+                        this.dialogoCambiarEstado = false;
+                        this.elementoACambiarEstado = null;
+                      
+                    
 
-            if (!this.formulario.producto || !this.formulario.cantidad) {
-                this.emptyFieldError = true;
-                return;
+
             }
 
-            // Busca el índice del elemento que se va a editar
-            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto == this.formulario.producto);
-
-            if (index !== -1) {
-                // Si se encontró el elemento, actualiza sus datos
-                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
-            } 
-            console.log('Después de guardar:', this.formulario.itemsDetalle);
-
-            this.dialogoFormularioEditarDe = false;
-        },
-        eliminarDetalle(id) {
-            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
         },
 
-        editarPedidoDetalle(item) {
-            this.dialogoFormularioEditarDe = true;
-
-            // this.formulario.codigo = item.producto
-            this.formulario.producto = item.idProducto;
-            this.formulario.cantidad = item.Cantidad;
-
-
-        },
-        
-        ObtenerNotaCreditoCompra() {
-
+        ObtenerNota_Credito_C() {
             NCCompraApi.getAll().then(({ data }) => {
-                console.log(data)
                 this.items = data.map(item => {
                     return {
-                        id: item.idPedido,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        detalleItems: item.detalle
+                        id: item.idNota_CreditoCompra,
+                        proveedor: item.idProveedor,
+                        numero_nc: item.Numero_doc,
+                        idProveedor: item.idProveedor,
+                        razonsocial:item.razonsocial,
+                        timbrado: item.Timbrado,
+                        fechaD: item.Fecha_doc,
+                        itemsDetalle: data.detalle,
 
                     }
                 })
             })
         },
+        recalcularTotal() {
+            // Verifica que haya valores en cantidad y precio
+            if (this.formulario.cantidad && this.formulario.precio) {
+                // Calcula el total dinámicamente
+                this.formulario.total = this.formulario.cantidad * this.formulario.precio;
 
+            }
+
+        },
+
+        editarDetalle(parametro) {
+            this.dialogoFormularioEditarDetalle = true
+            this.formulario.producto = parametro.idProducto
+            this.formulario.cantidad = parametro.Cantidad
+            this.formulario.precio = parametro.Precio
+            // Calcula el total al abrir el diálogo
+            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
+            this.formulario.iva = parametro.idIva
+
+
+
+        },
+        guardarFormularioEditarDetalle() {
+            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.precio) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
+            console.log(index)
+            console.log(this.formulario.itemsDetalle)
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
+                this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
+
+                this.formulario.itemsDetalle[index].total = this.formulario.cantidad * this.formulario.precio;
+                this.formulario.itemsDetalle[index].iva = this.formulario.iva;
+
+                switch (this.formulario.iva) {
+                    case 1:
+                        this.formulario.itemsDetalle[index].exenta = 0;
+                        this.formulario.itemsDetalle[index].iva5 = 0;
+                        this.formulario.itemsDetalle[index].iva10 = 0;
+                        break;
+                    case 2:
+                        this.formulario.itemsDetalle[index].exenta = 0;
+                        this.formulario.itemsDetalle[index].iva5 = Math.round(this.formulario.itemsDetalle[index].total / 21);
+                        this.formulario.itemsDetalle[index].iva10 = 0;
+                        break;
+                    case 3:
+                        this.formulario.itemsDetalle[index].exenta = 0;
+                        this.formulario.itemsDetalle[index].iva5 = 0;
+                        this.formulario.itemsDetalle[index].iva10 = Math.round(this.formulario.itemsDetalle[index].total / 11);
+                        break;
+                    default:
+                        // Manejar otro caso si es necesario
+                        break;
+                }
+            } else {
+                // Si no se encontró el elemento, agrega uno nuevo
+                const nuevoItem = {
+                    producto: this.formulario.producto,
+                    cantidad: this.formulario.cantidad,
+                    precio: this.formulario.precio,
+                    total: this.formulario.cantidad * this.formulario.precio, // Calcula el total
+                    iva: this.formulario.iva,
+                    exenta: 0,
+                    iva5: 0,
+                    iva10: 0,
+                    action: '',
+                };
+                this.formulario.itemsDetalle.push(nuevoItem);
+            }
+
+            this.dialogoFormularioEditarDetalle = false;
+        },
+
+
+        sumarIva(columna) {
+            // Verifica que this.formulario.itemsDetalle tenga un valor
+            if (this.formulario.itemsDetalle) {
+                // Redondea cada valor de IVA antes de sumarlos
+                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
+            } else {
+                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
+            }
+        },
+
+        sumarTotal(columna) {
+            // Verifica que this.formulario.itemsDetalle tenga un valor y sea un array
+            if (this.formulario.itemsDetalle && Array.isArray(this.formulario.itemsDetalle)) {
+                // Redondea cada valor de la columna antes de sumarlos
+                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
+            } else {
+                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
+            }
+        },
     },
-
 
 
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
-        this.ObtenerProducto()
-        this.ObtenerNotaCreditoCompra()
-
-
-
+        this.ObtenerProveedor()
+       // this.ObtenerProducto()
+        this.ObtenerIva()
+        this.ObtenerNota_Credito_C()
 
     },
 

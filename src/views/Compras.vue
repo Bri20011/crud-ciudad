@@ -10,10 +10,6 @@
                                 required></v-text-field>
                         </v-col>
 
-                        <!-- <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Codigo" 
-                                v-model="formulario.codigo"></v-text-field>
-                        </v-col> -->
                         <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
                         </v-col>
@@ -230,7 +226,7 @@
                     </v-icon> -->
 
                     <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
-                        Anular1
+                        Anular
                     </v-btn>
 
                 </template>
@@ -654,6 +650,8 @@ export default {
                         proveedor: item.idProveedor,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
+                        detalleItems: item.detalle
+
                     }
                 })
             })
