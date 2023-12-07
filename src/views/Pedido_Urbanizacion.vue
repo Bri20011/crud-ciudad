@@ -2,7 +2,7 @@
     <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h2 class="mb-3">Registrar Pedido</h2>
+                <h2 class="mb-3">Registrar Pedido de Urbanizacion</h2>
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="6" md="6" class="">
@@ -121,7 +121,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Editar Pedido</h1>
+                <h1 class="mb-3">Editar Pedido de Urbanizacion</h1>
                 <v-form>
                     <v-row class="justify-center">
 
@@ -219,7 +219,7 @@
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
-                            <p class="font-weight-bold">Pedidos Registrados</p>
+                            <p class="font-weight-bold">Pedidos de Urbanizacion Registrados</p>
                         </v-toolbar-title>
 
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -283,7 +283,7 @@
         <v-dialog max-width="700" v-model="dialogoFormularioEditarGuardado" persistent>
             <v-card class="rounded-xl">
                 <v-container>
-                    <h1 class="mb-3">Editar Pedido</h1>
+                    <h1 class="mb-3">Editar Pedido de Urbanizacion</h1>
                     <v-form>
                         <v-row>
                             <v-col cols="12" sm="2" md="2">
@@ -335,7 +335,7 @@
         <v-dialog max-width="700" v-model="dialogoFormularioEditarDe" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Editar Detalle</h1>
+                <h1 class="mb-3">Editar Detalle </h1>
                 <v-form>
                     <v-row class="justify-center">
 
@@ -367,8 +367,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { PedidoAPI } from '@/services/pedido.api'
 import { ProductoAPI } from '@/services/producto.api'
+import { PedidoUrbanizacionAPI } from '@/services/pedido_urbanizacion.api'
 import dayjs from 'dayjs'
 
 
@@ -560,13 +560,13 @@ export default {
 
                 } else {
                     // Todos los campos requeridos están completos y no hay duplicados, puedes proceder a guardar
-                    PedidoAPI.create({
-                        idPedido: this.formulario.codigo,
+                    PedidoUrbanizacionAPI.create({
+                        idPedido_Urbanizacion: this.formulario.codigo,
                         Descripcion: this.formulario.descripcion,
                         Fecha_pedi: this.formulario.fechaD,
                         Detalle: this.itemsDetalle,
                     }).then(() => {
-                        this.ObtenerPedido();
+                        this.ObtenerPedidoUrbanizacion();
                     });
 
                     // Limpia los campos del formulario después de guardar
@@ -657,8 +657,8 @@ export default {
         eliminarCiudad() {
             if (this.elementoAEliminar) {
                 // Realiza la eliminación aquí
-                PedidoAPI.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerPedido();
+                PedidoUrbanizacionAPI.delete(this.elementoAEliminar.id).then(() => {
+                    this.ObtenerPedidoUrbanizacion();
                 });
                 // Cierra el diálogo de confirmación
                 this.dialogoEliminar = false;
@@ -687,7 +687,7 @@ export default {
 
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
-                    idPedido:detalle.idPedido,
+                    idPedido_Urbanizacion:detalle.idPedido_Urbanizacion,
                     idProducto: detalle.idProducto,
                     nombre_producto: detalle.nomnbreProducto,
                     Cantidad: detalle.Cantidad,
@@ -701,18 +701,18 @@ export default {
         guardarFormularioEditarG() {
             console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
 
-            PedidoAPI.update(
+            PedidoUrbanizacionAPI.update(
              
                 this.formulario.codigo,
                 {
-                    idPedido: this.formulario.codigo,
+                    idPedido_Urbanizacion: this.formulario.codigo,
                     Descripcion: this.formulario.descripcion,
                     Fecha_pedi: this.formulario.fechaD,
                     Detalle: this.formulario.itemsDetalle,
                   
                 }
             ).then(() => {
-                this.ObtenerPedido()
+                this.ObtenerPedidoUrbanizacion()
             })
             this.formulario.codigo = "";
                     this.formulario.producto = "";
@@ -764,13 +764,13 @@ export default {
 
         },
         
-        ObtenerPedido() {
+        ObtenerPedidoUrbanizacion() {
 
-            PedidoAPI.getAll().then(({ data }) => {
+            PedidoUrbanizacionAPI.getAll().then(({ data }) => {
                 console.log(data)
                 this.items = data.map(item => {
                     return {
-                        id: item.idPedido,
+                        id: item.idPedido_Urbanizacion,
                         descripcion: item.Descripcion,
                         fechaD: item.Fecha_pedi,
                         detalleItems: item.detalle
@@ -787,8 +787,8 @@ export default {
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
-        this.ObtenerPedido()
         this.ObtenerProducto()
+        this.ObtenerPedidoUrbanizacion()
 
 
 

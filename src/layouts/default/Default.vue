@@ -116,8 +116,9 @@ export default {
 
       ],
       Produccion: [
-        ['Lotes', 'mdi-plus-outline', '/'],
-        ['Contratos', 'mdi-plus-outline', '/'],
+        ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
+        ['Orden de Compra Urbanizacion', 'mdi-plus-outline', '/'],
+        ['Registro Urbanizacion', 'mdi-plus-outline', '/'],
 
       ],
       mantenimiento: [
