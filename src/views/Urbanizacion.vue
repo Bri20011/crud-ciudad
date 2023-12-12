@@ -5,66 +5,84 @@
                 <h1 class="mb-3">Registrar Urbanizacion</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="2" md="2">
+                        <v-col cols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3">
+                            <input class="custom-input" v-model="formulario.fechaO" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+                        <!-- <v-col cols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Nº  de Compras" v-model="formulario.numero_orden"
                                 required></v-text-field>
                         </v-col>
 
                         <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
-                        </v-col>
+                        </v-col> -->
+
 
                         <v-col cols="12" sm="4" md="4">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                                placeholder="Fecha de Operacion" @input="formatDate" />
+                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC"
+                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
                         </v-col>
 
+
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
-                               required></v-text-field>
-                        </v-col>
-                        
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="formulario.area"
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Area" v-model="formulario.area" required></v-text-field>
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Lado A" v-model="formulario.ladoA"
-                                 required></v-text-field>
+                                required></v-text-field>
                         </v-col>
-                        
+
                         <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Lado B" v-model="formulario.ladoB"
-                               required></v-text-field>
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
+                                required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"
                                 required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio" v-model="formulario.precio"
-                                required></v-text-field>
-                        </v-col>
 
 
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad"
-                                item-title="descripcionC" item-value="id" v-model="formulario.ciudad"
-                                required></v-autocomplete>
-                        </v-col>
+                        <!-- INICIO DETALLE -->
+                        <v-divider class="mt-0"></v-divider>
 
-                        <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
-                            :items="formulario.itemsDetalle">
+                        <v-row>
+                            <v-col cols="12" sm="5" md="5" class="mt-5">
+                                <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
+                                    item-title="descripcionPr" item-value="id" v-model="detalle.producto"
+                                    :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                            </v-col>
+                            <v-col cols="12" sm="3" md="3" class="mt-5">
+                                <v-text-field variant="outlined" label="Precio" v-model="detalle.precio"
+                                    required></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
+                                    @click="AgregarDetalle">Calcular</v-btn>
+                            </v-col>
+                        </v-row>
+                        <!-- FIN DETALLE -->
 
 
-                            <template v-slot:tfoot>
 
+                        <v-data-table items-per-page-text="Articulos" :headers="headersCompra" :items="itemsDetalle">
+
+
+
+                            <!-- <template v-slot:tfoot>
                                 <tr>
                                     <td></td>
                                     <td></td>
@@ -77,7 +95,7 @@
                                     <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
                                     <td></td>
                                 </tr>
-                            </template>
+                            </template> -->
 
 
 
@@ -106,7 +124,7 @@
             </v-container>
         </v-card>
     </v-dialog>
- 
+
 
     <!-- INICIO EDITAR DETALLE -->
     <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
@@ -119,29 +137,28 @@
 
                         <v-col cols="12" sm="5" md="5">
                             <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
                         <v-col ols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Ubicacion"
-                                v-model="formulario.ubicacionD"></v-text-field>
+                                v-model="detalle.ubicacionD"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Numero Manzana" 
-                                v-model="formulario.manzana"></v-text-field>
+                            <v-text-field variant="outlined" label="Numero Manzana"
+                                v-model="detalle.manzana"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero Lote" v-model="formulario.numeroLote"
-                                ></v-text-field>
+                            <v-text-field variant="outlined" label="Numero Lote"
+                                v-model="detalle.numeroLote"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="formulario.areaD"
-                                ></v-text-field>
+                            <v-text-field variant="outlined" label="Area" v-model="detalle.areaD"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio del Lote" v-model="formulario.precioLote"
-                                ></v-text-field>
+                            <v-text-field variant="outlined" label="Precio del Lote"
+                                v-model="detalle.precio"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -260,7 +277,10 @@ export default {
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
             ordenCompraSeleccionada: null,
-
+            detalle: {
+                producto: '',
+                descripcion: '',
+            },
 
 
             formulario: {
@@ -296,16 +316,18 @@ export default {
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
+                { title: 'Cantidad', key: 'cantidad', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersCompra: [
-                { title: 'Producto', key: 'idProducto', align: 'center' },
-                { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
+                { title: 'Producto', key: 'producto', align: 'center' },
+                { title: 'Descripcion', key: 'descripcionPr', align: 'center' },
+                { title: 'Precio Lote', key: 'precio', align: 'center' },
                 { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
                 { title: 'Numero Manzana', key: 'numero_manz', align: 'center' },
                 { title: 'Numero Lote', key: 'numero_lot', align: 'center' },
                 { title: 'Area', key: 'area', align: 'center' },
-                { title: 'Precio Lote', key: 'precio_lote', align: 'center' },
+
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
@@ -338,24 +360,24 @@ export default {
             if (!this.buscador) return this.items
             return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
-        
+
     },
     methods:
     {
         obtenerCiudades() {
-        CiudadAPI.getAll().then(({ data }) => {
-          this.listaCiudad = data.map(item => {
-            return {
-              id: item.idCiudad,
-              descripcionC: item.Descripcion
-            }
-          })
-        })
-      },
+            CiudadAPI.getAll().then(({ data }) => {
+                this.listaCiudad = data.map(item => {
+                    return {
+                        id: item.idCiudad,
+                        descripcionC: item.Descripcion
+                    }
+                })
+            })
+        },
 
 
         ObtenerProducto() {
-            ProductoAPI.getAll().then(({ data }) => {
+            ProductoAPI.findByTipo(1).then(({ data }) => {
                 this.listaProducto = data.map(item => {
                     return {
                         id: item.idProducto,
@@ -366,7 +388,7 @@ export default {
             })
         },
 
-  
+
 
         // INICIO NUEVO 
         ObtenerCompras() {
@@ -495,19 +517,19 @@ export default {
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
                 UrbanizacionApi.update(this.elementoACambiarEstado.id, { estado_compras: true }
-                ).then(()=> {
-                        // Actualiza la tabla después de que la actualización se haya completado
-                        this.items = [];
-                        this.ObtenerUrbanizacion();
-                        
-                    })
-                   
-                   
-                        // Cierra el diálogo de confirmación
-                        this.dialogoCambiarEstado = false;
-                        this.elementoACambiarEstado = null;
-                      
-                    
+                ).then(() => {
+                    // Actualiza la tabla después de que la actualización se haya completado
+                    this.items = [];
+                    this.ObtenerUrbanizacion();
+
+                })
+
+
+                // Cierra el diálogo de confirmación
+                this.dialogoCambiarEstado = false;
+                this.elementoACambiarEstado = null;
+
+
 
 
             }
@@ -544,100 +566,71 @@ export default {
             }
 
         },
-        
+
         editarDetalle(parametro) {
             this.dialogoFormularioEditarDetalle = true
-            this.formulario.producto = parametro.idProducto
-            this.formulario.cantidad = parametro.Cantidad
-            this.formulario.precio = parametro.Precio
-            // Calcula el total al abrir el diálogo
-            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
-            this.formulario.iva = parametro.idIva
-
+            this.detalle.producto = parametro.producto
+            this.detalle.ubicacion = parametro.ubicacion;
+            this.detalle.precio = parametro.precio;
 
 
         },
         guardarFormularioEditarDetalle() {
-            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.precio) {
+            if (!this.detalle.producto || !this.detalle.ubicacion || !this.detalle.precio || !this.detalle.ubicacion || !this.detalle.numero_manz || !this.detalle.numero_lot || !this.detalle.ubicacion) {
                 this.emptyFieldError = true;
                 return;
             }
 
             // Busca el índice del elemento que se va a editar
-            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
-            console.log(index)
-            console.log(this.formulario.itemsDetalle)
+            const index = this.itemsDetalle.findIndex(item => parametro.producto == this.detalle.producto);
+
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
-                this.formulario.itemsDetalle[index].Ubicacion = this.formulario.ubicacion;
-                this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
-
-                this.formulario.itemsDetalle[index].total = this.formulario.cantidad * this.formulario.precio;
-                this.formulario.itemsDetalle[index].iva = this.formulario.iva;
-
-                switch (this.formulario.iva) {
-                    case 1:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = 0;
-                        this.formulario.itemsDetalle[index].iva10 = 0;
-                        break;
-                    case 2:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = Math.round(this.formulario.itemsDetalle[index].total / 21);
-                        this.formulario.itemsDetalle[index].iva10 = 0;
-                        break;
-                    case 3:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = 0;
-                        this.formulario.itemsDetalle[index].iva10 = Math.round(this.formulario.itemsDetalle[index].total / 11);
-                        break;
-                    default:
-                        // Manejar otro caso si es necesario
-                        break;
-                }
-            } else {
+                this.itemsDetalle[index].precio = this.detalle.precio;
+                this.itemsDetalle[index].ubicacion = this.detalle.ubicacion;
+                this.itemsDetalle[index].numero_manz = this.detalle.numero_manz;
+                this.itemsDetalle[index].numero_lot = this.detalle.numero_lot;
+                this.itemsDetalle[index].ubicacion = this.detalle.ubicacion;
+            
+        } else {
                 // Si no se encontró el elemento, agrega uno nuevo
-                const nuevoItem = {
+                this.itemsDetalle.push({
                     producto: this.formulario.producto,
                     cantidad: this.formulario.cantidad,
-                    precio: this.formulario.precio,
-                    total: this.formulario.cantidad * this.formulario.precio, // Calcula el total
-                    iva: this.formulario.iva,
-                    exenta: 0,
-                    iva5: 0,
-                    iva10: 0,
                     action: '',
-                };
-                this.formulario.itemsDetalle.push(nuevoItem);
+                });
             }
+            console.log('Después de guardar:', this.itemsDetalle);
 
-            this.dialogoFormularioEditarDetalle = false;
+            this.dialogoFormularioEditarDe = false;
         },
+       
 
-        //     sumarColumna(columna) {
-        //   return this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0);
-        // },
 
-        sumarIva(columna) {
-            // Verifica que this.formulario.itemsDetalle tenga un valor
-            if (this.formulario.itemsDetalle) {
-                // Redondea cada valor de IVA antes de sumarlos
-                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
-            } else {
-                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
-            }
-        },
+ 
+    AgregarDetalle() {
+      const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
+      if (productoSeleccionado) {
+        const cantidad = this.formulario.cantidad;
 
-        sumarTotal(columna) {
-            // Verifica que this.formulario.itemsDetalle tenga un valor y sea un array
-            if (this.formulario.itemsDetalle && Array.isArray(this.formulario.itemsDetalle)) {
-                // Redondea cada valor de la columna antes de sumarlos
-                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
-            } else {
-                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
+        // Agregar  detalle segun la cantidad ingresada
+        for (let i = 0; i < cantidad; i++) {
+          this.itemsDetalle.push({
+            producto: productoSeleccionado.id,
+            descripcionPr: productoSeleccionado.descripcionPr,
+            precio: this.detalle.precio / cantidad,
+            action: '',
+          });
+        }
+        
+
+                // this.detalle.producto = '';
+                // this.detalle.cantidad = '';
             }
         },
     },
+
+  
 
 
     created() {
