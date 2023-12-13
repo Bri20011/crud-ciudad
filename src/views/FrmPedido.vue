@@ -121,7 +121,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Editar Pedido</h1>
+                <h1 class="mb-3">Editar Pedido antes de guardar</h1>
                 <v-form>
                     <v-row class="justify-center">
 

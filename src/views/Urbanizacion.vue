@@ -11,7 +11,7 @@
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
+                            <input class="custom-input" v-model="formulario.fechaD" type="date"
                                 placeholder="Fecha de Operacion" @input="formatDate" />
                         </v-col>
 
@@ -53,6 +53,10 @@
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"
                                 required></v-text-field>
                         </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
+                                required></v-text-field>
+                        </v-col>
 
 
                         <!-- INICIO DETALLE -->
@@ -64,10 +68,7 @@
                                     item-title="descripcionPr" item-value="id" v-model="detalle.producto"
                                     :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                             </v-col>
-                            <v-col cols="12" sm="3" md="3" class="mt-5">
-                                <v-text-field variant="outlined" label="Precio" v-model="detalle.precio"
-                                    required></v-text-field>
-                            </v-col>
+
 
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
@@ -116,7 +117,7 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardarr</v-btn>
 
                         </v-col>
                     </v-row>
@@ -134,7 +135,6 @@
                 <v-form>
                     <v-row class="justify-center">
 
-
                         <v-col cols="12" sm="5" md="5">
                             <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="detalle.producto"
@@ -143,22 +143,22 @@
 
                         <v-col ols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Ubicacion"
-                                v-model="detalle.ubicacionD"></v-text-field>
+                                v-model="detalle.ubicacion"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Numero Manzana"
-                                v-model="detalle.manzana"></v-text-field>
+                                v-model="detalle.numero_manz"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Numero Lote"
-                                v-model="detalle.numeroLote"></v-text-field>
+                                v-model="detalle.numero_lot"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="detalle.areaD"></v-text-field>
+                            <v-text-field variant="outlined" label="Area" v-model="detalle.area"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Precio del Lote"
-                                v-model="detalle.precio"></v-text-field>
+                                v-model="detalle.precio_ind"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -202,7 +202,7 @@
 
                     </v-toolbar>
                 </template>
-                <template v-slot:item.fecha="{ item }">
+                <template v-slot:item.fechaD="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
                 <template v-slot:item.action="{ item }">
@@ -251,7 +251,7 @@
   
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { ComprasAPI } from '@/services/compras.api'
+
 import { ProveedorAPI } from '@/services/proveedor.api'
 import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
 import { ProductoAPI } from '@/services/producto.api'
@@ -280,14 +280,16 @@ export default {
             detalle: {
                 producto: '',
                 descripcion: '',
+                ubicacion:'',
+                numero_manz:'',
+                id: '',
             },
 
 
             formulario: {
                 proveedor: '',
                 documento: '',
-                fechaO: null,
-                fechaD: null,
+                fechaD: '',
                 timbrado: '',
                 numero_factura: '',
 
@@ -304,6 +306,7 @@ export default {
                 producto: null,
                 cantidad: '',
                 precio: '',
+                id: '',
                 nomnbreProducto: '',
                 descripcionI: ''
 
@@ -311,28 +314,29 @@ export default {
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Numero de Factura', key: 'numero_factura' },
-                { title: 'Tipo Documento', key: 'documento' },
-                { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
-                { title: 'Timbrado', key: 'timbrado', align: 'star' },
-                { title: 'Proveedor', key: 'proveedor', align: 'star' },
-                { title: 'Cantidad', key: 'cantidad', align: 'center' },
+                { title: 'Fecha de Urbamizacion', key: 'fechaD', align: 'star' },
+                { title: 'Nombre de Urbanizacion', key: 'nombre_urb' },
+                { title: 'Area', key: 'area', align: 'star' },
+                { title: 'Lado A', key: 'ladoA', align: 'star' },
+                { title: 'Lado B', key: 'ladoB', align: 'center' },
+                { title: 'Cantidad de Manzanas', key: 'Cantidad_manzana', align: 'center' },
+                { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
+                { title: 'Precio', key: 'precio', align: 'center' },
+                { title: 'Ciudad', key: 'idCiudad', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersCompra: [
                 { title: 'Producto', key: 'producto', align: 'center' },
                 { title: 'Descripcion', key: 'descripcionPr', align: 'center' },
-                { title: 'Precio Lote', key: 'precio', align: 'center' },
+                { title: 'Codigo', key: 'id', align: 'center' },
+                { title: 'Precio por Lote', key: 'precio_ind', align: 'center' },
                 { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
                 { title: 'Numero Manzana', key: 'numero_manz', align: 'center' },
                 { title: 'Numero Lote', key: 'numero_lot', align: 'center' },
                 { title: 'Area', key: 'area', align: 'center' },
-
-                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-
-
-
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' }
             ],
+            
             items: [
                 {
                     id: '',
@@ -341,10 +345,14 @@ export default {
                     action: '',
                     timbrado: '',
                     numero_factura: '',
-                    proveedor: ''
+                    proveedor: '',
+                    numero_manz:'',
+                    ubicacion:'',
                 }
             ],
-            itemsDetalle: [],
+            itemsDetalle: [
+
+            ],
             dialogoEliminar: false,
             elementoAEliminar: null,
 
@@ -391,55 +399,16 @@ export default {
 
 
         // INICIO NUEVO 
-        ObtenerCompras() {
-            ComprasAPI.getAll().then(({ data }) => {
 
-                // this.items = data.map(item => {
-                //     return {
-                //         id: item.idorden_compra,
-                //         descripcionPr: item.Descripcion,
-                //         fechaD: item.Fecha_pedi,
-                //         proveedor: item.idProveedor,
-                //         itemsDetalle: item.Detalle
-                //     }
-                // }
-                // )
-            })
-        },
+        
 
-        ObtenerCodigoOrden() {
-            // Verifica que se haya ingresado un número de orden
-            if (!this.formulario.numero_orden) {
-                // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
-                return;
-            }
-
-            // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
-            ComprasAPI.getById(this.formulario.numero_orden).then(({ data }) => {
-                this.formulario = {
-                    ...this.formulario,
-                    proveedor: data.idProveedor,
-                    fechaD: data.Fecha_pedi,
-                    itemsDetalle: data.detalle,
+       
 
 
 
 
-
-
-
-
-                };
-            });
-
-            this.dialogoFormulario = true;
-        },
-
-
-
-
-        formatearFecha(fecha) {
-            return dayjs(fecha).format('DD/MM/YYYY')
+        formatearFecha(fechaD) {
+            return dayjs(fechaD).format('DD/MM/YYYY')
         },
         showDatePicker() {
             this.showDatepicker = true;
@@ -461,13 +430,6 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_factura) {
-
-                this.emptyFieldError = true;
-                return;
-            }
-
-
             UrbanizacionApi.create({
 
                 idUrbanizacion: this.formulario.codigo,
@@ -479,15 +441,11 @@ export default {
                 Cantidad_manzana: this.formulario.cantidad,
                 Ubicacion: this.formulario.ubicacion,
                 Precio: this.formulario.precio,
-                idCompras: this.formulario.numero_orden, //nuevo 
                 idCiudad: this.formulario.ciudad,
-                Detalle: this.formulario.itemsDetalle
-
-
-            },
-            ).then(() => {
-                this.ObtenerUrbanizacion()
-            })
+                Detalle: this.itemsDetalle
+ }).then(() => {
+               
+     // Limpia los campos del formulario después de guardar
 
             this.formulario.codigo = '';
             this.formulario.fechaD = '';
@@ -496,6 +454,11 @@ export default {
             this.formulario.documento = '';
             this.formulario.proveedor = '';
             this.dialogoFormulario = false;
+
+            this.itemsDetalle = [];
+            this.dialogoFormulario = false;
+            this.ObtenerUrbanizacion();
+        });
         },
 
 
@@ -549,7 +512,6 @@ export default {
                         cantidad: item.Cantidad_manzana,
                         ubicacion: item.Ubicacion,
                         precio: item.Precio,
-                        numero_orden: item.idCompras,
                         ciudad: item.idCiudad,
                         detalleItems: item.detalle
 
@@ -569,40 +531,39 @@ export default {
 
         editarDetalle(parametro) {
             this.dialogoFormularioEditarDetalle = true
+            this.detalle.id = parametro.id,
             this.detalle.producto = parametro.producto
             this.detalle.ubicacion = parametro.ubicacion;
-            this.detalle.precio = parametro.precio;
+            this.detalle.numero_manz = parametro.numero_manz;
+            this.detalle.numero_lot = parametro.numero_lot;
+            this.detalle.area = parametro.area;
+            this.detalle.precio_ind = parametro.precio_ind;
 
 
         },
         guardarFormularioEditarDetalle() {
-            if (!this.detalle.producto || !this.detalle.ubicacion || !this.detalle.precio || !this.detalle.ubicacion || !this.detalle.numero_manz || !this.detalle.numero_lot || !this.detalle.ubicacion) {
+            if (!this.detalle.producto || !this.detalle.ubicacion || !this.detalle.precio_ind || !this.detalle.ubicacion || !this.detalle.numero_manz || !this.detalle.numero_lot || !this.detalle.ubicacion) {
                 this.emptyFieldError = true;
                 return;
             }
 
             // Busca el índice del elemento que se va a editar
-            const index = this.itemsDetalle.findIndex(item => parametro.producto == this.detalle.producto);
+            const index = this.itemsDetalle.findIndex(item => item.id == this.detalle.id);
+            console.log('Antes de guardar:', this.itemsDetalle);
 
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
-                this.itemsDetalle[index].precio = this.detalle.precio;
                 this.itemsDetalle[index].ubicacion = this.detalle.ubicacion;
                 this.itemsDetalle[index].numero_manz = this.detalle.numero_manz;
                 this.itemsDetalle[index].numero_lot = this.detalle.numero_lot;
-                this.itemsDetalle[index].ubicacion = this.detalle.ubicacion;
+                this.itemsDetalle[index].area = this.detalle.area;
+                this.itemsDetalle[index].precio_ind = this.detalle.precio_ind;
+
             
-        } else {
-                // Si no se encontró el elemento, agrega uno nuevo
-                this.itemsDetalle.push({
-                    producto: this.formulario.producto,
-                    cantidad: this.formulario.cantidad,
-                    action: '',
-                });
-            }
+        } 
             console.log('Después de guardar:', this.itemsDetalle);
 
-            this.dialogoFormularioEditarDe = false;
+            this.dialogoFormularioEditarDetalle = false;
         },
        
 
@@ -618,10 +579,11 @@ export default {
           this.itemsDetalle.push({
             producto: productoSeleccionado.id,
             descripcionPr: productoSeleccionado.descripcionPr,
-            precio: this.detalle.precio / cantidad,
+            precio_ind: this.formulario.precio / cantidad,
             action: '',
+            id: i,
           });
-        }
+        } 
         
 
                 // this.detalle.producto = '';
@@ -636,7 +598,6 @@ export default {
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
-        this.ObtenerCompras()
         this.ObtenerProducto()
         this.ObtenerUrbanizacion()
         this.obtenerCiudades()
