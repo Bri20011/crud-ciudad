@@ -5,7 +5,7 @@
                 <h1 class="mb-3">Registrar Compras</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="2" md="2">
+                        <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Nº Orden de Compras" v-model="formulario.numero_orden"
                                 required></v-text-field>
                         </v-col>
@@ -82,6 +82,7 @@
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
+                            <v-btn prepend-icon="mdi mdi-plus-thick" color="#90A4AE" class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
 
@@ -261,6 +262,103 @@
 
         </v-dialog>
         <!-- FIN DIALOGO -->
+
+
+        <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
+
+        <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
+                <v-form>
+                    <v-row class="d-flex justify-center"> 
+                        <v-col cols="12" sm="4" md="4" >
+                            <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+                        <v-col cols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
+                                required></v-text-field>
+                        </v-col>
+
+                       
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
+                                    @click="AgregarDetallePago">Agregar P</v-btn>
+                            </v-col>
+                      
+
+                        <!-- INICIO DETALLE -->
+                        <v-divider class="mt-0"></v-divider>
+
+                        <!-- FIN DETALLE -->
+
+
+
+                        <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar" :items="itemsDetalle">
+
+                            <template v-slot:item.fechaD="{ item }">
+                               {{ formatearFecha(item.raw.fechaD) }}
+                                 </template>
+                            <template v-slot:item.action="{ item }">
+                                <v-icon size="small" class="me-2" @click="editarDetallePagos(item.raw)">
+                                    mdi-pencil
+                                </v-icon>
+                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+                                    mdi-trash-can-outline
+                                </v-icon> -->
+                            </template>
+
+                        </v-data-table>
+
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+            <!-- INICIO EDITAR DETALLE PAGOS -->
+        <v-dialog max-width="600" v-model="dialogoFormularioEditarDetallePagos" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Editar Detalle Pagos</h1>
+                <v-form>
+                    <v-row class="justify-center">
+
+                        <v-col cols="12" sm="4" md="4" >
+                            <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+                        <v-col ols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
+                                required></v-text-field>
+                        </v-col>
+
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditarDetallePagos = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetallePago">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+      <!-- INICIO EDITAR DETALLE PAGOS -->
+    </v-dialog>
+
+
+        <!-- FIN DIALOGO REGISTRAR CUENTAS A PAGAR -->
     </v-container>
 </template>
   
@@ -289,7 +387,9 @@ export default {
 
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
+            dialogoFormularioGenerarCuota:false,
             ordenCompraSeleccionada: null,
+            dialogoFormularioEditarDetallePagos: false,
 
 
 
@@ -300,8 +400,11 @@ export default {
                 fechaD: null,
                 timbrado: '',
                 numero_factura: '',
-
-
+                monto: '',
+            },
+            detalle: {
+                fechaD: null,
+                monto: '',
             },
 
             contador: 1,
@@ -339,9 +442,11 @@ export default {
                 { title: 'Iva 10%', key: 'iva10', align: 'center' },
                 { title: 'Total', key: 'total', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-
-
-
+            ],
+            headersCuentasPagar:[
+            { title: 'Fecha de Pago', key: 'fechaD', align: 'star' },
+            { title: 'Monto', key: 'monto', align: 'center' },
+            { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
                 {
@@ -784,6 +889,51 @@ export default {
             } else {
                 return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
             }
+        },
+
+        abrirformulariogenerarcuentas() {
+            // Abrir el modal y cargar el código aquí
+            this.dialogoFormularioGenerarCuota = true;
+            this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+        },
+
+        AgregarDetallePago(){
+            this.itemsDetalle.push({
+                fecha: this.formulario.fechaD,
+                monto: this.formulario.monto,
+                action: '',
+
+            }),
+            this.formulario.fechaD = ''
+            this.formulario.monto = ''
+        },
+
+        editarDetallePagos(parametro) {
+            this.dialogoFormularioEditarDetallePagos = true
+            this.formulario.fechaD = parametro.fechaD
+            this.formulario.monto = parametro.monto
+
+            // Calcula el total al abrir el diálogo
+            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
+            this.formulario.iva = parametro.idIva
+        },
+
+        guardarFormularioEditarDetallePago() {
+            if (!this.detalle.fechaD || !this.formulario.monto) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.itemsDetalle.findIndex(item => item.monto === this.formulario.monto);
+
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.itemsDetalle[index].fechaD = this.formulario.fechaD;
+                this.itemsDetalle[index].monto = this.formulario.monto;
+            } 
+            this.dialogoFormularioEditarDetallePagos = false;
         },
     },
 

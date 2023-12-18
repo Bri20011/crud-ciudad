@@ -120,10 +120,10 @@
 
 
     <!-- INICIO VISTA APROBAR -->
-    <v-dialog max-width="700" v-model="dialogoFormularioVistaAprobar" persistent>
+    <v-dialog max-width="800" v-model="dialogoFormularioVistaAprobar" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Aprobar Presupuesto</h1>
+                <h1 class="mb-3">Aprobar Presupuesto y Generar Orden de Compra</h1>
                 <v-form>
 
                     <v-row>
