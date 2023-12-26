@@ -41,26 +41,33 @@
                             <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
                                 required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"
-                                required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
-                                required></v-text-field>
-                        </v-col>
+
+
+
 
 
                         <!-- INICIO DETALLE -->
                         <v-divider class="mt-0"></v-divider>
 
-                        <v-row>
-                            <v-col cols="12" sm="5" md="5" class="mt-5">
-                                <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                                    item-title="descripcionPr" item-value="id" v-model="detalle_cabecera.producto" required>
-                                </v-autocomplete>
-                            </v-col>
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                            <v-autocomplete variant="outlined" label="Urbanizar" :items="listaUrbanizar" item-title="descripcionU"
+                                item-value="id" v-model="formulario.urbanizacion" required></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                            <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
+                                required></v-text-field>
+                        </v-col>
 
+                   
+                            <v-col cols="12" sm="3" md="3" class="mt-5">
+                                <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto" item-title="descripcionPr"
+                                 item-value="id" v-model="detalle_cabecera.producto" required> </v-autocomplete>
+                            </v-col>
+                            <v-row>
 
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
@@ -137,6 +144,7 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ProductoAPI } from '@/services/producto.api'
 import { CiudadAPI } from '@/services/ciudad.api'
+import { StockAPI } from '@/services/stock.api'
 import { UrbanizacionApi } from '@/services/urbanizacion.api'
 export default {
     components: {
@@ -153,10 +161,12 @@ export default {
             dialogoFormularioEditarDetalle: false,
             listaCiudad: [],
             listaProducto: [],
+            listaUrbanizar:[],
             formulario: {
                 nombre_urb: '',
                 fechaD: '',
                 ciudad: '',
+                urbanizacion: '',
                 area: '',
                 ladoA: '',
                 ladoB: '',
@@ -179,6 +189,7 @@ export default {
             headers: [
                 { title: 'Producto', key: 'producto', align: 'center' },
                 { title: 'Descripcion', key: 'descripcionPr', align: 'center' },
+                { title: 'Descripcion', key: 'nombre_urb', align: 'center' },
                 { title: 'Codigo', key: 'id', align: 'center' },
                 { title: 'Precio por Lote', key: 'precio_ind', align: 'center' },
                 { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
@@ -193,10 +204,11 @@ export default {
     created() {
         this.ObtenerProducto();
         this.ObtenerCiudades();
+        this.ObtenerStock();
     },
     methods: {
         ObtenerProducto() {
-            ProductoAPI.findByTipo(2).then(({ data }) => {
+            ProductoAPI.findByTipo(3).then(({ data }) => {
                 this.listaProducto = data.map(item => {
                     return {
                         id: item.idProducto,
@@ -216,6 +228,16 @@ export default {
                 })
             })
         },
+        ObtenerStock() {
+            StockAPI.findByTipo(4).then(({ data }) => {
+                this.listaUrbanizar = data.map(item => {
+                    return {
+                        id: item.idStock,
+                        descripcionU: item.nombreproducto
+                    }
+                })
+            })
+        },
         agregarDetalleAntesGuardar() {
             const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle_cabecera.producto);
 
@@ -228,6 +250,7 @@ export default {
                     descripcionPr: productoSeleccionado.descripcionPr,
                     id: indice,
                     precio_ind: this.formulario.precio / cantidad,
+                    nombre_urb: this.formulario.nombre_urb,
                     ubicacion: '',
                     numero_manz: '',
                     numero_lot: '',
@@ -258,6 +281,7 @@ export default {
                 Ubicacion: this.formulario.ubicacion,
                 Precio: this.formulario.precio,
                 idCiudad: this.formulario.ciudad,
+                idStock: this.formulario.urbanizacion,
                 Detalle: this.listadoDeLaTabla.map(elemento => ({
                     idProducto: elemento.producto,
                     id_detalle: elemento.id,

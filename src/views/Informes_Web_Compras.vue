@@ -2,46 +2,41 @@
     <v-dialog max-width="1200" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registrar Nota de Credito Proveedor</h1>
+                <h1 class="mb-3">Informe Web de Compras</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="3" md="3">
+                        <!-- <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Nº de factura Asociado" v-model="formulario.numero_orden"
                                 required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="mt-4" sm="2" md="2">
-                            <v-btn @click="ObtenerCodigoCompra">Calcular</v-btn>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero de Nota de Credito" v-model="formulario.numero_nc"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                                placeholder="Fecha de Operacion" @input="formatDate" />
-                        </v-col>
+                        </v-col> -->
                         <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
-                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
                         <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
-                               disabled required></v-autocomplete>
+                        
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
+                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col> 
+                        <v-col cols="12" sm="1" md="1" class="mx-0"><H5>Fecha Desde:</H5></v-col>
+
+                        <v-col cols="12" sm="2" md="2" >
+                           
+                            <input  class="custom-input" v-model="formulario.fechaO" type="date"
+                              placeholder="Fecha de Desde" @input="formatDate" />
                         </v-col>
+
+                        
+                        <v-col cols="12" sm="1" md="1"><H5>Fecha Hasta:</H5></v-col>
                         <v-col cols="12" sm="2" md="2">
                             <input class="custom-input" v-model="formulario.fechaO" type="date"
-                            disabled  placeholder="Fecha de Operacion" @input="formatDate" />
+                              placeholder="Fecha de Hasta" @input="formatDate" />
+                        </v-col>
+
+                        <v-col cols="12"  class="d-flex justify-end">
+                            <v-btn color="primary" @click="ObtenerCodigoCompra">Obtener</v-btn>
                         </v-col>
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
@@ -75,7 +70,7 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Imprimir</v-btn>
 
                         </v-col>
                     </v-row>

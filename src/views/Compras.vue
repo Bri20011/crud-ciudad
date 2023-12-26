@@ -5,8 +5,8 @@
                 <h1 class="mb-3">Registrar Compras</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nº Orden de Compras" v-model="formulario.numero_orden"
+                        <v-col cols="12" sm="2" md="2">
+                            <v-text-field variant="outlined" label="Nº OC" v-model="formulario.numero_orden"
                                 required></v-text-field>
                         </v-col>
 
@@ -23,7 +23,10 @@
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
-
+                        <v-col cols="12" sm="2" md="2">
+                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
+                               disabled required></v-autocomplete>
+                        </v-col>
 
                         <v-col cols="12" sm="4" md="4">
                             <input class="custom-input" v-model="formulario.fechaO" type="date"

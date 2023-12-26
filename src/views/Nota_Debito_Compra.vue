@@ -20,18 +20,30 @@
                             <input class="custom-input" v-model="formulario.fechaO" type="date"
                                 placeholder="Fecha de Operacion" @input="formatDate" />
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
+                        <v-col cols="12" sm="2" md="2">
+                        <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
+                                item-title="descripcionD" item-value="id" v-model="formulario.documento"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
 
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
                                 item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
-               
+                        <v-col cols="12" sm="2" md="2">
+                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
+                               disabled required></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="2" md="2">
+                            <input class="custom-input" v-model="formulario.fechaO" type="date"
+                            disabled  placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">

@@ -292,6 +292,7 @@ export default {
                 fechaD: '',
                 timbrado: '',
                 numero_factura: '',
+                urbanizacion: '',
 
 
             },
@@ -442,6 +443,7 @@ export default {
                 Ubicacion: this.formulario.ubicacion,
                 Precio: this.formulario.precio,
                 idCiudad: this.formulario.ciudad,
+                idStock: this.formulario.urbanizacion,
                 Detalle: this.itemsDetalle
  }).then(() => {
                

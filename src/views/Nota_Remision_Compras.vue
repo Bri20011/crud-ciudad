@@ -2,18 +2,12 @@
     <v-dialog max-width="1200" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registrar Nota de Credito Proveedor</h1>
+                <h1 class="mb-3">Registrar Remision Proveedor</h1>
                 <v-form>
                     <v-row>
+
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nº de factura Asociado" v-model="formulario.numero_orden"
-                                required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="mt-4" sm="2" md="2">
-                            <v-btn @click="ObtenerCodigoCompra">Calcular</v-btn>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero de Nota de Credito" v-model="formulario.numero_nc"
+                            <v-text-field variant="outlined" label="Numero de Remision" v-model="formulario.numero_nc"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
@@ -30,19 +24,7 @@
                                 item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                        <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
-                                item-title="descripcionD" item-value="id" v-model="formulario.documento"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
-                               disabled required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                            disabled  placeholder="Fecha de Operacion" @input="formatDate" />
-                        </v-col>
+                        
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">
@@ -140,7 +122,7 @@
             </v-col>
 
             <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de NC: {{ items.length }}
+                Cantidad de NR: {{ items.length }}
             </v-col>
 
         </v-row>
@@ -264,8 +246,8 @@ export default {
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Numero de Nota de Credito', key: 'numero_nc' },
-                { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
+                { title: 'Numero de Remision', key: 'numero_nc' },
+                { title: 'Fecha de Remision', key: 'fecha', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
@@ -274,13 +256,13 @@ export default {
                 { title: 'Producto', key: 'idProducto', align: 'center' },
                 { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'center' },
-                { title: 'Precio Unitario', key: 'Precio', align: 'center' },
-                { title: 'Iva', key: 'iva', align: 'center' },
-                { title: 'Exenta', key: 'exenta', align: 'center' },
-                { title: 'Iva 5%', key: 'iva5', align: 'center' },
-                { title: 'Iva 10%', key: 'iva10', align: 'center' },
-                { title: 'Total', key: 'total', align: 'center' },
-                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+                // { title: 'Precio Unitario', key: 'Precio', align: 'center' },
+                // { title: 'Iva', key: 'iva', align: 'center' },
+                // { title: 'Exenta', key: 'exenta', align: 'center' },
+                // { title: 'Iva 5%', key: 'iva5', align: 'center' },
+                // { title: 'Iva 10%', key: 'iva10', align: 'center' },
+                // { title: 'Total', key: 'total', align: 'center' },
+                // { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
 
