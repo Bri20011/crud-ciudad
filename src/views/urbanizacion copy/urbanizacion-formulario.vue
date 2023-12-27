@@ -49,22 +49,18 @@
                         <!-- INICIO DETALLE -->
                         <v-divider class="mt-0"></v-divider>
 
-                        <v-col cols="12" sm="2" md="2" class="mt-5">
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-autocomplete variant="outlined" label="Urbanizar" :items="listaUrbanizar" item-title="descripcionU"
                                 item-value="id" v-model="formulario.urbanizacion" required></v-autocomplete>
                         </v-col>
                         <v-col cols="12" sm="3" md="3" class="mt-5">
-                                <v-autocomplete variant="outlined" label="Numero de manzana" :items="listaManzana" item-title="descripcionM"
-                                 item-value="id" v-model="formulario.manzana" required> </v-autocomplete>
-                            </v-col>
-                        <v-col cols="12" sm="2" md="2" class="mt-5">
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"
                                 required></v-text-field>
                         </v-col>
-                        <!-- <v-col cols="12" sm="2" md="2" class="mt-5">
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
                                 required></v-text-field>
-                        </v-col> -->
+                        </v-col>
 
                    
                             <v-col cols="12" sm="3" md="3" class="mt-5">
@@ -119,7 +115,7 @@
                         </v-col>
                         <v-col ols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Numero Manzana"
-                                v-model="detalle_editar.manzana"></v-text-field>
+                                v-model="detalle_editar.numero_manz"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Numero Lote"
@@ -182,8 +178,7 @@ export default {
                 precio: ''
             },
             detalle_cabecera: {
-                producto: '',
-                manzana: ''
+                producto: ''
             },
             detalle_editar: {
                 id: '',
@@ -192,8 +187,7 @@ export default {
                 numero_manz: '',
                 numero_lot: '',
                 area: '',
-                precio_ind: '',
-                manzana: ''
+                precio_ind: ''
             },
             headers: [
                 { title: 'Producto', key: 'producto', align: 'center' },
@@ -202,7 +196,7 @@ export default {
                 { title: 'Codigo', key: 'id', align: 'center' },
                 { title: 'Precio por Lote', key: 'precio_ind', align: 'center' },
                 { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
-                { title: 'Numero Manzana', key: 'manzana', align: 'center' },
+                { title: 'Numero Manzana', key: 'numero_manz', align: 'center' },
                 { title: 'Numero Lote', key: 'numero_lot', align: 'center' },
                 { title: 'Area', key: 'area', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' }
@@ -265,15 +259,15 @@ export default {
             const cantidad = this.formulario.cantidad;
 
             // Agregar  detalle segun la cantidad ingresada
-            if (productoSeleccionado) {
+            for (let indice = 0; indice < cantidad; indice++) {
                 this.listadoDeLaTabla.push({
                     producto: productoSeleccionado.id,
                     descripcionPr: productoSeleccionado.descripcionPr,
-                    // id: indice,
-                    precio_ind: this.formulario.precio_ind,
+                    id: indice,
+                    precio_ind: this.formulario.precio / cantidad,
                     nombre_urb: this.formulario.nombre_urb,
                     ubicacion: '',
-                    manzana: '',
+                    numero_manz: '',
                     numero_lot: '',
                     area: '',
                     action: '',
@@ -307,7 +301,7 @@ export default {
                     idProducto: elemento.producto,
                     id_detalle: elemento.id,
                     Ubicacion: elemento.ubicacion,
-                    Numero_manzana: elemento.manzana,
+                    Numero_manzana: elemento.numero_manz,
                     Numero_lote: elemento.numero_lot,
                     Area: elemento.area,
                     Precio_Lote: elemento.precio_ind
@@ -317,7 +311,7 @@ export default {
             });
         },
         guardarFormularioEditarDetalle() {
-            if (!this.detalle_editar.producto || !this.detalle_editar.ubicacion || !this.detalle_editar.precio_ind || !this.detalle_editar.manzana || !this.detalle_editar.numero_lot) {
+            if (!this.detalle_editar.producto || !this.detalle_editar.ubicacion || !this.detalle_editar.precio_ind || !this.detalle_editar.numero_manz || !this.detalle_editar.numero_lot) {
                 return;
             }
             // Busca el índice del elemento que se va a editar

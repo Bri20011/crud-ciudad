@@ -54,7 +54,7 @@
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
+                            <v-text-field variant="outlined" label="Precio Totall" v-model="formulario.precio"
                                 required></v-text-field>
                         </v-col>
 

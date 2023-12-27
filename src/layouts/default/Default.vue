@@ -135,6 +135,8 @@ export default {
         ['Caja', 'mdi-cog-outline', '/frmcaja'],
         ['Proveedor', 'mdi-cog-outline', '/proveedor'],
         ['Producto', 'mdi-cog-outline', '/producto'],
+        ['Manzana', 'mdi-cog-outline', '/manzana'],
+
 
       ],
     };
