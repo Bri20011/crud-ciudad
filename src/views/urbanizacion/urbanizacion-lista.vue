@@ -54,7 +54,7 @@ export default {
         return {
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Fecha de Urbamizacion', key: 'fechaD', align: 'star' },
+                { title: 'Fecha de Urbanizacion', key: 'fechaD', align: 'star' },
                 { title: 'Nombre de Urbanizacion', key: 'nombre_urb' },
                 { title: 'Area', key: 'area', align: 'star' },
                 { title: 'Lado A', key: 'ladoA', align: 'star' },
