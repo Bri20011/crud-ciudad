@@ -2,45 +2,47 @@
   <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Crear Usuario</h1>
+        <h1 class="mb-3">Crear Timbrado</h1>
         <v-form>
           <v-row>
-            <!-- <v-col cols="12" sm="2" md="2">
-              <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled></v-text-field>
-            </v-col> -->
-
-
-
-            <v-col cols="12" sm="5" md="5">
-              <v-text-field variant="outlined" label="Nombre de Usuario" v-model="formulario.descripcion"
-                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+            <v-col cols="12" sm="4" md="4">
+              <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" :error="excededLimit"
+                :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="4" md="4">
-              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                density="default" label="Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
-                :error-messages="errorMessageE" required></v-text-field>
+              <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha de Pedido"
+                @input="formatDate" />
+            </v-col>
+         
+          <v-col cols="12" sm="4" md="4">
+            <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha de Pedido"
+              @input="formatDate" />
+          </v-col>
 
-            </v-col>
-            
-            <v-col cols="12" sm="4" md="4">
-              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-            </v-col>
-            
-            <v-col cols="12" sm="4" md="4">
-              <v-autocomplete variant="outlined" label="Funcionario" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-            </v-col>
-            
-            <v-col cols="12" sm="4" md="4">
-              <v-autocomplete variant="outlined" label="Nivel" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-            </v-col>
+          <v-col cols="12" sm="4" md="4">
+            <v-autocomplete variant="outlined" label="Punto Establecimiento" :items="listaSucursal"
+              item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+          </v-col>
+
+          <v-col cols="12" sm="4" md="4">
+            <v-autocomplete variant="outlined" label="Punto  Expedicion" :items="listaSucursal" item-title="descripcion"
+              item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+          </v-col>
+          <v-col cols="12" sm="4" md="4">
+            <v-autocomplete variant="outlined" label="Tipo Documento" :items="listaSucursal" item-title="descripcion"
+              item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+          </v-col>
+
+
+
+
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.password">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.numerCaja">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -52,7 +54,7 @@
   <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Editar Usuario</h1>
+        <h1 class="mb-3">Editar Timbrado</h1>
         <v-form>
           <v-row>
             <v-col cols="12" sm="4" md="4">
@@ -60,19 +62,19 @@
             </v-col>
 
             <v-col cols="12" sm="8" md="8">
-              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion"
+                item-value="id" v-model="formulario.sucursal"></v-autocomplete>
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
-              <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
+              <v-text-field variant="outlined" label="Descripcion de Caja" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
-              <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
-                :error-messages="errorMessageE" required></v-text-field>
+              <v-text-field density="default" label="Introduza el numero de caja" prepend-inner-icon="mdi-lock-outline"
+                variant="outlined" @click:append-inner="visible = !visible" v-model="formulario.numerCaja"
+                :error="excededLimitPas" :error-messages="errorMessageE" required></v-text-field>
 
             </v-col>
           </v-row>
@@ -80,7 +82,7 @@
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.password">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.numerCaja">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -92,12 +94,12 @@
     <v-row>
       <v-col cols="12" sm="6" md="6">
 
-        <v-text-field :loading="loading" density="compact"  v-model="buscador" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
-          single-line hide-details rounded click:prependInner></v-text-field>
+        <v-text-field :loading="loading" density="compact" v-model="buscador" variant="solo" label="Buscar"
+          append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
 
       </v-col>
       <v-col cols="12" sm="6" md="6" class="d-flex justify-end align-center">
-        Cantidad de Usuario: {{ items.length }}
+        Cantidad de Timbrado: {{ items.length }}
       </v-col>
     </v-row>
 
@@ -106,7 +108,7 @@
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
-              <p class="font-weight-bold">Usuarios</p>
+              <p class="font-weight-bold">Timbrado</p>
             </v-toolbar-title>
 
             <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -116,10 +118,6 @@
 
         </template>
 
-        <template v-slot:item.password="{ item }">
-          <span v-if="!dialogoFormularioEditar">********</span>
-          <span v-else>{{ item.password }}</span>
-        </template>
         <template v-slot:item.action="{ item }">
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
             mdi-pencil
@@ -140,31 +138,31 @@
     <v-dialog v-model="dialogoEliminar" max-width="400">
       <v-card>
         <v-container>
-        <v-card-title class="headline">Confirmar Eliminación</v-card-title>
-        <v-card-text>
-          ¿Está seguro de que desea eliminar este elemento?
-        </v-card-text>
+          <v-card-title class="headline">Confirmar Eliminación</v-card-title>
+          <v-card-text>
+            ¿Está seguro de que desea eliminar este elemento?
+          </v-card-text>
 
-      
+
           <v-row>
-         <v-col cols="12" class="d-flex justify-end">
-          <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-          <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
-         </v-col>
-        </v-row>
-        
-        
-      </v-container>
+            <v-col cols="12" class="d-flex justify-end">
+              <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
+              <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+            </v-col>
+          </v-row>
+
+
+        </v-container>
       </v-card>
-      
+
     </v-dialog>
-                        <!-- FIN DIALOGO -->
+    <!-- FIN DIALOGO -->
   </v-container>
 </template>
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { UsuarioAPI } from '@/services/usuario.api'
+import { CajaAPI } from '@/services/caja.api'
 import { SucursalAPI } from '@/services/sucursal.api'
 
 export default {
@@ -179,17 +177,16 @@ export default {
       formulario: {
         codigo: '',
         descripcion: '',
-        password: '',
+        numerCaja: '',
         sucursal: ''
       },
       limit: 45,
-      limitePasswordMin: 6,
-      limitePasswordMax: 10,
+      limiteNumerCajMax: 4,
       contador: 1,
       defaultFormulario: {
         codigo: '',
         descripcion: '',
-        password: '',
+        numerCaja: '',
         sucursal: ''
       },
       listaSucursal: [],
@@ -201,21 +198,23 @@ export default {
           sortable: false,
           key: 'id',
         },
-        { title: 'Nombre Usuario', key: 'descripcion' },
-        { title: 'Contraseña', key: 'password' },
-        { title: 'Sucursal', key: 'nombreSucursal'},
-        { title: 'Funcionario', key: 'fun'},
-        { title: 'Nivel', key: 'niv'},
+        { title: 'Descripcion', key: 'descripcion' },
+        { title: 'Numero', key: 'descripcionn' },
+        { title: 'Fecha Inicio', key: 'nombreSucursal' },
+        { title: 'Fecha Fin', key: 'f' },
+        { title: 'Punto Expedicion', key: 'ff' },
+        { title: 'Punto Establecimiento', key: 'ffd' },
+        { title: 'Tipo Documento', key: 'numerCaja' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
         {
           id: '1',
           descripcion: 'Campo',
-          password: '123',
+          numerCaja: '123',
           action: ''
         }
-      ], 
+      ],
       dialogoEliminar: false,
       elementoAEliminar: null,
     }
@@ -228,10 +227,11 @@ export default {
     },
     excededLimit() {
       return this.formulario.descripcion.length > this.limit;
+
     },
     excededLimitPas() {
-      const password = this.formulario.password;
-      return isNaN(password) || password.length < this.limitePasswordMin || password.length > this.limitePasswordMax;
+      return this.formulario.numerCaja.length > this.limiteNumerCajMax;
+
     },
     errorMessage() {
       if (this.excededLimit) {
@@ -241,7 +241,7 @@ export default {
     },
     errorMessageE() {
       if (this.excededLimitPas) {
-        return `Debe ser entre ${this.limitePasswordMin} y ${this.limitePasswordMax} caracteres alfanuméricos`;
+        return 'Superaste el límite de 4 letras';
       }
       return '';
     }
@@ -272,44 +272,44 @@ export default {
     },
     guardarFormulario() {
 
-      if (!this.formulario.descripcion || !this.formulario.password || this.excededLimit || this.excededLimitPas) {
+      if (!this.formulario.descripcion || !this.formulario.numerCaja || this.excededLimit || this.excededLimitPas) {
         this.emptyFieldError = true;
         return;
       }
-      UsuarioAPI.create(
+      CajaAPI.create(
         {
-          idUsuario: this.formulario.codigo,
-          Nombre: this.formulario.descripcion,
-          Contrasehna: this.formulario.password,
+          idCaja: this.formulario.codigo,
+          nombrecaja: this.formulario.descripcion,
+          Cajahabilitada: this.formulario.numerCaja,
           idSucursal: this.formulario.sucursal
         }
-      ).then(()=> {
-        this.ObtenerUsuario()
+      ).then(() => {
+        this.ObtenerCaja()
       })
 
       this.formulario.descripcion = '';
-      this.formulario.password = '';
+      this.formulario.numerCaja = '';
       this.dialogoFormulario = false
     },
 
 
     guardarFormularioEditar() {
-      if (!this.formulario.descripcion || !this.formulario.password || this.excededLimit || this.excededLimitPas) {
+      if (!this.formulario.descripcion || !this.formulario.numerCaja || this.excededLimit || this.excededLimitPas) {
         this.emptyFieldError = true;
         return;
       }
 
 
-      UsuarioAPI.update(
+      CajaAPI.update(
         this.formulario.codigo,
         {
-          idUsuario: this.formulario.codigo,
-          Nombre: this.formulario.descripcion,
-          Contrasehna: this.formulario.password,
+          idCaja: this.formulario.codigo,
+          nombrecaja: this.formulario.descripcion,
+          Cajahabilitada: this.formulario.numerCaja,
           idSucursal: this.formulario.sucursal
         }
-      ).then(()=> {
-        this.ObtenerUsuario()
+      ).then(() => {
+        this.ObtenerCaja()
       })
       this.dialogoFormularioEditar = false
     },
@@ -317,7 +317,7 @@ export default {
       this.dialogoFormularioEditar = true
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
-      this.formulario.password = parametro.password
+      this.formulario.numerCaja = parametro.numerCaja
       this.formulario.sucursal = parametro.idSucursal
     },
     confirmarEliminarCiudad(elemento) {
@@ -333,21 +333,21 @@ export default {
     eliminarCiudad() {
       if (this.elementoAEliminar) {
         // Realiza la eliminación aquí
-        UsuarioAPI.delete(this.elementoAEliminar.id).then(() => {
-          this.ObtenerUsuario();
+        CajaAPI.delete(this.elementoAEliminar.id).then(() => {
+          this.ObtenerCaja();
         });
         // Cierra el diálogo de confirmación
         this.dialogoEliminar = false;
         this.elementoAEliminar = null;
       }
     },
-    ObtenerUsuario() {
-      UsuarioAPI.getAll().then(({data}) => {
-        this.items = data.map(item=> {
+    ObtenerCaja() {
+      CajaAPI.getAll().then(({ data }) => {
+        this.items = data.map(item => {
           return {
-            id: item.idUsuario,
-            descripcion: item.Nombre,
-            password: item.Contrasehna,
+            id: item.idCaja,
+            descripcion: item.nombrecaja,
+            numerCaja: item.Cajahabilitada,
             idSucursal: item.idSucursal,
             nombreSucursal: item.nombreSucursal
           }
@@ -362,10 +362,27 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.ObtenerUsuario()
+    this.ObtenerCaja()
     this.ObtenerSucursal()
   },
 
 }
 </script>
-<style></style>
+<style>
+.custom-input {
+    width: 100%;
+    /* Ancho completo */
+    height: 56px;
+    /* Altura deseada */
+    border: 1px solid #9E9E9E;
+    /* Borde */
+    padding: 8px;
+    /* Espaciado interno */
+    border-radius: 3px;
+    /* Bordes redondeados */
+    box-sizing: border-box;
+    /* Incluir el borde en el tamaño total */
+    outline: none;
+    /* Quitar el contorno al hacer clic */
+}
+</style>

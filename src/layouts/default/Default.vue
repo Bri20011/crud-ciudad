@@ -116,9 +116,12 @@ export default {
 
       ],
       Produccion: [
-        ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
-        ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_urbanizacion'],
+        // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
+        // ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_urbanizacion'],
         ['Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
+        ['Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
+        ['Registro Contrato', 'mdi-plus-outline', '/contrato'],
+      
 
       ],
       mantenimiento: [
@@ -131,11 +134,13 @@ export default {
         ['Numero de Establecimiento', 'mdi-cog-outline', '/frmnumero_establecimiento'],
         ['Numero de Expedicion', 'mdi-cog-outline','/frmnumero_expedicion'],
         ['Iva', 'mdi-cog-outline', '/frmiva'],
-        ['Usuario', 'mdi-cog-outline', '/frmusuario'],
+        ['x-Usuario', 'mdi-cog-outline', '/frmusuario'],
         ['Caja', 'mdi-cog-outline', '/frmcaja'],
         ['Proveedor', 'mdi-cog-outline', '/proveedor'],
         ['Producto', 'mdi-cog-outline', '/producto'],
         ['Manzana', 'mdi-cog-outline', '/manzana'],
+        ['x-Timbrado', 'mdi-cog-outline', '/timbrado'],
+        ['x-Cliente', 'mdi-cog-outline', '/cliente'],
 
 
       ],

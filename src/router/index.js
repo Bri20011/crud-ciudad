@@ -263,7 +263,41 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/Manzana.vue'),
+    },
+    {
+      path: 'timbrado',
+      name: 'Timbrado',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/Timbrado.vue'),
+    },
+    {
+      path: 'cliente',
+      name: 'Cliente',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/Cliente.vue'),
+    },
+    {
+      path: 'precio',
+      name: 'Precio',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexPrecio.vue'),
+    },
+
+    {
+      path: 'contrato',
+      name: 'Contrato',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexContrato.vue'),
     }
+
 
 
 

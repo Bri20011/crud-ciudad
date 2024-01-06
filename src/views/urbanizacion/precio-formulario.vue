@@ -1,13 +1,21 @@
 
 
 <template>
-    <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
+    <v-dialog max-width="2000" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registrar Urbanizacion</h1>
+                <h1 class="mb-3">Registrar Precios</h1>
                 <v-form>
-                    <v-row>
-                        <v-col cols="12" sm="5" md="5">
+                    <v-row class="">
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Nº Urbanizacion" v-model="formulario.nombre_urb"
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="2" md="2" class="mt-5">
+                                <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
+                                    @click="agregarDetalleAntesGuardar">Obtener</v-btn>
+                            </v-col>
+                        <v-col cols="12" sm="3" md="3" class="mx-0">
                             <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
                                 required></v-text-field>
                         </v-col>
@@ -17,37 +25,14 @@
                                 placeholder="Fecha de Operacion" />
                         </v-col>
 
-                        <v-col cols="12" sm="4" md="4">
-                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC"
-                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
-                        </v-col>
 
-
-                        <!-- <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="formulario.area" required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Lado A" v-model="formulario.ladoA"
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Lado B" v-model="formulario.ladoB"
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
-                                required></v-text-field>
-                        </v-col> -->
 
 
 
 
 
                         <!-- INICIO DETALLE -->
-                        <v-divider class="mt-0"></v-divider>
+                        <!-- <v-divider class="mt-0"></v-divider>
 
                         <v-col cols="12" sm="2" md="2" class="mt-5">
                             <v-autocomplete variant="outlined" label="Lote a Urbanizar" :items="listaUrbanizar"
@@ -66,26 +51,20 @@
                         <v-col cols="12" sm="2" md="2" class="mt-5">
                             <v-text-field variant="outlined" label="Cantidad de lotes" v-model="formulario.cantidad"
                                 required></v-text-field>
-                        </v-col>
+                        </v-col> -->
                         <!-- <v-col cols="12" sm="2" md="2" class="mt-5">
                             <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
                                 required></v-text-field>
                         </v-col> -->
 
 
-                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                        <!-- <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="detalle_cabecera.producto" required>
                             </v-autocomplete>
-                        </v-col>
+                        </v-col> -->
 
 
-                        <v-row class="d-flex align-end  mt-5">
-                            <v-col cols="12" sm="8" md="8">
-                                <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
-                                    @click="agregarDetalleAntesGuardar">Agregar</v-btn>
-                            </v-col>
-                        </v-row>
                         <!-- FIN DETALLE -->
 
                         <v-data-table class="mt-5" max-width="1500" items-per-page-text="Articulos" :headers="headers"
@@ -100,23 +79,23 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="cerrarDialogo">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardarr</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
             </v-container>
         </v-card>
     </v-dialog>
-    <!-- INICIO EDITAR DETALLE -->
-    <v-dialog max-width="800" v-model="dialogoFormularioEditarDetalle" persistent>
+   <!-- INICIO EDITAR DETALLE -->
+   <v-dialog max-width="1000" v-model="dialogoFormularioEditarDetalle" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3 text-center">Ingresar Detalle</h1>
+                <h1 class="mb-3 text-center">Ingresar Precio</h1>
                 <v-form>
 
                     <v-row class="justify-center">
-                        <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Numero de manzana" :items="listaManzana"
+                        <v-col cols="12" sm="2" md="2">
+                            <v-text-field variant="outlined" label="Nª manzana" :items="listaManzana"
                                 item-title="descripcionM" item-value="id" v-model="formulario.manzana" disabled required>
                             </v-text-field>
                         </v-col>
@@ -124,14 +103,13 @@
                             <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
                                 disabled required></v-text-field>
                         </v-col>
-                    </v-row>
-
-                    <v-row class="justify-center">
-                        <v-col cols="12" sm="4" md="4">
+                   
+                    
+                        <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Ancho del Frente:" v-model="detalle_editar.ancho_frente"
                                 required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Ancho de Atrás:" v-model="detalle_editar.ancho_atras"
                                 required></v-text-field>
                         </v-col>
@@ -151,31 +129,25 @@
                                 v-model="detalle_editar.numero_lote" required></v-text-field>
                         </v-col>
                     </v-row>
-                    <!-- <v-col cols="12" sm="5" md="5">
-                        <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                            item-title="descripcionPr" item-value="id" v-model="detalle_editar.producto" disabled
-                            required></v-autocomplete>
-                    </v-col> -->
-                    <!-- <v-col ols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Ubicacion"
-                                v-model="detalle_editar.ubicacion"></v-text-field>
-                        </v-col> -->
-                    <!-- <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Numero Manzana"
-                                v-model="detalle_editar.manzana"></v-text-field>
-                        </v-col> -->
-                    <!-- <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero Lote"
-                                v-model="detalle_editar.numero_lot"></v-text-field>
+                    <v-row>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Precio Contado"
+                                v-model="detalle_editar.numero_lote" required></v-text-field>
                         </v-col>
-                        <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="detalle_editar.area"></v-text-field>
+                        <v-col cols="12" sm="2" md="2" >
+                            <v-autocomplete variant="outlined" label="Cantidad Cuotas" :items="listaUrbanizar"
+                                item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
+                                required></v-autocomplete>
                         </v-col>
-                        <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio del Lote"
-                                v-model="detalle_editar.precio_ind"></v-text-field>
-                        </v-col> -->
-
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Monto total Financiado"
+                            disabled    v-model="detalle_editar.numero_lote" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Monto Cuotas de Financiacion"
+                              disabled  v-model="detalle_editar.numero_lote" required></v-text-field>
+                        </v-col>
+                    </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2"
@@ -251,10 +223,13 @@ export default {
                 { title: 'Nombre de Urbanizacion', key: 'nombre_urb', align: 'center' },
                 { title: 'Numero de Lote', key: 'numero_lote', align: 'center' },
                 { title: 'Numero Manzana', key: 'manzana', align: 'center' },
+                { title: 'Costo', key: 'costo', align: 'center' },
                 { title: 'Ancho del Frente:', key: 'ancho_frente', align: 'center' },
                 { title: 'Ancho de Atrás:', key: 'ancho_atras', align: 'center' },
                 { title: 'Longitud del Lado Izquierdo:', key: 'l_izquiero', align: 'center' },
                 { title: 'Longitud del Lado Derecho:', key: 'l_derecho', align: 'center' },
+                { title: 'Precio Contado:', key: 'P_contado', align: 'center' },
+                { title: 'Precio Financiado:', key: 'P_financiado', align: 'center' },
                 // { title: 'Precio por Lote', key: 'precio_ind', align: 'center' },
                 // { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
                 // { title: 'Cantidad de lotes', key: 'cantidad', align: 'center' },

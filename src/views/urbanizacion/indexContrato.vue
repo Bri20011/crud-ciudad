@@ -2,19 +2,19 @@
 
 <template>
     <v-container>
-        <UrbanizacionLista :prop_listado_urbanizacion="listado_urbanizacion" />
+        <ContratoLista :prop_listado_contrato="listado_contrato" />
     </v-container>
 </template>
 <script>
-import UrbanizacionLista from './urbanizacion-lista.vue'
+import ContratoLista from './contrato-lista.vue'
 import { UrbanizacionApi } from '@/services/urbanizacion.api'
 export default {
     components: {
-        UrbanizacionLista
+        ContratoLista
     },
     data() {
         return {
-            listado_urbanizacion: []
+            listado_contrato: []
         }
     },
     created() {
@@ -23,7 +23,7 @@ export default {
     methods: {
         ObtenerUrbanizacion() {
             UrbanizacionApi.getAll().then(({ data }) => {
-                this.listado_urbanizacion = data.map(item => {
+                this.listado_contrato = data.map(item => {
                     return {
                         id: item.idUrbanizacion,
                         fechaD: item.fecha_urb,
