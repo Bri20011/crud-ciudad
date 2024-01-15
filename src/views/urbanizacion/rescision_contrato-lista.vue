@@ -6,7 +6,7 @@
         </v-col>
 
         <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-            Cantidad de Urbanizacion: {{ prop_listado_urbanizacion.length }}
+            Cantidad de Rescisión de Contratos: {{ prop_listado_rescision_contrato.length }}
         </v-col>
 
     </v-row>
@@ -15,7 +15,7 @@
             <template v-slot:top>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>
-                        <p class="font-weight-bold">Registro de Urbanizacion</p>
+                        <p class="font-weight-bold">Registro de Rescisión de Contratos</p>
                     </v-toolbar-title>
 
                     <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -34,19 +34,19 @@
             </template>
         </v-data-table>
     </v-card>
-    <UrbanizacionFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
+    <ContratoFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
 </template>
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import UrbanizacionFormulario from './urbanizacion-formulario.vue'
+import ContratoFormulario from './Rescision_contrato-formulario.vue'
 import dayjs from 'dayjs'
 export default {
     components: {
         VDataTable,
-        UrbanizacionFormulario
+        ContratoFormulario
     },
     props: {
-        prop_listado_urbanizacion: {
+        prop_listado_rescision_contrato: {
             type: Array
         }
     },
@@ -54,13 +54,17 @@ export default {
         return {
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Fecha de Urbanizacion', key: 'fechaD', align: 'star' },
+                { title: 'Numero de Contrato', key: 'fechaD', align: 'star' },
                 { title: 'Nombre de Urbanizacion', key: 'nombre_urb' },
-                { title: 'Cantidad de Manzanas', key: 'Cantidad_manzana', align: 'center' },
-                { title: 'Cantidad de Lotes', key: 'Cantidad_manzana', align: 'center' },
-                { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
-                { title: 'Costo', key: 'costo', align: 'center' },
-                { title: 'Ciudad', key: 'idCiudad', align: 'center' },
+                // { title: 'Area', key: 'area', align: 'star' },
+                // { title: 'Lado A', key: 'ladoA', align: 'star' },
+                // { title: 'Lado B', key: 'ladoB', align: 'center' },
+                { title: 'Cliente', key: 'Cantidad_manzana', align: 'center' },
+                { title: 'Fecha', key: 'Cantidad_lote', align: 'center' },
+                { title: 'Motivo de Rescision', key: 'motivo', align: 'center' },
+                // { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
+                // { title: 'Precio', key: 'precio', align: 'center' },
+                // { title: 'Ciudad', key: 'idCiudad', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             buscador: '',
@@ -69,8 +73,8 @@ export default {
     },
     computed: {
         itemsComputed() {
-            if (!this.buscador) return this.prop_listado_urbanizacion
-            return this.prop_listado_urbanizacion.filter((element) => element.id.toString().toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
+            if (!this.buscador) return this.prop_listado_contrato
+            return this.prop_listado_contrato.filter((element) => element.id.toString().toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
     },
     methods: {

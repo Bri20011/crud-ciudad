@@ -105,22 +105,35 @@ export default {
         ['Nota de Debito', 'mdi-cog-outline','/nota_debito_compra'],
         ['x-Nota de Remision', 'mdi-cog-outline','/nota_remision_compras'],
         ['x-Obtener Libro de Compras', 'mdi-cog-outline', '/obtener_libro_compras'],
-        ['x-Informes Web', 'mdi-cog-outline', '/informes_web_compras'],
+        ['x-Informes', 'mdi-cog-outline', '/informes_web_compras'],
    
         
 
       ],
       ventas: [
-        ['Venta', 'mdi-file-outline', '/'],
-        ['Pedido', 'mdi-file-outline', '/'],
+        ['x-Apertura de Caja', 'mdi-file-outline', '/frmaperturacaja'],
+        ['x-Cierre de Caja', 'mdi-file-outline', '/'],
+        ['x-Recaudaciones a depositar', 'mdi-file-outline', '/'],
+        ['x-Pedido de Cliente', 'mdi-file-outline', '/'],
+        ['x-Venta y Cuentas a pagar', 'mdi-file-outline', '/'],
+        ['x-Cobranzas por forma de cobro', 'mdi-file-outline', '/'],
+        ['x-Registrar Nota de Remisión', 'mdi-file-outline', '/'],
+        ['x-Registrar Nota de Credito', 'mdi-file-outline', '/'],
+        ['x-Registrar Nota de Debito', 'mdi-file-outline', '/'],
+        ['x-Informes', 'mdi-file-outline', '/'],
+        ['x-Obtener Libro Ventas', 'mdi-file-outline', '/'],
 
       ],
       Produccion: [
         // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
-        // ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_urbanizacion'],
+        ['Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
+        ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
         ['Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
         ['Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
         ['Registro Contrato', 'mdi-plus-outline', '/contrato'],
+        ['Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
+        ['Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
+        ['Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
       
 
       ],

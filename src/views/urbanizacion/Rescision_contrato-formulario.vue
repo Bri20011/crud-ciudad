@@ -4,11 +4,11 @@
     <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registrar Contrato</h1>
+                <h1 class="mb-3">Registrar Rescision de Contrato</h1>
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nº Urbanizacion" v-model="formulario.nombre_urb"
+                            <v-text-field variant="outlined" label="Nº Contrato" v-model="formulario.nombre_urb"
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="2" md="2" class="mt-5">
@@ -24,31 +24,43 @@
                             <input class="custom-input" v-model="formulario.fechaD" type="date"
                             disabled   placeholder="Fecha de Operacion" />
                         </v-col>
-
-                        <v-col cols="12" sm="4" md="4">
-                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC"
-                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="4" md="4">
-                            <v-autocomplete variant="outlined" label="Tipo Venta" :items="listaCiudad" item-title="descripcionC"
-                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
-                        </v-col>
-
                         <v-col cols="12" sm="3" md="3" class="mx-0">
-                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.nombre_urb"
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Numero de Manzana" v-model="formulario.nombre_urb"
+                            disabled    required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="3" md="3" class="mx-0">
+                            <v-text-field variant="outlined" label="Numero de Lote" v-model="formulario.nombre_urb"
+                            disabled    required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC"
+                            disabled    item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Tipo Venta" :items="listaCiudad" item-title="descripcionC"
+                            disabled  item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
+                        </v-col>
+
+                        <v-col cols="12" sm="4" md="4" class="mx-0">
+                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.nombre_urb"
+                            disabled  required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" label="Cliente" :items="listaCiudad" item-title="descripcionC"
-                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
+                            disabled   item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
                         </v-col>
                         <v-col cols="12" sm="3" md="3" class="mx-0">
                             <v-text-field variant="outlined" label="Plazo de Venta" v-model="formulario.nombre_urb"
-                                required></v-text-field>
+                            disabled   required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
                             <input class="custom-input" v-model="formulario.fechaD" type="date"
                                placeholder="Fecha de Operacion" />
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Motivo Rescision" :items="listaCiudad" item-title="descripcionC"
+                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
                         </v-col>
                         <!-- <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Area" v-model="formulario.area" required></v-text-field>
@@ -107,12 +119,12 @@
                         </v-col> -->
 
 
-                        <v-row class="d-flex align-end  mt-5">
+                        <!-- <v-row class="d-flex align-end  mt-5">
                             <v-col cols="12" sm="8" md="8">
                                 <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
                                     @click="agregarDetalleAntesGuardar">Agregar</v-btn>
                             </v-col>
-                        </v-row>
+                        </v-row> -->
                         <!-- FIN DETALLE -->
 
                         <v-data-table class="mt-5" max-width="1500" items-per-page-text="Articulos" :headers="headers"

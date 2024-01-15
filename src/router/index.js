@@ -296,10 +296,51 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexContrato.vue'),
-    }
+    },
+    {
+      path: 'rescision_contrato',
+      name: 'Rescision_contrato',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexRescision_contrato.vue'),
+    },
+    {
+      path: 'cesion_derecho_deuda',
+      name: 'Cesion_derecho_deuda',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexCesion_derecho_deuda.vue'),
+    },
+    {
+      path: 'orden_compra_lote',
+      name: 'Orden_Compra_Lote',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/urbanizacion/orden_compra_lote.vue'),
+    },
+    {
+      path: 'compra_lote',
+      name: 'Compra_Lote',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/urbanizacion/compra_lote.vue'),
+    },
+    {
+      path: 'frmaperturacaja',
+      name: 'FrmAperturaCaja',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/venta/frmaperturacaja.vue'),
+    },
 
 
 
+    
 
     
     ],

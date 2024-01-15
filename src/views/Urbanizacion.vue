@@ -316,7 +316,6 @@ export default {
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Fecha de Urbamizacion', key: 'fechaD', align: 'star' },
-                { title: 'Nombre de Urbanizacion', key: 'nombre_urb' },
                 { title: 'Area', key: 'area', align: 'star' },
                 { title: 'Lado A', key: 'ladoA', align: 'star' },
                 { title: 'Lado B', key: 'ladoB', align: 'center' },

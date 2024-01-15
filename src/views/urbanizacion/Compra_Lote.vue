@@ -1,48 +1,58 @@
 <template>
-    <v-dialog max-width="1200" v-model="dialogoFormulario" persistent>
+    <v-dialog max-width="1400" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Obtener Libro de Compras</h1>
+                <h1 class="mb-3">Registrar Compras</h1>
                 <v-form>
                     <v-row>
-                        <!-- <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nº de factura Asociado" v-model="formulario.numero_orden"
-                                required></v-text-field>
-                        </v-col> -->
-                       
                         <v-col cols="12" sm="2" md="2">
-                        <v-autocomplete variant="outlined" label="Nº Factura" :items="listaDocumento"
+                            <v-text-field variant="outlined" label="Nº OC" v-model="formulario.numero_orden"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" class="mt-4" sm="2" md="2">
+                            <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Numero de Factura" v-model="formulario.numero_factura"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
-                        
-                        <!-- <v-col cols="12" sm="3" md="3">
+                        <v-col cols="12" sm="2" md="2">
+                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
+                               disabled required></v-autocomplete>
+                        </v-col>
+
+                        <v-col cols="12" sm="4" md="4">
+                            <input class="custom-input" v-model="formulario.fechaO" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
                                 item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>  -->
-                        <v-col cols="12" sm="1" md="1" class="mx-0"><H5>Fecha Desde:</H5></v-col>
-
-                        <v-col cols="12" sm="2" md="2" >
-                           
-                            <input  class="custom-input" v-model="formulario.fechaO" type="date"
-                              placeholder="Fecha de Desde" @input="formatDate" />
                         </v-col>
 
-                        
-                        <v-col cols="12" sm="1" md="1"><H5>Fecha Hasta:</H5></v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                              placeholder="Fecha de Hasta" @input="formatDate" />
-                        </v-col>
 
-                        <v-col cols="12"  class="d-flex justify-end">
-                            <v-btn color="primary" @click="ObtenerCodigoCompra">Obtener</v-btn>
-                        </v-col>
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">
+
+
                             <template v-slot:tfoot>
+
                                 <tr>
                                     <td></td>
                                     <td></td>
@@ -56,6 +66,10 @@
                                     <td></td>
                                 </tr>
                             </template>
+
+
+
+
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
                                     mdi-pencil
@@ -64,14 +78,16 @@
                                     mdi-trash-can-outline
                                 </v-icon> -->
                             </template>
+
                         </v-data-table>
 
                     </v-row>
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
+                            <v-btn disabled prepend-icon="mdi mdi-plus-thick" color="#90A4AE" class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Imprimir</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
 
                         </v-col>
                     </v-row>
@@ -79,28 +95,84 @@
             </v-container>
         </v-card>
     </v-dialog>
-   
+    <!-- 
+    <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Editar Compras</h1>
+                <v-form>
+                    <v-row>
+                        <v-col cols="12" sm="2" md="2">
+                            <v-text-field variant="outlined" label="Codigo" disabled
+                                v-model="formulario.codigo"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Descripcion de Compras" v-model="formulario.descripcion"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+
+
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Fecha de Compras"
+                                v-model="formulario.fecha"></v-text-field>
+                        </v-col>
+
+
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditar"
+                                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog> -->
+
+    <!-- FIN DETALLE -->
+
     <!-- INICIO EDITAR DETALLE -->
     <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Ingresar Precio</h1>
+                <h1 class="mb-3">Ingresar Precio y Detalles</h1>
                 <v-form>
                     <v-row class="justify-center">
 
 
                         <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
+                            <v-text-field  variant="outlined" label="Descripcion" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field >
+                        </v-col>
+                        <v-col cols="12" sm="5" md="5">
+                            <v-autocomplete variant="outlined" label="Barrio" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="formulario.producto"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
-
+                        <v-col cols="12" sm="5" md="5">
+                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="5" md="5">
+                            <v-text-field  variant="outlined" label="Ubicacion" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field >
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Dimension total" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
                         <v-col ols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Cantidad" @input="recalcularTotal"
                                 v-model="formulario.cantidad"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Precio Unitario" @input="recalcularTotal"
+                            <v-text-field variant="outlined" label="Costo" @input="recalcularTotal"
                                 v-model="formulario.precio"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
@@ -113,6 +185,19 @@
                                 :error-messages="errorMessage" required>
                             </v-autocomplete>
                         </v-col>
+                        <!-- <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Exenta" v-model="formulario.exenta"
+                                readonly></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Iva 5%" v-model="formulario.iva5"
+                                readonly></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Iva 10%" v-model="formulario.iva10"
+                                readonly></v-text-field>
+                        </v-col> -->
+
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
@@ -136,7 +221,7 @@
             </v-col>
 
             <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de NC: {{ items.length }}
+                Cantidad de Compras: {{ items.length }}
             </v-col>
 
         </v-row>
@@ -146,7 +231,7 @@
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
-                            <p class="font-weight-bold">Registro de Notas de Credito Proveedor</p>
+                            <p class="font-weight-bold">Registro de Compras</p>
                         </v-toolbar-title>
 
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -199,16 +284,114 @@
 
         </v-dialog>
         <!-- FIN DIALOGO -->
+
+
+        <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
+
+        <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
+                <v-form>
+                    <v-row class="d-flex justify-center"> 
+                        <v-col cols="12" sm="4" md="4" >
+                            <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+                        <v-col cols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
+                                required></v-text-field>
+                        </v-col>
+
+                       
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
+                                    @click="AgregarDetallePago">Agregar</v-btn>
+                            </v-col>
+                      
+
+                        <!-- INICIO DETALLE -->
+                        <v-divider class="mt-0"></v-divider>
+
+                        <!-- FIN DETALLE -->
+
+
+
+                        <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar" :items="itemsDetalle">
+
+                            <template v-slot:item.fechaD="{ item }">
+                               {{ formatearFecha(item.raw.fechaD) }}
+                                 </template>
+                            <template v-slot:item.action="{ item }">
+                                <v-icon size="small" class="me-2" @click="editarDetallePagos(item.raw)">
+                                    mdi-pencil
+                                </v-icon>
+                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+                                    mdi-trash-can-outline
+                                </v-icon> -->
+                            </template>
+
+                        </v-data-table>
+
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+            <!-- INICIO EDITAR DETALLE PAGOS -->
+        <v-dialog max-width="600" v-model="dialogoFormularioEditarDetallePagos" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Editar Detalle Pagos</h1>
+                <v-form>
+                    <v-row class="justify-center">
+
+                        <v-col cols="12" sm="4" md="4" >
+                            <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+                        <v-col ols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
+                                required></v-text-field>
+                        </v-col>
+
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditarDetallePagos = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetallePago">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+      <!-- INICIO EDITAR DETALLE PAGOS -->
+    </v-dialog>
+
+
+        <!-- FIN DIALOGO REGISTRAR CUENTAS A PAGAR -->
     </v-container>
 </template>
   
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { NCCompraApi } from '@/services/nota_credito_compra.api'
+import { ComprasAPI } from '@/services/compras.api'
 import { ProveedorAPI } from '@/services/proveedor.api'
+import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
-import { ComprasAPI } from '@/services/compras.api'
+import { OrdenCompraApi } from '@/services/orden_compra.api'
 
 
 import dayjs from 'dayjs'
@@ -221,14 +404,14 @@ export default {
     },
     data() {
         return {
-            VARIABLE_PARA_GUARDAR_ID_COMPRA: '',
             dialogoFormulario: false,
             dialogoCambiarEstado: false,
 
-        
-            
-            dialogoFormularioEditarDetalle: false,
+            dialogoFormularioEditar: false,
+            dialogoFormularioEditarDetalle: true,
+            dialogoFormularioGenerarCuota:true,
             ordenCompraSeleccionada: null,
+            dialogoFormularioEditarDetallePagos: false,
 
 
 
@@ -238,9 +421,12 @@ export default {
                 fechaO: null,
                 fechaD: null,
                 timbrado: '',
-                numero_nc: '',
-
-
+                numero_factura: '',
+                monto: '',
+            },
+            detalle: {
+                fechaD: null,
+                monto: '',
             },
 
             contador: 1,
@@ -260,7 +446,8 @@ export default {
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Numero de Nota de Credito', key: 'numero_nc' },
+                { title: 'Numero de Factura', key: 'numero_factura' },
+                { title: 'Tipo Documento', key: 'documento' },
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
@@ -269,7 +456,12 @@ export default {
             headersCompra: [
                 { title: 'Producto', key: 'idProducto', align: 'center' },
                 { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'center' },
+                { title: 'Barrio', key: 'barrio', align: 'center' },
+                { title: 'Ciudad', key: 'Ciudad', align: 'center' },
+                { title: 'Ubicacion', key: 'Ubicacion', align: 'center' },
+                { title: 'Dimension Total', key: 'dimension_t', align: 'center' },
+                // { title: 'Desc Bar', key: 'dimension_A', align: 'center' },
+                // { title: 'Cantidad', key: 'Cantidad', align: 'center' },
                 { title: 'Costo', key: 'Precio', align: 'center' },
                 { title: 'Iva', key: 'iva', align: 'center' },
                 { title: 'Exenta', key: 'exenta', align: 'center' },
@@ -277,9 +469,11 @@ export default {
                 { title: 'Iva 10%', key: 'iva10', align: 'center' },
                 { title: 'Total', key: 'total', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-
-
-
+            ],
+            headersCuentasPagar:[
+            { title: 'Fecha de Pago', key: 'fechaD', align: 'star' },
+            { title: 'Monto', key: 'monto', align: 'center' },
+            { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
                 {
@@ -288,7 +482,7 @@ export default {
                     fecha: '',
                     action: '',
                     timbrado: '',
-                    numero_nc: '',
+                    numero_factura: '',
                     proveedor: ''
                 }
             ],
@@ -331,7 +525,16 @@ export default {
             })
         },
 
-       
+        ObtenerTipoD() {
+            TipoDocumentoAPI.getAll().then(({ data }) => {
+                this.listaDocumento = data.map(item => {
+                    return {
+                        id: item.idTipo_Documento,
+                        descripcionD: item.Descripcion
+                    }
+                })
+            })
+        },
 
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
@@ -358,9 +561,24 @@ export default {
         },
 
 
-     
+        // INICIO NUEVO 
+        Obtenerorden_compra() {
+            OrdenCompraApi.getAll().then(({ data }) => {
 
-        ObtenerCodigoCompra() {
+                // this.items = data.map(item => {
+                //     return {
+                //         id: item.idorden_compra,
+                //         descripcionPr: item.Descripcion,
+                //         fechaD: item.Fecha_pedi,
+                //         proveedor: item.idProveedor,
+                //         itemsDetalle: item.Detalle
+                //     }
+                // }
+                // )
+            })
+        },
+
+        ObtenerCodigoOrden() {
             // Verifica que se haya ingresado un número de orden
             if (!this.formulario.numero_orden) {
                 // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
@@ -368,13 +586,17 @@ export default {
             }
 
             // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
-            ComprasAPI.getById(this.formulario.numero_orden).then(({ data }) => {
-                this.VARIABLE_PARA_GUARDAR_ID_COMPRA = data.idCompras
+            OrdenCompraApi.getById(this.formulario.numero_orden).then(({ data }) => {
                 this.formulario = {
                     ...this.formulario,
                     proveedor: data.idProveedor,
-                    fechaD: data.Fecha_doc,
+                    fechaD: data.Fecha_pedi,
                     itemsDetalle: data.detalle,
+
+
+
+
+
 
 
 
@@ -384,6 +606,26 @@ export default {
             this.dialogoFormulario = true;
         },
 
+
+
+
+
+
+
+        // FIN NUEVO 
+
+        // AgregarDetalle() {
+        //     this.itemsDetalle.push({
+        //         producto: this.detalle.producto,
+        //         cantidad: this.detalle.cantidad,
+        //         precio: this.detalle.precio,
+        //         action: '',
+
+        //     }),
+        //         this.detalle.producto = ''
+        //     this.detalle.cantidad = ''
+        //     this.detalle.precio = ''
+        // },
 
 
         formatearFecha(fecha) {
@@ -409,33 +651,34 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_nc) {
+            if (!this.formulario.numero_factura) {
 
                 this.emptyFieldError = true;
                 return;
             }
 
 
-            NCCompraApi.create({
+            ComprasAPI.create({
 
-                idNota_CreditoCompra: this.formulario.codigo,
+                idCompras: this.formulario.codigo,
                 Fecha_doc: this.formulario.fechaD,
                 Timbrado: this.formulario.timbrado,
-                Numero_doc: this.formulario.numero_nc,
+                Numero_fact: this.formulario.numero_factura,
+                idTipo_Documento: this.formulario.documento,
                 idProveedor: this.formulario.proveedor,
-                idCompras: this.VARIABLE_PARA_GUARDAR_ID_COMPRA,
+                idorden_compra: this.formulario.numero_orden, //nuevo 
                 Detalle: this.formulario.itemsDetalle
 
 
             },
             ).then(() => {
-                this.ObtenerNota_Credito_C()
+                this.ObtenerCompras()
             })
 
             this.formulario.codigo = '';
             this.formulario.fechaD = '';
             this.formulario.timbrado = '';
-            this.formulario.numero_nc = '';
+            this.formulario.numero_factura = '';
             this.formulario.documento = '';
             this.formulario.proveedor = '';
             this.dialogoFormulario = false;
@@ -443,6 +686,56 @@ export default {
 
 
 
+
+
+        // guardarFormularioEditar() {
+        //     if (!this.formulario.descripcion) {
+
+        //         this.emptyFieldError = true;
+        //         return;
+        //     }
+        //     ComprasAPI.update(
+        //         this.formulario.codigo,
+        //         {
+        //             idCompras: this.formulario.codigo,
+        //             Descripcion: this.formulario.descripcion,
+        //             Fecha_pedi: this.formulario.fecha,
+        //             Timbrado:this.formulario.timbrado,
+        //             idProveedor:this.formulario.proveedor
+        //         }
+        //     ).then(() => {
+        //         this.ObtenerCompras()
+        //     })
+
+        //     this.dialogoFormularioEditar = false
+        // },
+        // editarCiudad(parametro) {
+        //     this.dialogoFormularioEditar = true
+        //     this.formulario.codigo = parametro.id
+        //     this.formulario.descripcion = parametro.descripcion
+        //     this.formulario.fecha = parametro.fecha
+        // },
+        // confirmarEliminarCiudad(elemento) {
+        //     // Abre el diálogo de confirmación y guarda el elemento a eliminar
+        //     this.elementoAEliminar = elemento;
+        //     this.dialogoEliminar = true;
+        // },
+        // cancelarEliminarCiudad() {
+        //     // Cierra el diálogo de confirmación y restablece la variable
+        //     this.dialogoEliminar = false;
+        //     this.elementoAEliminar = null;
+        // },
+        // eliminarCiudad() {
+        //     if (this.elementoAEliminar) {
+        //         // Realiza la eliminación aquí
+        //         ComprasAPI.delete(this.elementoAEliminar.id).then(() => {
+        //             this.ObtenerCompras();
+        //         });
+        //         // Cierra el diálogo de confirmación
+        //         this.dialogoEliminar = false;
+        //         this.elementoAEliminar = null;
+        //     }
+        // },
 
 
         confirmarCambiarEstado(elemento) {
@@ -458,11 +751,11 @@ export default {
         cambiarEstadoCompra() {
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
-                NCCompraApi.update(this.elementoACambiarEstado.id, { estado_nc: true }
+                ComprasAPI.update(this.elementoACambiarEstado.id, { estado_compras: true }
                 ).then(()=> {
                         // Actualiza la tabla después de que la actualización se haya completado
                         this.items = [];
-                        this.ObtenerNota_Credito_C();
+                        this.ObtenerCompras();
                         
                     })
                    
@@ -478,18 +771,18 @@ export default {
 
         },
 
-        ObtenerNota_Credito_C() {
-            NCCompraApi.getAll().then(({ data }) => {
+        ObtenerCompras() {
+            ComprasAPI.getAll().then(({ data }) => {
                 this.items = data.map(item => {
                     return {
-                        id: item.idNota_CreditoCompra,
+                        id: item.idCompras,
                         proveedor: item.idProveedor,
-                        numero_nc: item.Numero_doc,
-                        idProveedor: item.idProveedor,
-                        razonsocial:item.razonsocial,
+                        numero_factura: item.Numero_fact,
+                        documento: item.idTipo_Documento,
+                        proveedor: item.idProveedor,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
-                        itemsDetalle: data.detalle,
+                        detalleItems: item.detalle
 
                     }
                 })
@@ -504,6 +797,33 @@ export default {
             }
 
         },
+        // actualizarCamposIVA() {
+        //     // Lógica adicional para calcular Exenta, Iva 5% e Iva 10%
+        //     const ivaSeleccionado = this.listaIva.find(iva => iva.id === this.formulario.iva);
+        // if (ivaSeleccionado) {
+        //     switch (ivaSeleccionado.descripcionI) {
+        //         case 1:
+        //             this.formulario.exenta = 0;
+        //             this.formulario.iva5 = 0;
+        //             this.formulario.iva10 = 0;
+        //             break;
+        //         case 2:
+        //             this.formulario.exenta = 0;
+        //             this.formulario.iva5 = this.formulario.total / 21; // Ajustar según necesidades
+        //             this.formulario.iva10 = 0;
+        //             break;
+        //         case 3:
+        //             this.formulario.exenta = 0;
+        //             this.formulario.iva5 = 0;
+        //             this.formulario.iva10 = this.formulario.total / 11; // Ajustar según necesidades
+        //             break;
+        //         default:
+        //             // Manejar otro caso si es necesario
+        //             break;
+
+        //     }
+        // }
+        // },
 
         editarDetalle(parametro) {
             this.dialogoFormularioEditarDetalle = true
@@ -574,6 +894,9 @@ export default {
             this.dialogoFormularioEditarDetalle = false;
         },
 
+        //     sumarColumna(columna) {
+        //   return this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0);
+        // },
 
         sumarIva(columna) {
             // Verifica que this.formulario.itemsDetalle tenga un valor
@@ -594,16 +917,63 @@ export default {
                 return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
             }
         },
+
+        abrirformulariogenerarcuentas() {
+            // Abrir el modal y cargar el código aquí
+            this.dialogoFormularioGenerarCuota = true;
+            this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+        },
+
+        AgregarDetallePago(){
+            this.itemsDetalle.push({
+                fecha: this.formulario.fechaD,
+                monto: this.formulario.monto,
+                action: '',
+
+            }),
+            this.formulario.fechaD = ''
+            this.formulario.monto = ''
+        },
+
+        editarDetallePagos(parametro) {
+            this.dialogoFormularioEditarDetallePagos = true
+            this.formulario.fechaD = parametro.fechaD
+            this.formulario.monto = parametro.monto
+
+            // Calcula el total al abrir el diálogo
+            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
+            this.formulario.iva = parametro.idIva
+        },
+
+        guardarFormularioEditarDetallePago() {
+            if (!this.detalle.fechaD || !this.formulario.monto) {
+                this.emptyFieldError = true;
+                return;
+            }
+
+            // Busca el índice del elemento que se va a editar
+            const index = this.itemsDetalle.findIndex(item => item.monto === this.formulario.monto);
+
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.itemsDetalle[index].fechaD = this.formulario.fechaD;
+                this.itemsDetalle[index].monto = this.formulario.monto;
+            } 
+            this.dialogoFormularioEditarDetallePagos = false;
+        },
     },
 
 
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
+        this.ObtenerCompras()
         this.ObtenerProveedor()
-       // this.ObtenerProducto()
+        this.ObtenerTipoD()
+        this.ObtenerProducto()
+        this.Obtenerorden_compra()
         this.ObtenerIva()
-        this.ObtenerNota_Credito_C()
 
     },
 
