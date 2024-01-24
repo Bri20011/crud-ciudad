@@ -9,30 +9,34 @@
               <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" :error="excededLimit"
                 :error-messages="errorMessage" required></v-text-field>
             </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <v-text-field variant="outlined" label="Numero de Timbrado" v-model="formulario.numeroTimbrado"
+                required></v-text-field>
+            </v-col>
 
             <v-col cols="12" sm="4" md="4">
-              <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha de Pedido"
+              <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha Inicio"
                 @input="formatDate" />
             </v-col>
-         
-          <v-col cols="12" sm="4" md="4">
-            <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha de Pedido"
-              @input="formatDate" />
-          </v-col>
 
-          <v-col cols="12" sm="4" md="4">
-            <v-autocomplete variant="outlined" label="Punto Establecimiento" :items="listaSucursal"
-              item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-          </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <input class="custom-input" v-model="formulario.fechaF" type="date" placeholder="Fecha de Vto"
+                @input="formatDate" />
+            </v-col>
 
-          <v-col cols="12" sm="4" md="4">
-            <v-autocomplete variant="outlined" label="Punto  Expedicion" :items="listaSucursal" item-title="descripcion"
-              item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-          </v-col>
-          <v-col cols="12" sm="4" md="4">
-            <v-autocomplete variant="outlined" label="Tipo Documento" :items="listaSucursal" item-title="descripcion"
-              item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-          </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Punto Establecimiento" :items="listaEstablecimiento"
+                item-title="descripcionEs" item-value="id" v-model="formulario.establecimiento"></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Punto  Expedicion" :items="listaExpedicion"
+                item-title="descripcionEx" item-value="id" v-model="formulario.expedicion"></v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Tipo Documento" :items="listaTipoDoc" item-title="descripcionD"
+                item-value="id" v-model="formulario.tipoDoc"></v-autocomplete>
+            </v-col>
 
 
 
@@ -42,7 +46,7 @@
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormulario"
-                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.numerCaja">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -61,28 +65,45 @@
               <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="8" md="8">
-              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion"
-                item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-            </v-col>
-
             <v-col cols="12" sm="6" md="6">
-              <v-text-field variant="outlined" label="Descripcion de Caja" v-model="formulario.descripcion"
-                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+              <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" :error="excededLimit"
+                :error-messages="errorMessage" required></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <v-text-field variant="outlined" label="Numero de Timbrado"
+                v-model="formulario.numeroTimbrado"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha Inicio"
+                @input="formatDate" />
             </v-col>
 
-            <v-col cols="12" sm="6" md="6">
-              <v-text-field density="default" label="Introduza el numero de caja" prepend-inner-icon="mdi-lock-outline"
-                variant="outlined" @click:append-inner="visible = !visible" v-model="formulario.numerCaja"
-                :error="excededLimitPas" :error-messages="errorMessageE" required></v-text-field>
-
+            <v-col cols="12" sm="4" md="4">
+              <input class="custom-input" v-model="formulario.fechaF" type="date" placeholder="Fecha de Vto"
+                @input="formatDate" />
             </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Punto Establecimiento" :items="listaEstablecimiento"
+                item-title="descripcionEs" item-value="id" v-model="formulario.establecimiento"></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Punto  Expedicion" :items="listaExpedicion"
+                item-title="descripcionEx" item-value="id" v-model="formulario.expedicion"></v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Tipo Documento" :items="listaTipoDoc" item-title="descripcionD"
+                item-value="id" v-model="formulario.tipoDoc"></v-autocomplete>
+            </v-col>
+
+
+
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
               <v-btn color="primary" @click="guardarFormularioEditar"
-                :disabled="excededLimit || !formulario.descripcion || excededLimitPas || !formulario.numerCaja">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion ">Guardar</v-btn>
 
             </v-col>
           </v-row>
@@ -103,8 +124,8 @@
       </v-col>
     </v-row>
 
-    <v-card class="mt-5 rounded-xl">
-      <v-data-table :headers="headers" :items="itemsComputed">
+    <v-card max-width="1800" class="mt-5 rounded-xl">
+      <v-data-table max-width="1000" :headers="headers" :items="itemsComputed">
         <template v-slot:top>
           <v-toolbar flat color="white">
             <v-toolbar-title>
@@ -117,8 +138,14 @@
           </v-toolbar>
 
         </template>
-
+        <template v-slot:item.fechaD="{ item }">
+          {{ formatearFecha(item.raw.fechaD) }}
+        </template>
+        <template v-slot:item.fechaF="{ item }">
+          {{ formatearFecha(item.raw.fechaD) }}
+        </template>
         <template v-slot:item.action="{ item }">
+
           <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
             mdi-pencil
           </v-icon>
@@ -162,8 +189,13 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { CajaAPI } from '@/services/caja.api'
-import { SucursalAPI } from '@/services/sucursal.api'
+import { TimbradoAPI } from '@/services/timbrado.api'
+import { EstablecimientoAPI } from '@/services/establecimiento.api'
+import { PuntoExpAPI } from '@/services/punto_exp.api'
+import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
+import dayjs from 'dayjs'
+
+
 
 export default {
   components: {
@@ -177,7 +209,7 @@ export default {
       formulario: {
         codigo: '',
         descripcion: '',
-        numerCaja: '',
+        numeroTimbrado: '',
         sucursal: ''
       },
       limit: 45,
@@ -186,10 +218,17 @@ export default {
       defaultFormulario: {
         codigo: '',
         descripcion: '',
-        numerCaja: '',
-        sucursal: ''
+        numeroTimbrado: '',
+        fechaD: '',
+        fechaF: '',
+        establecimiento: '',
+        expedicion: '',
+        tipoDoc: '',
+
       },
-      listaSucursal: [],
+      listaEstablecimiento: [],
+      listaExpedicion: [],
+      listaTipoDoc: [],
       buscador: '',
       headers: [
         {
@@ -199,19 +238,19 @@ export default {
           key: 'id',
         },
         { title: 'Descripcion', key: 'descripcion' },
-        { title: 'Numero', key: 'descripcionn' },
-        { title: 'Fecha Inicio', key: 'nombreSucursal' },
-        { title: 'Fecha Fin', key: 'f' },
-        { title: 'Punto Expedicion', key: 'ff' },
-        { title: 'Punto Establecimiento', key: 'ffd' },
-        { title: 'Tipo Documento', key: 'numerCaja' },
+        { title: 'Numero', key: 'numeroTimbrado' },
+        { title: 'Fecha Inicio', key: 'fechaD' },
+        { title: 'Fecha Fin', key: 'fechaF' },
+        { title: 'Punto Establecimiento', key: 'establecimiento' },
+        { title: 'Punto Expedicion', key: 'expedicion' },
+        { title: 'Tipo Documento', key: 'tipoDoc' },
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
         {
           id: '1',
           descripcion: 'Campo',
-          numerCaja: '123',
+          numeroTimbrado: '123',
           action: ''
         }
       ],
@@ -229,22 +268,22 @@ export default {
       return this.formulario.descripcion.length > this.limit;
 
     },
-    excededLimitPas() {
-      return this.formulario.numerCaja.length > this.limiteNumerCajMax;
+    // excededLimitPas() {
+    //   return this.formulario.numeroTimbrado.length > this.limiteNumerCajMax;
 
-    },
+    // },
     errorMessage() {
       if (this.excededLimit) {
         return 'Superaste el límite de 45 letras';
       }
       return '';
     },
-    errorMessageE() {
-      if (this.excededLimitPas) {
-        return 'Superaste el límite de 4 letras';
-      }
-      return '';
-    }
+    // errorMessageE() {
+    //   if (this.excededLimitPas) {
+    //     return 'Superaste el límite de 4 letras';
+    //   }
+    //   return '';
+    // }
   },
 
 
@@ -256,15 +295,38 @@ export default {
       this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
     },
 
-    ObtenerSucursal() {
-      SucursalAPI.getAll().then(({ data }) => {
-        this.listaSucursal = data.map(item => {
+    ObtenerEstablecimiento() {
+      EstablecimientoAPI.getAll().then(({ data }) => {
+        this.listaEstablecimiento = data.map(item => {
           return {
-            id: item.idSucursal,
-            descripcion: item.Descripcion
+            id: item.idEstablecimiento,
+            descripcionEs: item.Descripcion
           }
         })
       })
+    },
+    ObtenerExpedicion() {
+      PuntoExpAPI.getAll().then(({ data }) => {
+        this.listaExpedicion = data.map(item => {
+          return {
+            id: item.idPunto_exp,
+            descripcionEx: item.Descripcion
+          }
+        })
+      })
+    },
+    ObtenerTipoDocumento() {
+      TipoDocumentoAPI.getAll().then(({ data }) => {
+        this.listaTipoDoc = data.map(item => {
+          return {
+            id: item.idTipo_Documento,
+            descripcionD: item.Descripcion
+          }
+        })
+      })
+    },
+    formatearFecha(fechaD) {
+      return dayjs(fechaD).format('DD/MM/YYYY')
     },
     generarCodigo() {
       const nuevoCodigo = this.contador++;
@@ -272,44 +334,59 @@ export default {
     },
     guardarFormulario() {
 
-      if (!this.formulario.descripcion || !this.formulario.numerCaja || this.excededLimit || this.excededLimitPas) {
+      if (!this.formulario.descripcion || this.excededLimit) {
         this.emptyFieldError = true;
         return;
       }
-      CajaAPI.create(
+      TimbradoAPI.create(
         {
-          idCaja: this.formulario.codigo,
-          nombrecaja: this.formulario.descripcion,
-          Cajahabilitada: this.formulario.numerCaja,
-          idSucursal: this.formulario.sucursal
+          idTimbrado: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          NumerTimbrado: this.formulario.numeroTimbrado,
+          fecha_inicio: this.formulario.fechaD,
+          fecha_fin: this.formulario.fechaF,
+          idPunto_exp: this.formulario.expedicion,
+          idEstablecimiento: this.formulario.establecimiento,
+          idTipo_Documento: this.formulario.tipoDoc
+
         }
       ).then(() => {
-        this.ObtenerCaja()
+        this.ObtenerTimbrado()
       })
 
       this.formulario.descripcion = '';
-      this.formulario.numerCaja = '';
+      this.formulario.numeroTimbrado = '';
+      this.formulario.fechaD = '';
+      this.formulario.fechaF = '';
+      this.formulario.expedicion = '';
+      this.formulario.establecimiento = '';
+      this.formulario.tipoDoc = '';
+
       this.dialogoFormulario = false
     },
 
 
     guardarFormularioEditar() {
-      if (!this.formulario.descripcion || !this.formulario.numerCaja || this.excededLimit || this.excededLimitPas) {
+      if (!this.formulario.descripcion || !this.formulario.numeroTimbrado || this.excededLimit || this.excededLimitPas) {
         this.emptyFieldError = true;
         return;
       }
 
 
-      CajaAPI.update(
+      TimbradoAPI.update(
         this.formulario.codigo,
         {
-          idCaja: this.formulario.codigo,
-          nombrecaja: this.formulario.descripcion,
-          Cajahabilitada: this.formulario.numerCaja,
-          idSucursal: this.formulario.sucursal
+          idTimbrado: this.formulario.codigo,
+          Descripcion: this.formulario.descripcion,
+          NumerTimbrado: this.formulario.numeroTimbrado,
+          fecha_inicio: this.formulario.fechaD,
+          fecha_fin: this.formulario.fechaF,
+          idPunto_exp: this.formulario.expedicion,
+          idEstablecimiento: this.formulario.establecimiento,
+          idTipo_Documento: this.formulario.tipoDoc
         }
       ).then(() => {
-        this.ObtenerCaja()
+        this.ObtenerTimbrado()
       })
       this.dialogoFormularioEditar = false
     },
@@ -317,8 +394,12 @@ export default {
       this.dialogoFormularioEditar = true
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
-      this.formulario.numerCaja = parametro.numerCaja
-      this.formulario.sucursal = parametro.idSucursal
+      this.formulario.numeroTimbrado = parametro.numeroTimbrado
+      this.formulario.fechaD = parametro.fechaD
+      this.formulario.fechaF = parametro.fechaF
+      this.formulario.establecimiento = parametro.establecimiento
+      this.formulario.expedicion = parametro.expedicion
+      this.formulario.tipoDoc = parametro.tipoDoc
     },
     confirmarEliminarCiudad(elemento) {
       // Abre el diálogo de confirmación y guarda el elemento a eliminar
@@ -333,23 +414,29 @@ export default {
     eliminarCiudad() {
       if (this.elementoAEliminar) {
         // Realiza la eliminación aquí
-        CajaAPI.delete(this.elementoAEliminar.id).then(() => {
-          this.ObtenerCaja();
+        TimbradoAPI.delete(this.elementoAEliminar.id).then(() => {
+          this.ObtenerTimbrado();
         });
         // Cierra el diálogo de confirmación
         this.dialogoEliminar = false;
         this.elementoAEliminar = null;
       }
     },
-    ObtenerCaja() {
-      CajaAPI.getAll().then(({ data }) => {
+    ObtenerTimbrado() {
+      TimbradoAPI.getAll().then(({ data }) => {
         this.items = data.map(item => {
           return {
-            id: item.idCaja,
-            descripcion: item.nombrecaja,
-            numerCaja: item.Cajahabilitada,
-            idSucursal: item.idSucursal,
-            nombreSucursal: item.nombreSucursal
+            id: item.idTimbrado,
+            descripcion: item.Descripcion,
+            numeroTimbrado: item.NumerTimbrado,
+            fechaD: item.fecha_inicio,
+            fechaF: item.fecha_fin,
+            expedicion: item.idPunto_exp,
+            establecimiento: item.idEstablecimiento,
+            tipoDoc: item.idTipo_Documento,
+            // idSucursal: item.idSucursal,
+            // nombreSucursal: item.nombreSucursal,
+
           }
         })
       })
@@ -362,27 +449,29 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    this.ObtenerCaja()
-    this.ObtenerSucursal()
+    this.ObtenerTimbrado()
+    this.ObtenerExpedicion()
+    this.ObtenerEstablecimiento()
+    this.ObtenerTipoDocumento()
   },
 
 }
 </script>
 <style>
 .custom-input {
-    width: 100%;
-    /* Ancho completo */
-    height: 56px;
-    /* Altura deseada */
-    border: 1px solid #9E9E9E;
-    /* Borde */
-    padding: 8px;
-    /* Espaciado interno */
-    border-radius: 3px;
-    /* Bordes redondeados */
-    box-sizing: border-box;
-    /* Incluir el borde en el tamaño total */
-    outline: none;
-    /* Quitar el contorno al hacer clic */
+  width: 100%;
+  /* Ancho completo */
+  height: 56px;
+  /* Altura deseada */
+  border: 1px solid #9E9E9E;
+  /* Borde */
+  padding: 8px;
+  /* Espaciado interno */
+  border-radius: 3px;
+  /* Bordes redondeados */
+  box-sizing: border-box;
+  /* Incluir el borde en el tamaño total */
+  outline: none;
+  /* Quitar el contorno al hacer clic */
 }
 </style>

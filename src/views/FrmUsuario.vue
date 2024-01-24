@@ -29,11 +29,11 @@
             </v-col>
             
             <v-col cols="12" sm="4" md="4">
-              <v-autocomplete variant="outlined" label="Funcionario" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+              <v-autocomplete variant="outlined" label="Funcionario" :items="listaFuncionario" item-title="descripcionF" item-value="id" v-model="formulario.funcionario"></v-autocomplete>
             </v-col>
             
             <v-col cols="12" sm="4" md="4">
-              <v-autocomplete variant="outlined" label="Nivel" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+              <v-autocomplete variant="outlined" label="Nivel" :items="listaNivel" item-title="descripcionN" item-value="id" v-model="formulario.nivel"></v-autocomplete>
             </v-col>
           </v-row>
           <v-row>
@@ -55,26 +55,33 @@
         <h1 class="mb-3">Editar Usuario</h1>
         <v-form>
           <v-row>
-            <v-col cols="12" sm="4" md="4">
+            <v-col cols="12" sm="2" md="2">
               <v-text-field variant="outlined" label="Codigo" disabled v-model="formulario.codigo"></v-text-field>
             </v-col>
-
-            <v-col cols="12" sm="8" md="8">
-              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
-            </v-col>
-
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="12" sm="5" md="5">
               <v-text-field variant="outlined" label="Descripcion de Usuario" v-model="formulario.descripcion"
                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
             </v-col>
 
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="12" sm="5" md="5">
               <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
                 density="default" label="Introduza la Contraseña" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                 @click:append-inner="visible = !visible" v-model="formulario.password" :error="excededLimitPas"
                 :error-messages="errorMessageE" required></v-text-field>
-
             </v-col>
+
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Sucursal" :items="listaSucursal" item-title="descripcion" item-value="id" v-model="formulario.sucursal"></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Funcionario" :items="listaFuncionario" item-title="descripcionF" item-value="id" v-model="formulario.funcionario"></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12" sm="4" md="4">
+              <v-autocomplete variant="outlined" label="Nivel" :items="listaNivel" item-title="descripcionN" item-value="id" v-model="formulario.nivel"></v-autocomplete>
+            </v-col>
+            
           </v-row>
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
@@ -166,6 +173,8 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { UsuarioAPI } from '@/services/usuario.api'
 import { SucursalAPI } from '@/services/sucursal.api'
+import { NivelAPI } from '@/services/nivel.api'
+import { FuncionarioAPI } from '@/services/funcionario.api'
 
 export default {
   components: {
@@ -190,9 +199,13 @@ export default {
         codigo: '',
         descripcion: '',
         password: '',
-        sucursal: ''
+        sucursal: '',
+        funcionario: '',
+        nivel: ''
       },
       listaSucursal: [],
+      listaFuncionario: [],
+      listaNivel: [],
       buscador: '',
       headers: [
         {
@@ -204,8 +217,8 @@ export default {
         { title: 'Nombre Usuario', key: 'descripcion' },
         { title: 'Contraseña', key: 'password' },
         { title: 'Sucursal', key: 'nombreSucursal'},
-        { title: 'Funcionario', key: 'fun'},
-        { title: 'Nivel', key: 'niv'},
+        { title: 'Funcionario', key: 'nombrefuncionario'},
+        { title: 'Nivel', key: 'nombrenivel'},
         { title: 'Accion', key: 'action', sortable: false, align: 'end' },
       ],
       items: [
@@ -266,6 +279,26 @@ export default {
         })
       })
     },
+    ObtenerFuncionario() {
+      FuncionarioAPI.getAll().then(({ data }) => {
+        this.listaFuncionario = data.map(item => {
+          return {
+            id: item.idFuncionario,
+            descripcionF: item.nombres
+          }
+        })
+      })
+    },
+    ObtenerNivel() {
+      NivelAPI.getAll().then(({ data }) => {
+        this.listaNivel = data.map(item => {
+          return {
+            id: item.idNivel,
+            descripcionN: item.Descripcion
+          }
+        })
+      })
+    },
     generarCodigo() {
       const nuevoCodigo = this.contador++;
       return nuevoCodigo;
@@ -281,7 +314,11 @@ export default {
           idUsuario: this.formulario.codigo,
           Nombre: this.formulario.descripcion,
           Contrasehna: this.formulario.password,
-          idSucursal: this.formulario.sucursal
+          idSucursal: this.formulario.sucursal,
+          idFuncionario: this.formulario.funcionario,
+          idNivel: this.formulario.nivel
+          
+
         }
       ).then(()=> {
         this.ObtenerUsuario()
@@ -289,6 +326,9 @@ export default {
 
       this.formulario.descripcion = '';
       this.formulario.password = '';
+      this.formulario.sucursal = '';
+      this.formulario.funcionario = '';
+      this.formulario.nivel = '';
       this.dialogoFormulario = false
     },
 
@@ -306,7 +346,9 @@ export default {
           idUsuario: this.formulario.codigo,
           Nombre: this.formulario.descripcion,
           Contrasehna: this.formulario.password,
-          idSucursal: this.formulario.sucursal
+          idSucursal: this.formulario.sucursal,
+          idFuncionario: this.formulario.funcionario,
+          idNivel: this.formulario.nivel
         }
       ).then(()=> {
         this.ObtenerUsuario()
@@ -319,6 +361,8 @@ export default {
       this.formulario.descripcion = parametro.descripcion
       this.formulario.password = parametro.password
       this.formulario.sucursal = parametro.idSucursal
+      this.formulario.funcionario = parametro.idFuncionario
+      this.formulario.nivel = parametro.idNivel
     },
     confirmarEliminarCiudad(elemento) {
       // Abre el diálogo de confirmación y guarda el elemento a eliminar
@@ -349,7 +393,11 @@ export default {
             descripcion: item.Nombre,
             password: item.Contrasehna,
             idSucursal: item.idSucursal,
-            nombreSucursal: item.nombreSucursal
+            nombreSucursal: item.nombreSucursal,
+            idFuncionario: item.idFuncionario,
+            nombrefuncionario: item.nombrefuncionario,
+            idNivel: item.idNivel,
+            nombrenivel: item.nombrenivel
           }
         })
       })
@@ -364,6 +412,8 @@ export default {
     this.formulario.codigo = this.generarCodigo();
     this.ObtenerUsuario()
     this.ObtenerSucursal()
+    this.ObtenerNivel()
+    this.ObtenerFuncionario()
   },
 
 }

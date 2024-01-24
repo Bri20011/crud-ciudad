@@ -2,18 +2,18 @@
     <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
       <v-card class="rounded-xl">
         <v-container>
-          <h1 class="mb-3">Crear Cliente</h1>
+          <h1 class="mb-3">Crear Funcionario</h1>
           <v-form>
             <v-row>
               <v-col cols="12" sm="4" md="4">
                 <v-text-field
-                  density="default" label="Ruc o CI" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                  @click:append-inner="visible = !visible" v-model="formulario.ruc" :error="excededLimit4"
+                  density="default" label="Nombres" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                  @click:append-inner="visible = !visible" v-model="formulario.nombres" :error="excededLimit4"
                   :error-messages="errorMessage4" required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-text-field variant="outlined" label="Razon Social" v-model="formulario.razonsocial"
+                <v-text-field variant="outlined" label="Apellidos" v-model="formulario.apellidos"
                   :error="excededLimit1" :error-messages="errorMessage1" required></v-text-field>
               </v-col>
   
@@ -42,8 +42,8 @@
               <v-col cols="12" class="d-flex justify-end">
                 <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                 <v-btn color="primary" @click="guardarFormulario"
-                  :disabled="excededLimit1 || !formulario.razonsocial || excededLimit3 || !formulario.direccion || excededLimit2 || !formulario.telefono || limit3 || !formulario.barrio
-                  || limit3 || !formulario.ciudad || excededLimit4 || !formulario.ruc">Guardar</v-btn>    <!-- CORREGIR VALIDACIONES  -->
+                  :disabled="excededLimit1 || !formulario.nombres || excededLimit3 || !formulario.direccion || excededLimit2 || !formulario.telefono || limit3 || !formulario.barrio
+                  || limit3 || !formulario.ciudad || excededLimit4 || !formulario.nombres">Guardar</v-btn>    <!-- CORREGIR VALIDACIONES  -->
   
               </v-col>
             </v-row>
@@ -55,7 +55,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
       <v-card class="rounded-xl">
         <v-container>
-          <h1 class="mb-3">Editar Cliente</h1>
+          <h1 class="mb-3">Editar Funcionario</h1>
           <v-form>
             <v-row>
 
@@ -64,14 +64,14 @@
               </v-col>
 
               <v-col cols="12" sm="4" md="4">
-                <v-text-field variant="outlined" label="Ruc o CI" v-model="formulario.ruc"
+                <v-text-field variant="outlined" label="Nombres" v-model="formulario.nombres"
                   :error="excededLimit4" :error-messages="errorMessage4" required></v-text-field>
               </v-col>
   
               <v-col cols="12" sm="4" md="4">
                 <v-text-field 
-                  density="default" label="Razon Social" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                  @click:append-inner="visible = !visible" v-model="formulario.razonsocial" :error="excededLimit1"
+                  density="default" label="Apellidos" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                  @click:append-inner="visible = !visible" v-model="formulario.apellidos" :error="excededLimit1"
                   :error-messages="errorMessage1" required></v-text-field>
               </v-col>
 
@@ -100,8 +100,8 @@
               <v-col cols="12" class="d-flex justify-end">
                 <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
                 <v-btn color="primary" @click="guardarFormularioEditar"
-                :disabled="excededLimit1 || !formulario.razonsocial || excededLimit3 || !formulario.direccion || excededLimit2 || !formulario.telefono || limit3 || !formulario.barrio
-                  || limit3 || !formulario.ciudad || excededLimit4 || !formulario.ruc">Guardar</v-btn>  <!-- CORREGIR VALIDACIONES  -->
+                :disabled="excededLimit1 || !formulario.apellidos || excededLimit3 || !formulario.direccion || excededLimit2 || !formulario.telefono || limit3 || !formulario.barrio
+                  || limit3 || !formulario.ciudad || excededLimit4 || !formulario.nombres">Guardar</v-btn>  <!-- CORREGIR VALIDACIONES  -->
               </v-col>
 
             </v-row>
@@ -120,7 +120,7 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="6" class="d-flex justify-end align-center">
-          Cantidad de Cliente: {{ items.length }}
+          Cantidad de Funcionario: {{ items.length }}
         </v-col>
 
       </v-row>
@@ -130,7 +130,7 @@
           <template v-slot:top>
             <v-toolbar flat color="white">
               <v-toolbar-title>
-                <p class="font-weight-bold">Cliente</p>
+                <p class="font-weight-bold">Funcionarios</p>
               </v-toolbar-title>
   
               <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -142,10 +142,10 @@
   
           <template
            v-slot:item.action="{ item }">
-            <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
+            <v-icon size="small" class="me-2" @click="editarFuncionario(item.raw)">
               mdi-pencil
             </v-icon>
-            <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+            <v-icon color="#C62828" size="small" @click="confirmarEliminarFuncionario(item.raw)">
               mdi-trash-can-outline
             </v-icon>
           </template>
@@ -169,8 +169,8 @@
         
             <v-row>
            <v-col cols="12" class="d-flex justify-end">
-            <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-            <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+            <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarFuncionario">Eliminar</v-btn>
+            <v-btn color="primary" text @click="cancelarEliminarFuncionario">Cancelar</v-btn>
            </v-col>
           </v-row>
           
@@ -185,7 +185,7 @@
   
   <script>
   import { VDataTable } from 'vuetify/labs/VDataTable'
-  import { ClienteAPI } from '@/services/cliente.api'
+  import { FuncionarioAPI } from '@/services/funcionario.api'
   import { BarrioAPI } from '@/services/barrio.api'
   import { CiudadAPI } from '@/services/ciudad.api'
   
@@ -200,8 +200,8 @@
         dialogoFormularioEditar: false,
         formulario: {
           codigo: '',
-          ruc: '',
-          razonsocial: '',
+          nombres: '',
+          apellidos: '',
           direccion: '',
           telefono: '',
           barrio: '',
@@ -213,8 +213,8 @@
         contador: 1,
         defaultFormulario: {
           codigo: '',
-          ruc: '',
-          razonsocial: '',
+          nombres: '',
+          apellidos: '',
           direccion: '',
           telefono: '',
           barrio: '',
@@ -225,8 +225,8 @@
         buscador: '',
         headers: [
           { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-          { title: 'Ruc o CI', key: 'ruc' },
-          { title: 'Razon Social', key: 'razonsocial' },
+          { title: 'Nombres', key: 'nombres' },
+          { title: 'Apellidos', key: 'apellidos' },
           { title: 'Direccion', key: 'direccion' },
           { title: 'Telefono', key: 'telefono' },
           { title: 'Barrio', key: 'nombrebarrio'},
@@ -236,8 +236,10 @@
         items: [
           {
             id: '1',
-            ruc: '7586748',
-            razonsocial: 'Juan Perez',
+            nombres: '7586748',
+            apellidos: 'Juan Perez',
+            nombreciudad: 'Campo 9',
+            nombrebarrio:'San Blas',
             direccion: 'Esq Flores',
             telefono: '0975482412',
 
@@ -252,10 +254,10 @@
     computed: {
       itemsComputed() {
         if (!this.buscador) return this.items
-        return this.items.filter((element) => element.razonsocial.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
+        return this.items.filter((element) => element.nombres.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
       },
       excededLimit1() {
-        return this.formulario.razonsocial.length > this.limit1;
+        return this.formulario.apellidos.length > this.limit1;
       },
 
 
@@ -268,7 +270,7 @@
       },
 
       excededLimit4() {
-        return this.formulario.ruc.length > this.limite2;
+        return this.formulario.nombres.length > this.limite2;
       },
 
 
@@ -333,28 +335,28 @@
       },
 
       guardarFormulario() {
-        if (!this.formulario.razonsocial || !this.formulario.telefono || this.excededLimit || this.excededLimitPas) {
+        if (!this.formulario.apellidos || !this.formulario.telefono || this.excededLimit || this.excededLimitPas) {
           this.emptyFieldError = true;
           return;
         }
 
         
-        ClienteAPI.create(
+        FuncionarioAPI.create(
           {
-            idCliente: this.formulario.codigo,
-            Ruc: this.formulario.ruc,
-            Razon_social: this.formulario.razonsocial,
+            idFuncionario: this.formulario.codigo,
+            nombres: this.formulario.nombres,
+            apellidos: this.formulario.apellidos,
             Direccion: this.formulario.direccion,
             Telefono: this.formulario.telefono,
-            idCiudad: this.formulario.ciudad,
-            idBarrio: this.formulario.barrio
+            idBarrio: this.formulario.barrio,
+            idCiudad: this.formulario.ciudad
           }
         ).then(()=> {
-          this.ObtenerCliente()
+          this.ObtenerFuncionario()
         })
   
-        this.formulario.ruc = '';
-        this.formulario.razonsocial = '';
+        this.formulario.nombres = '';
+        this.formulario.apellidos = '';
         this.formulario.direccion = '';
         this.formulario.telefono = '';
         this.formulario.barrio = '';
@@ -364,66 +366,66 @@
   
   
       guardarFormularioEditar() {
-        if (!this.formulario.razonsocial || !this.formulario.telefono || this.excededLimit || this.excededLimitPas) {
+        if (!this.formulario.apellidos || !this.formulario.telefono || this.excededLimit || this.excededLimitPas) {
           this.emptyFieldError = true;
           return;
         }
   
   
-        ClienteAPI.update(
+        FuncionarioAPI.update(
           this.formulario.codigo,
           {
-            idCliente: this.formulario.codigo,
-            Ruc: this.formulario.ruc,
-            Razon_social: this.formulario.razonsocial,
+            idFuncionario: this.formulario.codigo,
+            nombres: this.formulario.nombres,
+            apellidos: this.formulario.apellidos,
             Direccion: this.formulario.direccion,
             Telefono: this.formulario.telefono,
             idBarrio: this.formulario.barrio,
             idCiudad: this.formulario.ciudad
           }
         ).then(()=> {
-          this.ObtenerCliente()
+          this.ObtenerFuncionario()
         })
         this.dialogoFormularioEditar = false
       },
-      editarCiudad(parametro) {
+      editarFuncionario(parametro) {
         this.dialogoFormularioEditar = true
         this.formulario.codigo = parametro.id
-        this.formulario.ruc = parametro.ruc
-        this.formulario.razonsocial = parametro.razonsocial
+        this.formulario.nombres = parametro.nombres
+        this.formulario.apellidos = parametro.apellidos
         this.formulario.direccion = parametro.direccion
         this.formulario.telefono = parametro.telefono
         this.formulario.barrio = parametro.idBarrio
         this.formulario.ciudad = parametro.idCiudad
       },
-      confirmarEliminarCiudad(elemento) {
+      confirmarEliminarFuncionario(elemento) {
         // Abre el diálogo de confirmación y guarda el elemento a eliminar
         this.elementoAEliminar = elemento;
         this.dialogoEliminar = true;
       },
-      cancelarEliminarCiudad() {
+      cancelarEliminarFuncionario() {
         // Cierra el diálogo de confirmación y restablece la variable
         this.dialogoEliminar = false;
         this.elementoAEliminar = null;
       },
-      eliminarCiudad() {
+      eliminarFuncionario() {
         if (this.elementoAEliminar) {
           // Realiza la eliminación aquí
-          ClienteAPI.delete(this.elementoAEliminar.id).then(() => {
-            this.ObtenerCliente();
+          FuncionarioAPI.delete(this.elementoAEliminar.id).then(() => {
+            this.ObtenerFuncionario();
           });
           // Cierra el diálogo de confirmación
           this.dialogoEliminar = false;
           this.elementoAEliminar = null;
         }
       },
-      ObtenerCliente() {
-        ClienteAPI.getAll().then(({data}) => {
+      ObtenerFuncionario() {
+        FuncionarioAPI.getAll().then(({data}) => {
           this.items = data.map(item=> {
             return {
-              id: item.idCliente,
-              ruc: item.Ruc,
-              razonsocial: item.Razon_social,
+              id: item.idFuncionario,
+              nombres: item.nombres,
+              apellidos: item.apellidos,
               direccion: item.Direccion,
               telefono: item.Telefono,
               idBarrio: item.idBarrio,
@@ -445,7 +447,7 @@
       this.formulario.codigo = this.generarCodigo();
       this.ObtenerBarrio()
       this.obtenerCiudades()
-      this.ObtenerCliente()
+      this.ObtenerFuncionario()
     },
   
   }
