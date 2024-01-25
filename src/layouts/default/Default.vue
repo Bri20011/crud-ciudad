@@ -106,7 +106,7 @@ export default {
         ['x-Nota de Remision', 'mdi-cog-outline','/nota_remision_compras'],
         ['x-Obtener Libro de Compras', 'mdi-cog-outline', '/obtener_libro_compras'],
         ['x-Informes', 'mdi-cog-outline', '/informes_web_compras'],
-        ['x-Varios', 'mdi-cog-outline', '/varios'],
+    
    
         
 
@@ -160,7 +160,9 @@ export default {
         ['Funcionario', 'mdi-cog-outline', '/funcionario'],
         ['Tipo de Venta', 'mdi-cog-outline', '/tipoventa'],
         ['Motivo de Rescision Contrato', 'mdi-cog-outline', '/motivo_rescision_contrato'],
+        ['Motivo de Rescision Contrato', 'mdi-cog-outline', '/motivo_cesion_derecho_deuda'],
 
+        
 
       ],
     };

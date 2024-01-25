@@ -459,6 +459,14 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/motivo_rescision_contrato.vue'),
     },
+    {
+      path: 'motivo_cesion_derecho_deuda',
+      name: 'Motivo_Cesion_Derecho_Deuda',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/motivo_cesion_derecho_deuda.vue'),
+    },
 
 
 
