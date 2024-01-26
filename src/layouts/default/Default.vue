@@ -128,14 +128,15 @@ export default {
       ],
       Produccion: [
         // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
-        ['Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
-        ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
-        ['Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
-        ['Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
-        ['Registro Contrato', 'mdi-plus-outline', '/contrato'],
-        ['Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
-        ['Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
-        ['Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
+        ['x-Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
+        ['x-Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
+        ['x-Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
+        ['x-Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
+        ['x-Registro Contrato', 'mdi-plus-outline', '/contrato'],
+        ['x-Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
+        ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
+        ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
+        ['x-Informes', 'mdi-file-outline', '/'],
       
 
       ],
@@ -161,7 +162,10 @@ export default {
         ['Tipo de Venta', 'mdi-cog-outline', '/tipoventa'],
         ['Motivo de Rescision Contrato', 'mdi-cog-outline', '/motivo_rescision_contrato'],
         ['Motivo de Rescision Contrato', 'mdi-cog-outline', '/motivo_cesion_derecho_deuda'],
-
+        ['Moneda', 'mdi-cog-outline', '/moneda'],
+        ['Motivo Traslado de Remision', 'mdi-cog-outline', '/motivo_traslado_remision'],
+        ['Forma de Cobro', 'mdi-cog-outline', '/forma_cobro'],
+        ['Efectivo', 'mdi-cog-outline', '/efectivo'],
         
 
       ],

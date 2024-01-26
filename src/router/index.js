@@ -467,6 +467,39 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/motivo_cesion_derecho_deuda.vue'),
     },
+    {
+      path: 'moneda',
+      name: 'moneda',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/moneda.vue'),
+    },
+ 
+    {
+      path: 'motivo_traslado_remision',
+      name: 'Motivo_Traslado_Remision',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/motivo_traslado_remision.vue'),
+    },
+    {
+      path: 'forma_cobro',
+      name: 'Forma_cobro',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/forma_cobro.vue'),
+    },
+    {
+      path: 'efectivo',
+      name: 'Efectivo',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/efectivo.vue'),
+    },
 
 
 
