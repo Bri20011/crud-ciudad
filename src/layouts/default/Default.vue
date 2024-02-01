@@ -103,7 +103,7 @@ export default {
         ['Compras', 'mdi-cog-outline', '/compras'],
         ['Nota de Credito', 'mdi-cog-outline', '/nota_credito_compras'],
         ['Nota de Debito', 'mdi-cog-outline','/nota_debito_compra'],
-        ['x-Nota de Remision', 'mdi-cog-outline','/nota_remision_compras'],
+        ['Nota de Remision', 'mdi-cog-outline','/nota_remision_compra'],
         ['x-Obtener Libro de Compras', 'mdi-cog-outline', '/obtener_libro_compras'],
         ['x-Informes', 'mdi-cog-outline', '/informes_web_compras'],
     
@@ -166,6 +166,8 @@ export default {
         ['Motivo Traslado de Remision', 'mdi-cog-outline', '/motivo_traslado_remision'],
         ['Forma de Cobro', 'mdi-cog-outline', '/forma_cobro'],
         ['Efectivo', 'mdi-cog-outline', '/efectivo'],
+        ['Login1', 'mdi-cog-outline', '/logint'],
+        // ['Login2', 'mdi-cog-outline', '/loginusuario'],
         
 
       ],

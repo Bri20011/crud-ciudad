@@ -233,12 +233,12 @@ const routes = [
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/Urbanizacion.vue'),
     },
     {
-      path: 'nota_remision_compras',
-      name: 'Nota_Remision_Compras',
+      path: 'nota_remision_compra',
+      name: 'Nota_Remision_Compra',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "barrio" */ '@/views/Nota_Remision_Compras.vue'),
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/nota_remision_compra.vue'),
     },
     {
       path: 'obtener_libro_compras',
@@ -500,6 +500,22 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/efectivo.vue'),
     },
+    {
+      path: 'logint',
+      name: 'LoginT',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/logint.vue'),
+    },
+    // {
+    //   path: 'loginusuario',
+    //   name: 'LoginUsuario',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (about.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import(/* webpackChunkName: "barrio" */ '@/views/loginusuario.vue'),
+    // },
 
 
 

@@ -1,8 +1,8 @@
 <template>
   <v-sheet class="White pa-12" rounded width="100%" height="1000">
-    <v-card color="#68869a" class="mx-auto px-6 py-15" width="360" height="600">
+    <v-card color="blue-grey" class="mx-auto px-6 py-15" width="360" height="600">
       <v-form v-model="form" @submit.prevent="onSubmit">
-        <v-card-title class="text-h4 text-center">
+        <v-card-title  class="text-h4 text-center">
           ¡Bienvenido!
         </v-card-title>
 
