@@ -207,8 +207,6 @@ export default {
     // // Abrir el modal y cargar el código aquí
      this.dialogoFormulario = true;
 
-    // // Recuperar datos del localStorage
-    // let datosGuardadosBarrio = JSON.parse(localStorage.getItem('datosGuardadosBarrio')) || [];
     
     // // Encontrar el último valor guardado
     // let ultimoValor = datosGuardadosBarrio.length > 0 ? datosGuardadosBarrio[datosGuardadosBarrio.length - 1] : 0;
@@ -327,7 +325,6 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    // this.items = JSON.parse(localStorage.getItem('db-itemsBarrio')) || []
     this.ObtenerBarrio()
 
   },

@@ -70,8 +70,8 @@
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block>
-            Logout
+          <v-btn block @click="logout()">
+            Cerrar sesión
           </v-btn>
         </div>
       </template>
@@ -178,6 +178,10 @@ export default {
       // Cambiar el estado para mostrar u ocultar el segundo v-card
       this.showSecondCard = !this.showSecondCard;
     },
+    logout() {
+      localStorage.clear()
+      this.$router.push({name: 'LoginT'})
+    }
   },
 }
 </script>

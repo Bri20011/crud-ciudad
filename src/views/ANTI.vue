@@ -159,7 +159,7 @@
       this.dialogoFormulario = true;
   
       // Recuperar datos del localStorage
-      let datosGuardadosSucursal = JSON.parse(localStorage.getItem('datosGuardadosSucursal')) || [];
+      let datosGuardadosSucursal =  [];
       
       // Encontrar el último valor guardado
       let ultimoValor = datosGuardadosSucursal.length > 0 ? datosGuardadosSucursal[datosGuardadosSucursal.length - 1] : 0;
@@ -193,7 +193,7 @@
           descripcion: this.formulario.descripcion,
           action: ''
         })
-        localStorage.setItem('db-itemsSuc', JSON.stringify(this.items));
+        
   
         this.formulario.descripcion = '';
         this.dialogoFormulario = false
@@ -210,7 +210,7 @@
             item.descripcion = this.formulario.descripcion
           }
         })
-        localStorage.setItem('db-itemsSuc', JSON.stringify(this.items))
+       
         this.dialogoFormularioEditar = false
       },
       editarCiudad(parametro) {
@@ -222,7 +222,7 @@
         this.items = this.items.filter(item => {
           return item.id != parametro.id
         })
-        localStorage.setItem('db-itemsSuc', JSON.stringify(this.items))
+        
       }
   
     },
@@ -231,8 +231,6 @@
     created() {
       // Generar automáticamente el código al cargar el componente
       this.formulario.codigo = this.generarCodigo();
-      this.items = JSON.parse(localStorage.getItem('db-itemsTipoDoc')) || []
-  
     },
   
   }

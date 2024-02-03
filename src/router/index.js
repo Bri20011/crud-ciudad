@@ -3,6 +3,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+    path: '/logint',
+    component: () => import('@/layouts/Login.vue'),
+    children: [
+      {
+        path: '',
+        name: 'LoginT',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "barrio" */ '@/views/LoginT.vue'),
+      },
+    ]
+  },
+  {
     path: '/',
     component: () => import('@/layouts/default/Default.vue'),
     children: [
@@ -124,14 +138,6 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/LoginUsuario.vue'),
-    },
-    {
-      path: 'logint',
-      name: 'LoginT',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "barrio" */ '@/views/LoginT.vue'),
     },
     {
       path: 'frmcaja',
@@ -500,35 +506,9 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/efectivo.vue'),
     },
-    {
-      path: 'logint',
-      name: 'LoginT',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "barrio" */ '@/views/logint.vue'),
-    },
-    // {
-    //   path: 'loginusuario',
-    //   name: 'LoginUsuario',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "barrio" */ '@/views/loginusuario.vue'),
-    // },
 
-
-
-
-    
-    
-    
-    
-    
-
-    
     ],
-  },
+  }
 ]
 
 
@@ -536,6 +516,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+})
+
+router.beforeEach((to, from) => {
+  const token = localStorage.getItem('token')
+  if(token) {
+    if(to.name === 'LoginT') {
+      return { name: 'Home' }
+    }
+    return true
+  } else {
+    if(to.name !== 'LoginT') {
+      return { name: 'LoginT' }
+    }
+  }
 })
 
 export default router

@@ -298,7 +298,6 @@ export default {
   created() {
     // Generar automáticamente el código al cargar el componente
     this.formulario.codigo = this.generarCodigo();
-    // this.items = JSON.parse(localStorage.getItem('db-itemsBarrio')) || []
     this.ObtenerMoneda()
 
   },
