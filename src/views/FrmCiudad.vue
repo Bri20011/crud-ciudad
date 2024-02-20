@@ -12,6 +12,8 @@
 
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
+          
+
               <v-btn color="primary" @click="guardarFormulario"
                 :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
             </v-col>
@@ -38,8 +40,9 @@
           <v-row>
             <v-col cols="12" class="d-flex justify-end">
               <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
+            
               <v-btn color="primary" @click="guardarFormularioEditar"
-              :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
+                :disabled="excededLimit || !formulario.descripcion">Guardar</v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -50,14 +53,13 @@
     <v-row>
 
       <v-col cols="12" sm="5" md="5">
-        <v-text-field :loading="loading" v-model="buscador" density="compact" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
-          single-line hide-details rounded click:prependInner></v-text-field>
+        <v-text-field :loading="loading" v-model="buscador" density="compact" variant="solo" label="Buscar"
+          append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
       </v-col>
 
       <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
         Cantidad de Ciudad: {{ items.length }}
       </v-col>
-
     </v-row>
 
     <v-card class="mt-5 rounded-xl">
@@ -88,38 +90,41 @@
     <v-row>
       <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
         <v-btn>Cancelar </v-btn>
+          <v-btn color="#E0E0E0" class="mx-2" @click="GenerarReporte">Reporte</v-btn>
       </v-col>
     </v-row>
 
-      <!-- Diálogo de confirmación -->
-      <v-dialog v-model="dialogoEliminar" max-width="400">
+    <!-- Diálogo de confirmación -->
+    <v-dialog v-model="dialogoEliminar" max-width="400">
       <v-card>
         <v-container>
-        <v-card-title class="headline">Confirmar Eliminación</v-card-title>
-        <v-card-text>
-          ¿Está seguro de que desea eliminar este elemento?
-        </v-card-text>
+          <v-card-title class="headline">Confirmar Eliminación</v-card-title>
+          <v-card-text>
+            ¿Está seguro de que desea eliminar este elemento?
+          </v-card-text>
 
-      
+
           <v-row>
-         <v-col cols="12" class="d-flex justify-end">
-          <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
-          <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
-         </v-col>
-        </v-row>
-        
-        
-      </v-container>
+            <v-col cols="12" class="d-flex justify-end">
+              <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarCiudad">Eliminar</v-btn>
+              <v-btn color="primary" text @click="cancelarEliminarCiudad">Cancelar</v-btn>
+            </v-col>
+          </v-row>
+
+
+        </v-container>
       </v-card>
-      
+
     </v-dialog>
-                        <!-- FIN DIALOGO -->
+    <!-- FIN DIALOGO -->
   </v-container>
 </template>
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { CiudadAPI } from '@/services/ciudad.api'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 export default {
   components: {
     VDataTable
@@ -180,11 +185,22 @@ export default {
   },
   methods:
   {
+ GenerarReporte() {
+      const doc = new jsPDF();
+      doc.text('Reporte de Ciudades:', 60, 10);
+
+      autoTable(doc, {
+        head: [['Codigo', 'Descripcion']],
+        body: this.items.map(item => [item.id, item.descripcion])
+      });
+      doc.output('dataurlnewwindow');
+    },
+
     abrirDialogo() {
-    this.dialogoFormulario = true;
-    this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-  },
- 
+      this.dialogoFormulario = true;
+      this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+    },
+
 
 
     generarCodigo() {
@@ -194,7 +210,7 @@ export default {
     guardarFormulario() {
 
       if (!this.formulario.descripcion) {
-        
+
         this.emptyFieldError = true;
         return;
       }
@@ -204,7 +220,7 @@ export default {
           idCiudad: this.formulario.codigo,
           Descripcion: this.formulario.descripcion
         }
-      ).then(()=> {
+      ).then(() => {
         this.obtenerCiudades()
       })
 
@@ -212,12 +228,12 @@ export default {
       this.dialogoFormulario = false
       this.dialogoFormulario = false
     },
-   
+
 
     guardarFormularioEditar() {
 
       if (!this.formulario.descripcion) {
-        
+
         this.emptyFieldError = true;
         return;
       }
@@ -228,7 +244,7 @@ export default {
           idCiudad: this.formulario.codigo,
           Descripcion: this.formulario.descripcion
         }
-      ).then(()=> {
+      ).then(() => {
         this.obtenerCiudades()
       })
       this.formulario.descripcion = '';
@@ -239,7 +255,7 @@ export default {
       this.formulario.codigo = parametro.id
       this.formulario.descripcion = parametro.descripcion
     },
-    
+
     confirmarEliminarCiudad(elemento) {
       // Abre el diálogo de confirmación y guarda el elemento a eliminar
       this.elementoAEliminar = elemento;
@@ -264,8 +280,8 @@ export default {
 
 
     obtenerCiudades() {
-      CiudadAPI.getAll().then(({data}) => {
-        this.items = data.map(item=> {
+      CiudadAPI.getAll().then(({ data }) => {
+        this.items = data.map(item => {
           return {
             id: item.idCiudad,
             descripcion: item.Descripcion
@@ -276,7 +292,7 @@ export default {
 
   },
 
-  
+
 
   created() {
     // Generar automáticamente el código al cargar el componente  dd

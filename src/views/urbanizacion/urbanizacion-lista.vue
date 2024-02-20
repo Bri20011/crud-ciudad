@@ -1,8 +1,8 @@
 <template>
     <v-row>
         <v-col cols="12" sm="5" md="5">
-            <v-text-field  density="compact" v-model="buscador" variant="solo" label="Buscar"
-                append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
+            <v-text-field density="compact" v-model="buscador" variant="solo" label="Buscar" append-inner-icon="mdi-magnify"
+                single-line hide-details rounded click:prependInner></v-text-field>
         </v-col>
 
         <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
@@ -28,10 +28,12 @@
                 {{ formatearFecha(item.raw.fechaD) }}
             </template>
             <template v-slot:item.action="{ item }">
-                <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
-                    Anular
-                </v-btn>
-            </template>
+                <v-icon color="primary" size="small" @click="MostrarUrbanizacion(item.raw)">
+                    mdi-file-eye-outline
+                </v-icon>
+                <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
+                    mdi-trash-can-outline
+                </v-icon> </template>
         </v-data-table>
     </v-card>
     <UrbanizacionFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
@@ -56,11 +58,10 @@ export default {
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Fecha de Urbanizacion', key: 'fechaD', align: 'star' },
                 { title: 'Nombre de Urbanizacion', key: 'nombre_urb' },
-                { title: 'Cantidad de Manzanas', key: 'Cantidad_manzana', align: 'center' },
-                { title: 'Cantidad de Lotes', key: 'Cantidad_manzana', align: 'center' },
+                { title: 'Ciudad', key: 'nombreciudad', align: 'center' },
+                { title: 'Barrio', key: 'nombrebarrio', align: 'center' },
                 { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
                 { title: 'Costo', key: 'costo', align: 'center' },
-                { title: 'Ciudad', key: 'idCiudad', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             buscador: '',

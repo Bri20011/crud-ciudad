@@ -8,8 +8,11 @@
       <v-spacer></v-spacer>
      
     </v-toolbar>
+    
+    <v-navigation-drawer v-model="showSecondCard" color="blue-grey" width="700px" theme="dark" temporary>
+      <v-card class="color=black"></v-card> 
+
  
-    <v-navigation-drawer v-model="showSecondCard" color="blue-grey" width="700px" theme="dark" temporary >
      
          
           <v-container >
@@ -64,6 +67,13 @@
               :value="title" :to="link"></v-list-item>
           </v-list-group>
 
+          <v-list-group value="Informes">
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props" title="Informes"></v-list-item>
+            </template>
+            <v-list-item v-for="([title, icon, link], i) in informe" :key="i" :title="title" :prepend-icon="icon"
+              :value="title" :to="link"></v-list-item>
+          </v-list-group>
 
         </v-list-group>
       </v-list>
@@ -124,22 +134,20 @@ export default {
         ['x-Registrar Nota de Debito', 'mdi-file-outline', '/nota_debito_venta'],
         ['x-Informes', 'mdi-file-outline', '/'],
         ['x-Obtener Libro Ventas', 'mdi-file-outline', '/obtener_libro_venta'],
-
       ],
+      
       Produccion: [
         // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
-        ['x-Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
         ['x-Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
+        ['x-Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
         ['x-Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
         ['x-Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
         ['x-Registro Contrato', 'mdi-plus-outline', '/contrato'],
         ['x-Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
         ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
-        ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
         ['x-Informes', 'mdi-file-outline', '/'],
-      
-
       ],
+
       mantenimiento: [
         ['Ciudad', 'mdi-cog-outline', '/frmciudad'],
         ['Barrio', 'mdi-cog-outline', '/frmbarrio'],
@@ -161,7 +169,7 @@ export default {
         ['Funcionario', 'mdi-cog-outline', '/funcionario'],
         ['Tipo de Venta', 'mdi-cog-outline', '/tipoventa'],
         ['Motivo de Rescision Contrato', 'mdi-cog-outline', '/motivo_rescision_contrato'],
-        ['Motivo de Rescision Contrato', 'mdi-cog-outline', '/motivo_cesion_derecho_deuda'],
+        ['Motivo de Cesion Contrato', 'mdi-cog-outline', '/motivo_cesion_derecho_deuda'],
         ['Moneda', 'mdi-cog-outline', '/moneda'],
         ['Motivo Traslado de Remision', 'mdi-cog-outline', '/motivo_traslado_remision'],
         ['Forma de Cobro', 'mdi-cog-outline', '/forma_cobro'],
@@ -169,6 +177,11 @@ export default {
         ['Login1', 'mdi-cog-outline', '/logint'],
         // ['Login2', 'mdi-cog-outline', '/loginusuario'],
         
+      ],
+        
+      informe: [
+        // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
+        ['Informe de Ciudades', 'mdi-plus-outline', '/informe_ciudad'],
 
       ],
     };

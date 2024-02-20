@@ -506,7 +506,14 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/efectivo.vue'),
     },
-
+    {
+      path: 'informe_ciudad',
+      name: 'Informe_Ciudad',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/informe_ciudad.vue'),
+    },
     ],
   }
 ]

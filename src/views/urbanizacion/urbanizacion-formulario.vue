@@ -1,13 +1,14 @@
 
 
 <template>
+    <!-- INICIO CABECERA -->
     <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
                 <h1 class="mb-3">Registrar Urbanizacion</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="5" md="5">
+                        <v-col cols="12" sm="6" md="6">
                             <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
                                 required></v-text-field>
                         </v-col>
@@ -17,31 +18,30 @@
                                 placeholder="Fecha de Operacion" />
                         </v-col>
 
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="6" md="6" class="mt-0">
+                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio" item-title="descripcionB"
+                                item-value="id" v-model="formulario.barrio" required></v-autocomplete>
+                        </v-col>
+                        
+                        <v-col cols="12" sm="6" md="6" class="mt-0">
                             <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC"
                                 item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
                         </v-col>
-
-
-                        <!-- <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="formulario.area" required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Lado A" v-model="formulario.ladoA"
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Lado B" v-model="formulario.ladoB"
-                                required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
+                        
+                        <v-col cols="12" sm="6" md="6" class="mt-0">
                             <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
                                 required></v-text-field>
-                        </v-col> -->
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3" class="mt-0">
+                            <v-text-field variant="outlined" label="Total Lotes a Generar" v-model="formulario.total_lote_generar"
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3" class="mt-0">
+                            <v-text-field variant="outlined" label="Costo Total Lote" v-model="formulario.costo"
+                                required></v-text-field>
+                        </v-col>
 
+                        <!-- FIN CABECERA -->
 
 
 
@@ -54,31 +54,23 @@
                                 item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
                                 required></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2" class="mt-5">
-                            <v-text-field variant="outlined" label="Costo Total Lote" v-model="formulario.cantidad"
-                              disabled required></v-text-field>
-                        </v-col>
+
                         <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-autocomplete variant="outlined" label="Manzana" :items="listaManzana"
                                 item-title="descripcionM" item-value="id" v-model="formulario.manzana" required>
                             </v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2" class="mt-5">
+
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-text-field variant="outlined" label="Cantidad de lotes" v-model="formulario.cantidad"
                                 required></v-text-field>
                         </v-col>
-                        <!-- <v-col cols="12" sm="2" md="2" class="mt-5">
-                            <v-text-field variant="outlined" label="Precio Total" v-model="formulario.precio"
-                                required></v-text-field>
-                        </v-col> -->
-
 
                         <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="detalle_cabecera.producto" required>
                             </v-autocomplete>
                         </v-col>
-
 
                         <v-row class="d-flex align-end  mt-5">
                             <v-col cols="12" sm="8" md="8">
@@ -87,6 +79,9 @@
                             </v-col>
                         </v-row>
                         <!-- FIN DETALLE -->
+
+
+
 
                         <v-data-table class="mt-5" max-width="1500" items-per-page-text="Articulos" :headers="headers"
                             :items="listadoDeLaTabla" :group-by="groupBy">
@@ -108,8 +103,10 @@
         </v-card>
     </v-dialog>
     <!-- INICIO EDITAR DETALLE -->
-    <v-dialog max-width="800" v-model="dialogoFormularioEditarDetalle" persistent>
+    <v-dialog max-width="600" v-model="dialogoFormularioEditarDetalle" persistent>
+
         <v-card class="rounded-xl">
+
             <v-container>
                 <h1 class="mb-3 text-center">Ingresar Detalle</h1>
                 <v-form>
@@ -123,6 +120,17 @@
                         <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
                                 disabled required></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row class="justify-center">
+                    <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Costo por Lote:" v-model="detalle_editar.costo_lote"
+                           disabled  required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Numero Lote:" v-model="detalle_editar.numero_lote"
+                                required></v-text-field>
                         </v-col>
                     </v-row>
 
@@ -146,35 +154,8 @@
                             <v-text-field variant="outlined" label="Longitud del Lado Derecho:"
                                 v-model="detalle_editar.l_derecho" required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Numero Lote:"
-                                v-model="detalle_editar.numero_lote" required></v-text-field>
-                        </v-col>
                     </v-row>
-                    <!-- <v-col cols="12" sm="5" md="5">
-                        <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                            item-title="descripcionPr" item-value="id" v-model="detalle_editar.producto" disabled
-                            required></v-autocomplete>
-                    </v-col> -->
-                    <!-- <v-col ols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Ubicacion"
-                                v-model="detalle_editar.ubicacion"></v-text-field>
-                        </v-col> -->
-                    <!-- <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Numero Manzana"
-                                v-model="detalle_editar.manzana"></v-text-field>
-                        </v-col> -->
-                    <!-- <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero Lote"
-                                v-model="detalle_editar.numero_lot"></v-text-field>
-                        </v-col>
-                        <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Area" v-model="detalle_editar.area"></v-text-field>
-                        </v-col>
-                        <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio del Lote"
-                                v-model="detalle_editar.precio_ind"></v-text-field>
-                        </v-col> -->
+                   
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
@@ -192,7 +173,8 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ProductoAPI } from '@/services/producto.api'
 import { CiudadAPI } from '@/services/ciudad.api'
-import { StockAPI } from '@/services/stock.api'
+import { BarrioAPI } from '@/services/barrio.api'
+import { StockLoteAPI } from '@/services/stock_lote.api'
 import { UrbanizacionApi } from '@/services/urbanizacion.api'
 import { ManzanaAPI } from '@/services/manzana.api'
 export default {
@@ -209,6 +191,7 @@ export default {
             dialogoFormulario: true,
             dialogoFormularioEditarDetalle: false,
             listaCiudad: [],
+            listaBarrio: [],
             listaProducto: [],
             listaUrbanizar: [],
             listaManzana: [],
@@ -218,25 +201,26 @@ export default {
                 nombre_urb: '',
                 fechaD: '',
                 ciudad: '',
+                barrio: '',
                 urbanizacion: '',
-                area: '',
-                ladoA: '',
-                ladoB: '',
                 ubicacion: '',
                 cantidad: '',
-                precio: '',
-                descripcionM: ''
+                costo: '',
+                descripcionM: '',
+                manzana: ''
             },
             detalle_cabecera: {
                 producto: '',
-                manzana: ''
+                // manzana: ''
             },
             detalle_editar: {
                 id: '',
                 ancho_frente: '',
                 ancho_atras: '',
                 l_izquiero: '',
-                l_derecho: ''
+                l_derecho: '',
+                costo_lote: '',
+                
             },
 
             groupBy: [
@@ -255,11 +239,7 @@ export default {
                 { title: 'Ancho de Atrás:', key: 'ancho_atras', align: 'center' },
                 { title: 'Longitud del Lado Izquierdo:', key: 'l_izquiero', align: 'center' },
                 { title: 'Longitud del Lado Derecho:', key: 'l_derecho', align: 'center' },
-                // { title: 'Precio por Lote', key: 'precio_ind', align: 'center' },
-                // { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
-                // { title: 'Cantidad de lotes', key: 'cantidad', align: 'center' },
-                // { title: 'Numero Lote', key: 'numero_lot', align: 'center' },
-                // { title: 'Area', key: 'area', align: 'center' },
+                { title: 'Costo por Lote:', key: 'costo_lote', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' }
             ],
             listadoDeLaTabla: []
@@ -268,7 +248,8 @@ export default {
     created() {
         this.ObtenerProducto();
         this.ObtenerCiudades();
-        this.ObtenerStock();
+        this.ObtenerBarrio();
+        this.ObtenerStock_Lote();
         this.ObtenerManzana();
     },
     methods: {
@@ -293,11 +274,21 @@ export default {
                 })
             })
         },
-        ObtenerStock() {
-            StockAPI.findByTipo(4).then(({ data }) => {
+        ObtenerBarrio() {
+            BarrioAPI.getAll().then(({ data }) => {
+                this.listaBarrio = data.map(item => {
+                    return {
+                        id: item.idBarrio,
+                        descripcionB: item.descripcion
+                    }
+                })
+            })
+        },
+        ObtenerStock_Lote() {
+            StockLoteAPI.findByTipo(4).then(({ data }) => {
                 this.listaUrbanizar = data.map(item => {
                     return {
-                        id: item.idStock,
+                        id: item.idStock_Lote,
                         descripcionU: item.nombreproducto
                     }
                 })
@@ -314,7 +305,11 @@ export default {
                 })
             })
         },
+
+
+        
         agregarDetalleAntesGuardar() {
+
             const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle_cabecera.producto);
 
             // Buscar la descripción de la manzana seleccionada
@@ -327,6 +322,8 @@ export default {
             // Agregar  detalle segun la cantidad ingresada
             for (let indice = 0; indice < cantidad; indice++) {
                 this.indiceGlobal = this.indiceGlobal + 1
+                const numero_lote = indice + 1;
+
                 this.listadoDeLaTabla.push({
                     producto: productoSeleccionado.id,
                     descripcionPr: productoSeleccionado.descripcionPr,
@@ -336,13 +333,14 @@ export default {
                     cantidad: this.formulario.cantidad,
                     ubicacion: '',
                     manzana: descripcionManzana,
-                    // descripcionM: this.formulario.idManzana,
-                    numero_lot: '',
+                    idManzana: this.formulario.manzana, 
+                    numero_lote: numero_lote,                  
                     area: '',
                     ancho_frente: '',
                     ancho_atras: '',
                     l_izquiero: '',
                     l_derecho: '',
+                    costo_lote:'',
                     action: '',
                 });
             }
@@ -354,14 +352,16 @@ export default {
 
         },
         editarDetalleAntesGuardar(parametro) {
-
             this.dialogoFormularioEditarDetalle = true
             this.detalle_editar.id = parametro.id
             this.detalle_editar.ancho_frente = parametro.ancho_frente
             this.detalle_editar.ancho_atras = parametro.ancho_atras
             this.detalle_editar.l_izquiero = parametro.l_izquiero
             this.detalle_editar.l_derecho = parametro.l_derecho
-
+            this.formulario.manzana = parametro.manzana
+            this.detalle_editar.costo_lote = this.formulario.costo / this.formulario.total_lote_generar;
+            this.detalle_editar.numero_lote = parametro.numero_lote
+           
 
         },
         cerrarDialogo() {
@@ -370,33 +370,36 @@ export default {
 
 
         guardarFormulario() {
+            console.log('Listado de la tabla',this.listadoDeLaTabla);
             UrbanizacionApi.create({
                 idUrbanizacion: '',
-                fecha_urb: this.formulario.fechaD,
                 Nombre_Urbanizacion: this.formulario.nombre_urb,
-                Area: this.formulario.area,
-                LadoA: this.formulario.ladoA,
-                LadoB: this.formulario.ladoB,
-                Cantidad_manzana: this.formulario.cantidad,
-                Ubicacion: this.formulario.ubicacion,
-                Precio: this.formulario.precio,
+                fecha_urb: this.formulario.fechaD,
+                idBarrio: this.formulario.barrio,
                 idCiudad: this.formulario.ciudad,
-                idStock: this.formulario.urbanizacion,
+                Ubicacion: this.formulario.ubicacion,
+                Costo_total: this.formulario.costo,
+                idStock_Lote: this.formulario.urbanizacion,
+                // OJO Cantidad_manzana: this.formulario.cantidad,    Agregar a cabecera 
+
                 Detalle: this.listadoDeLaTabla.map(elemento => ({
                     idProducto: elemento.producto,
                     id_detalle: elemento.id,
-                    Ubicacion: elemento.ubicacion,
-                    Numero_manzana: elemento.manzana,
-                    Numero_lote: elemento.numero_lot,
-                    Area: elemento.area,
-                    Precio_Lote: elemento.precio_ind
+                    idManzana: elemento.idManzana,
+                    Numero_lote: elemento.numero_lote,
+                    ancho_frente: elemento.ancho_frente,
+                    ancho_atras: elemento.ancho_atras,
+                    long_izquierdo: elemento.l_izquiero,
+                    long_derecho: elemento.l_derecho,
+                    costo_lote: elemento.costo_lote, 
+
                 }))
             }).then(() => {
                 this.cerrarDialogo()
             });
         },
         guardarFormularioEditarDetalle() {
-            if (!this.detalle_editar.ancho_frente || !this.detalle_editar.ancho_atras || !this.detalle_editar.l_izquiero || !this.detalle_editar.l_derecho || !this.detalle_editar.numero_lote)  {
+            if (!this.detalle_editar.ancho_frente || !this.detalle_editar.ancho_atras || !this.detalle_editar.l_izquiero || !this.detalle_editar.l_derecho || !this.detalle_editar.numero_lote) {
                 return;
             }
             // Busca el índice del elemento que se va a editar
@@ -407,6 +410,8 @@ export default {
             this.listadoDeLaTabla[indice].l_izquiero = this.detalle_editar.l_izquiero;
             this.listadoDeLaTabla[indice].l_derecho = this.detalle_editar.l_derecho;
             this.listadoDeLaTabla[indice].numero_lote = this.detalle_editar.numero_lote;
+            this.listadoDeLaTabla[indice].costo_lote = this.detalle_editar.costo_lote;
+
 
             this.dialogoFormularioEditarDetalle = false;
         },

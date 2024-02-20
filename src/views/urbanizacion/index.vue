@@ -8,6 +8,7 @@
 <script>
 import UrbanizacionLista from './urbanizacion-lista.vue'
 import { UrbanizacionApi } from '@/services/urbanizacion.api'
+import { CiudadAPI } from '@/services/ciudad.api'
 export default {
     components: {
         UrbanizacionLista
@@ -32,9 +33,14 @@ export default {
                         ladoA: item.LadoA,
                         ladoB: item.LadoB,
                         cantidad: item.Cantidad_manzana,
+                        manzana: item.idManzana,
                         ubicacion: item.Ubicacion,
+                        costo: item.Costo_total,
                         precio: item.Precio,
-                        ciudad: item.idCiudad,
+                        idCiudad: item.idCiudad,
+                        nombreciudad: item.nombreciudad,
+                        idBarrio: item.idBarrio,
+                        nombrebarrio: item.nombrebarrio,
                         detalleItems: item.detalle
                     }
                 })
