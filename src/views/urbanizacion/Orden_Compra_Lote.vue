@@ -2,7 +2,7 @@
     <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h2 class="mb-3">Registrar Orden Compra Lote</h2>
+                <h2 class="mb-3">Registrar Orden Compra Lote </h2>
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="6" md="6" class="">
@@ -16,9 +16,8 @@
                         </v-col>
                     </v-row>
 
-
-
                     <v-divider class="mt-0"></v-divider>
+
                     <!-- INICIO DETALLE -->
                     <v-row>
                         <v-col cols="12" sm="4" md="4" class="mt-5">
@@ -29,16 +28,12 @@
 
                         <v-col cols="12" sm="4" md="4" class="mt-5">
                             <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
-                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
+                             required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4" class="mt-5">
-                            <v-text-field variant="outlined" label="Costo" v-model="detalle.cantidad"
-                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
+                            <v-text-field variant="outlined" label="Costo" v-model="detalle.costo"
+                            required></v-text-field>
                         </v-col>
-
-
-
-
                     </v-row>
                     <v-row class="mt-0">
                         <v-col cols="12" class="d-flex justify-end">
@@ -126,7 +121,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Editar Pedido antes de guardar</h1>
+                <h1 class="mb-3">Editar Orden de Compras antes de guardar</h1>
                 <v-form>
                     <v-row class="justify-center">
 
@@ -139,6 +134,9 @@
 
                         <v-col ols="12" sm="5" md="5">
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
+                        </v-col>
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Costo" v-model="formulario.costo"></v-text-field>
                         </v-col>
 
 
@@ -160,7 +158,7 @@
     <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Pedidos Registrado</h1>
+                <h1 class="mb-3">Ordenes Registrados</h1>
                 <v-form>
 
                     <v-row>
@@ -354,6 +352,9 @@
                         <v-col ols="12" sm="5" md="5">
                             <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
                         </v-col>
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Costo" v-model="formulario.costo"></v-text-field>
+                        </v-col>
 
 
                     </v-row>
@@ -372,7 +373,7 @@
 
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { PedidoAPI } from '@/services/pedido.api'
+import { OrdenUrbApi } from '@/services/orde_compra_lote.api'
 import { ProductoAPI } from '@/services/producto.api'
 import dayjs from 'dayjs'
 
@@ -395,6 +396,7 @@ export default {
             detalle: {
                 producto: '',
                 descripcion: '',
+                costo: '',
             },
             limit: 45,
 
@@ -417,6 +419,7 @@ export default {
                 fechaD: '',
                 producto: null,
                 cantidad: null,
+                costo: null,
             },
             buscador: '',
             headers: [
@@ -428,14 +431,16 @@ export default {
             headersPedido: [
 
                 { title: 'Producto', key: 'idProducto' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Cantidad', key: 'cantidad_lote', align: 'star' },
+                { title: 'Costo', key: 'costo_lote', align: 'star' },
 
             ],
 
             headersPedidoG: [
                 { title: 'Codigo', key: 'idProducto' },
                 { title: 'Descripcion', key: 'nombre_producto' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Cantidad', key: 'cantidad_lote', align: 'star' },
+                { title: 'Costo', key: 'costo_lote', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
@@ -443,7 +448,7 @@ export default {
 
             headersCrear: [
 
-                { title: 'Codigo', key: 'producto' },
+                { title: 'Producto', key: 'producto' },
                 { title: 'Producto', key: 'descripcionPr' },
                 { title: 'Cantidad', key: 'cantidad', align: 'star' },
                 { title: 'Costo', key: 'costo', align: 'star' },
@@ -511,11 +516,13 @@ export default {
                     producto: productoSeleccionado.id, // Agrega la descripción del producto
                     descripcionPr: productoSeleccionado.descripcionPr,
                     cantidad: this.detalle.cantidad,
+                    costo: this.detalle.costo,
                     action: '',
                 });
 
                 this.detalle.producto = '';
                 this.detalle.cantidad = '';
+                this.detalle.costo = '';
             }
         },
 
@@ -566,13 +573,13 @@ export default {
 
                 } else {
                     // Todos los campos requeridos están completos y no hay duplicados, puedes proceder a guardar
-                    PedidoAPI.create({
-                        idPedido: this.formulario.codigo,
-                        Descripcion: this.formulario.descripcion,
-                        Fecha_pedi: this.formulario.fechaD,
+                    OrdenUrbApi.create({
+                        idorde_compra_lote: this.formulario.codigo,
+                        descripcion: this.formulario.descripcion,
+                        fecha: this.formulario.fechaD,
                         Detalle: this.itemsDetalle,
                     }).then(() => {
-                        this.ObtenerPedido();
+                        this.ObtenerOrdenUrbanizacion();
                     });
 
                     // Limpia los campos del formulario después de guardar
@@ -582,6 +589,7 @@ export default {
                     this.formulario.fechaD = "";
                     this.detalle.producto = null;
                     this.detalle.cantidad = null;
+                    this.detalle.costo = null;
                     this.itemsDetalle = []
 
 
@@ -603,8 +611,9 @@ export default {
 
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
-                    idProducto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
+                    idProducto: detalle.nombreProducto,
+                    cantidad_lote: detalle.cantidad_lote,
+                    costo_lote: detalle.costo_lote,
                 });
             })
 
@@ -627,11 +636,14 @@ export default {
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
                 this.itemsDetalle[index].cantidad = this.formulario.cantidad;
+                this.itemsDetalle[index].costo = this.formulario.costo;
+
             } else {
                 // Si no se encontró el elemento, agrega uno nuevo
                 this.itemsDetalle.push({
                     producto: this.formulario.producto,
                     cantidad: this.formulario.cantidad,
+                    costo: this.formulario.costo,
                     action: '',
                 });
             }
@@ -648,6 +660,8 @@ export default {
             this.dialogoFormularioEditar = true
             this.formulario.producto = parametro.producto
             this.formulario.cantidad = parametro.cantidad
+            this.formulario.costo = parametro.costo
+
 
         },
         confirmarEliminarCiudad(elemento) {
@@ -663,8 +677,8 @@ export default {
         eliminarCiudad() {
             if (this.elementoAEliminar) {
                 // Realiza la eliminación aquí
-                PedidoAPI.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerPedido();
+                OrdenUrbApi.delete(this.elementoAEliminar.id).then(() => {
+                    this.ObtenerOrdenUrbanizacion();
                 });
                 // Cierra el diálogo de confirmación
                 this.dialogoEliminar = false;
@@ -678,7 +692,9 @@ export default {
             this.formulario.descripcion = parametro.descripcion
             this.formulario.fechaD = parametro.fechaD
             this.detalle.producto = parametro.producto
-            this.detalle.cantidad = parametro.cantidad
+            this.detalle.cantidad = parametro.cantidad_lote
+            this.detalle.costo = parametro.costo_lote
+
         },
 
 
@@ -693,10 +709,11 @@ export default {
 
             item.detalleItems.forEach((detalle) => {
                 this.formulario.itemsDetalle.push({
-                    idPedido:detalle.idPedido,
+                    idorde_compra_lote:detalle.idorde_compra_lote,
                     idProducto: detalle.idProducto,
-                    nombre_producto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
+                    nombre_producto: detalle.nombreProducto,
+                    cantidad_lote: detalle.cantidad_lote,
+                    costo_lote: detalle.costo_lote,
                 });
             })
 
@@ -707,18 +724,18 @@ export default {
         guardarFormularioEditarG() {
             console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
 
-            PedidoAPI.update(
+            OrdenUrbApi.update(
              
                 this.formulario.codigo,
                 {
-                    idPedido: this.formulario.codigo,
-                    Descripcion: this.formulario.descripcion,
-                    Fecha_pedi: this.formulario.fechaD,
+                    idorde_compra_lote: this.formulario.codigo,
+                    descripcion: this.formulario.descripcion,
+                    fecha: this.formulario.fechaD,
                     Detalle: this.formulario.itemsDetalle,
                   
                 }
             ).then(() => {
-                this.ObtenerPedido()
+                this.ObtenerOrdenUrbanizacion()
             })
             this.formulario.codigo = "";
                     this.formulario.producto = "";
@@ -740,7 +757,7 @@ export default {
             console.log('Antes de guardar:', this.formulario.itemsDetalle);
             console.log ('Ver producto', this.formulario.producto);
 
-            if (!this.formulario.producto || !this.formulario.cantidad) {
+            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.costo) {
                 this.emptyFieldError = true;
                 return;
             }
@@ -750,7 +767,8 @@ export default {
 
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
-                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
+                this.formulario.itemsDetalle[index].cantidad_lote = this.formulario.cantidad;
+                this.formulario.itemsDetalle[index].costo_lote = this.formulario.costo;
             } 
             console.log('Después de guardar:', this.formulario.itemsDetalle);
 
@@ -765,20 +783,21 @@ export default {
 
             // this.formulario.codigo = item.producto
             this.formulario.producto = item.idProducto;
-            this.formulario.cantidad = item.Cantidad;
+            this.formulario.cantidad = item.cantidad_lote;
+            this.formulario.costo = item.costo_lote;
 
 
         },
         
-        ObtenerPedido() {
+        ObtenerOrdenUrbanizacion() {
 
-            PedidoAPI.getAll().then(({ data }) => {
+            OrdenUrbApi.getAll().then(({ data }) => {
                 console.log(data)
                 this.items = data.map(item => {
                     return {
-                        id: item.idPedido,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
+                        id: item.idorde_compra_lote,
+                        descripcion: item.descripcion,
+                        fechaD: item.fecha,
                         detalleItems: item.detalle
 
                     }
@@ -793,7 +812,7 @@ export default {
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
-        this.ObtenerPedido()
+        this.ObtenerOrdenUrbanizacion()
         this.ObtenerProducto()
 
 

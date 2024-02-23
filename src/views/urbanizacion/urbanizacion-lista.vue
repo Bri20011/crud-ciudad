@@ -28,7 +28,7 @@
                 {{ formatearFecha(item.raw.fechaD) }}
             </template>
             <template v-slot:item.action="{ item }">
-                <v-icon color="primary" size="small" @click="MostrarUrbanizacion(item.raw)">
+                <v-icon color="primary" size="small" @click="MostrarUrbanizacion">
                     mdi-file-eye-outline
                 </v-icon>
                 <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
@@ -37,15 +37,20 @@
         </v-data-table>
     </v-card>
     <UrbanizacionFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
+    <UrbanizacionFormularioVista v-if="dialogoFormularioVista" @cerrar-dialogo-v="dialogoFormularioVista = false" />
+
 </template>
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import UrbanizacionFormulario from './urbanizacion-formulario.vue'
+import UrbanizacionFormularioVista from './urbanizacion-formulario-vista.vue'
+
 import dayjs from 'dayjs'
 export default {
     components: {
         VDataTable,
-        UrbanizacionFormulario
+        UrbanizacionFormulario,
+        UrbanizacionFormularioVista
     },
     props: {
         prop_listado_urbanizacion: {
@@ -65,7 +70,8 @@ export default {
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             buscador: '',
-            dialogoFormulario: false
+            dialogoFormulario: false,
+            dialogoFormularioVista:false
         }
     },
     computed: {
@@ -78,11 +84,42 @@ export default {
         abrirDialogo() {
             this.dialogoFormulario = true;
         },
+        MostrarUrbanizacion(item){
+            this.dialogoFormularioVista = true;
+            // this.formulario.codigo = item.id
+            this.formulario.nombre_urb = item.Nombre_Urbanizacion
+            this.formulario.fechaD = item.fechaD
+        },
         formatearFecha(fechaD) {
             return dayjs(fechaD).format('DD/MM/YYYY')
         }
     },
     confirmarCambiarEstado(elemento) {
     },
+
+    ObtenerUrbanizacion() {
+            UrbanizacionApi.getAll().then(({ data }) => {
+                this.listado_urbanizacion = data.map(item => {
+                    return {
+                        id: item.idUrbanizacion,
+                        fechaD: item.fecha_urb,
+                        nombre_urb: item.Nombre_Urbanizacion,
+                        area: item.Area,
+                        ladoA: item.LadoA,
+                        ladoB: item.LadoB,
+                        cantidad: item.Cantidad_manzana,
+                        manzana: item.idManzana,
+                        ubicacion: item.Ubicacion,
+                        costo: item.Costo_total,
+                        precio: item.Precio,
+                        idCiudad: item.idCiudad,
+                        nombreciudad: item.nombreciudad,
+                        idBarrio: item.idBarrio,
+                        nombrebarrio: item.nombrebarrio,
+                        detalleItems: item.detalle
+                    }
+                })
+            })
+        },
 }
 </script>
