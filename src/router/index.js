@@ -1,6 +1,10 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 
+import FrmCiudad from '@/views/FrmCiudad.vue'
+import FrmBarrio from '@/views/FrmBarrio.vue'
+
+
 const routes = [
   {
     path: '/logint',
@@ -23,18 +27,12 @@ const routes = [
       {
         path: 'frmciudad',
         name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "ciudad" */ '@/views/FrmCiudad.vue'),
+        component: FrmCiudad,
       },
       {
         path: 'frmbarrio',
         name: 'FrmBarrio',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "frmbarrio" */ '@/views/FrmBarrio.vue'),
+        component: FrmBarrio,
       },
       {
         path: 'frmusuario',
@@ -513,6 +511,14 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/informe_ciudad.vue'),
+    },
+    {
+      path: 'informes',
+      name: 'informes',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "informe" */ '@/views/informes/menu_informe.vue'),
     },
     ],
   }

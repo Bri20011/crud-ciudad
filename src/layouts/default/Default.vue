@@ -39,6 +39,14 @@
             <v-list-item v-for="([title, icon, link], i) in compras" :key="i" :value="title" :title="title"
               :prepend-icon="icon" :to="link"></v-list-item>
           </v-list-group>
+          
+          <v-list-group value="Produccion">
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props" title="Produccion"></v-list-item>
+            </template>
+            <v-list-item v-for="([title, icon, link], i) in Produccion" :key="i" :value="title" :title="title"
+              :prepend-icon="icon" :to="link"></v-list-item>
+          </v-list-group>
 
           <v-list-group value="Ventas">
             <template v-slot:activator="{ props }">
@@ -48,17 +56,6 @@
               :prepend-icon="icon" :to="link"></v-list-item>
           </v-list-group>
 
-
-
-          <v-list-group value="Produccion">
-            <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Produccion"></v-list-item>
-            </template>
-            <v-list-item v-for="([title, icon, link], i) in Produccion" :key="i" :value="title" :title="title"
-              :prepend-icon="icon" :to="link"></v-list-item>
-          </v-list-group>
-
-
           <v-list-group value="Mantemiento">
             <template v-slot:activator="{ props }">
               <v-list-item v-bind="props" title="Mantenimiento"></v-list-item>
@@ -67,15 +64,10 @@
               :value="title" :to="link"></v-list-item>
           </v-list-group>
 
-          <v-list-group value="Informes">
-            <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Informes"></v-list-item>
-            </template>
-            <v-list-item v-for="([title, icon, link], i) in informe" :key="i" :title="title" :prepend-icon="icon"
-              :value="title" :to="link"></v-list-item>
-          </v-list-group>
+          
 
         </v-list-group>
+        <v-list-item to="/informes" prepend-icon="mdi-chart-bar" title="Informes"></v-list-item>
       </v-list>
 
       <template v-slot:append>
@@ -110,17 +102,26 @@ export default {
         ['Pedido', 'mdi-cog-outline', '/frmpedido'],
         ['Presupuesto', 'mdi-cog-outline', '/presupuesto'],
         ['Orden de Compras', 'mdi-cog-outline', '/orden_compra'],
-        ['Compras', 'mdi-cog-outline', '/compras'],
-        ['Nota de Credito', 'mdi-cog-outline', '/nota_credito_compras'],
-        ['Nota de Debito', 'mdi-cog-outline','/nota_debito_compra'],
+        ['*Compras', 'mdi-cog-outline', '/compras'],
+        ['*Nota de Credito', 'mdi-cog-outline', '/nota_credito_compras'],
+        ['*Nota de Debito', 'mdi-cog-outline','/nota_debito_compra'],
         ['Nota de Remision', 'mdi-cog-outline','/nota_remision_compra'],
         ['x-Obtener Libro de Compras', 'mdi-cog-outline', '/obtener_libro_compras'],
-        ['x-Informes', 'mdi-cog-outline', '/informes_web_compras'],
-    
-   
-        
 
       ],
+  
+      Produccion: [
+        // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
+        ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
+        ['x-Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
+        ['*Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
+        ['x-Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
+        ['x-Registro Contrato', 'mdi-plus-outline', '/contrato'],
+        ['x-Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
+        ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
+      
+      ],
+
       ventas: [
         ['x-Apertura de Caja', 'mdi-file-outline', '/frmaperturacaja'],
         ['x-Cierre de Caja', 'mdi-file-outline', '/cierrecaja'],
@@ -132,20 +133,7 @@ export default {
         ['x-Registrar Nota de Remisión', 'mdi-file-outline', '/nota_remision_venta'],
         ['x-Registrar Nota de Credito', 'mdi-file-outline', '/nota_credito_venta'],
         ['x-Registrar Nota de Debito', 'mdi-file-outline', '/nota_debito_venta'],
-        ['x-Informes', 'mdi-file-outline', '/'],
         ['x-Obtener Libro Ventas', 'mdi-file-outline', '/obtener_libro_venta'],
-      ],
-      
-      Produccion: [
-        // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
-        ['x-Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
-        ['x-Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
-        ['x-Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
-        ['x-Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
-        ['x-Registro Contrato', 'mdi-plus-outline', '/contrato'],
-        ['x-Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
-        ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
-        ['x-Informes', 'mdi-file-outline', '/'],
       ],
 
       mantenimiento: [
