@@ -22,6 +22,7 @@
 import { PedidoAPI } from '@/services/pedido.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import dayjs from 'dayjs'
 export default {
     data() {
         return {
@@ -33,13 +34,13 @@ export default {
         }
     },
     methods: {
-        generarReporte() {
+        generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.text('Reporte de Pedidos:', 60, 10);
 
             autoTable(doc, {
                 head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                body: this.items.map(item => [item.id, item.descripcion, item.fechaD])
+                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')])
             });
             doc.output('dataurlnewwindow');
         },
@@ -55,9 +56,20 @@ export default {
                 })
             })
         },
+        filtrarItems() {
+            let items = this.items
+            if (this.filtros.fecha) {
+                items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
+            }
+            if (this.filtros.descripcion) {
+                items = items.filter(item => item.descripcion === this.filtros.descripcion)
+            }
+            return items
+        },
         async descargarReporte() {
             await this.obtenerPedido()
-            this.generarReporte()
+            const itemsFiltrados = this.filtrarItems()
+            this.generarReporte(itemsFiltrados)
         },
     }
 }

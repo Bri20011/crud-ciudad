@@ -17,7 +17,7 @@
          
           <v-container >
             
-            <v-img class="bg-white" width="310" height="79" src="../default/logomenu2.JPG" cover></v-img>
+            <v-img class="bg-white" width="400" height="150" src="../default/LogiInicial1.png" cover></v-img>
             
           </v-container>
           <v-divider class="ma-0" ></v-divider>
