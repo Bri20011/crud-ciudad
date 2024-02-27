@@ -1,14 +1,21 @@
 
 
 <template>
-   
-         <!-- INICIO VISTA DE URBANIZACION REGISTRADOS  -->
-    <v-dialog max-width="1500" v-model="dialogoFormularioVista" persistent>
+    <!-- INICIO CABECERA -->
+    <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registros de Urbanizacion</h1>
+                <h1 class="mb-3">Registrar Urbanizacion</h1>
                 <v-form>
                     <v-row>
+                        <v-col cols="12" sm="2" md="2">
+                            <v-text-field variant="outlined" label="Nº OC" v-model="formulario.numero_orden"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" class="mt-4" sm="2" md="2">
+                            <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
+                        </v-col>
                         <v-col cols="12" sm="6" md="6">
                             <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
                                 required></v-text-field>
@@ -41,36 +48,138 @@
                             <v-text-field variant="outlined" label="Costo Total Lote" v-model="formulario.costo"
                                 required></v-text-field>
                         </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-       
-  
-    <!-- INICIO VISTA DE URBANIZACION REGISTRADOS  -->
-       
-            <v-container>
-            
+
+                        <!-- FIN CABECERA -->
+
+
+
+
+                        <!-- INICIO DETALLE -->
+                        <v-divider class="mt-0"></v-divider>
+
+                        <v-col cols="12" sm="2" md="2" class="mt-5">
+                            <v-autocomplete variant="outlined" label="Lote a Urbanizar" :items="listaUrbanizar"
+                                item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
+                                required></v-autocomplete>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                            <v-autocomplete variant="outlined" label="Manzana" :items="listaManzana"
+                                item-title="descripcionM" item-value="id" v-model="formulario.manzana" required>
+                            </v-autocomplete>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                            <v-text-field variant="outlined" label="Cantidad de lotes" v-model="formulario.cantidad"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3" class="mt-5">
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="detalle_cabecera.producto" required>
+                            </v-autocomplete>
+                        </v-col>
+
+                        <v-row class="d-flex align-end  mt-5">
+                            <v-col cols="12" sm="8" md="8">
+                                <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
+                                    @click="agregarDetalleAntesGuardar">Agregar</v-btn>
+                            </v-col>
+                        </v-row>
+                        <!-- FIN DETALLE -->
+
+
+
+
                         <v-data-table class="mt-5" max-width="1500" items-per-page-text="Articulos" :headers="headers"
                             :items="listadoDeLaTabla" :group-by="groupBy">
                             <template v-slot:item.action="{ item }">
-                                
+                                <v-icon size="small" class="me-2" @click="editarDetalleAntesGuardar(item.raw)">
+                                    mdi-pencil
+                                </v-icon>
                             </template>
                         </v-data-table>
-                        <v-row>
-                        <v-col cols="12" class="d-flex justify-end mt-2">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="cerrarDialogoVista">Cerrar</v-btn>
-
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="cerrarDialogo">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">Guardarr</v-btn>
                         </v-col>
                     </v-row>
-                 
+                </v-form>
             </v-container>
-
         </v-card>
     </v-dialog>
 
-  
 
-   
+    <!-- INICIO EDITAR DETALLE -->
+    <v-dialog max-width="600" v-model="dialogoFormularioEditarDetalle" persistent>
+
+        <v-card class="rounded-xl">
+
+            <v-container>
+                <h1 class="mb-3 text-center">Ingresar Detalle</h1>
+                <v-form>
+
+                    <v-row class="justify-center">
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Numero de manzana" :items="listaManzana"
+                                item-title="descripcionM" item-value="id" v-model="formulario.manzana" disabled required>
+                            </v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
+                                disabled required></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row class="justify-center">
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Costo por Lote:" v-model="detalle_editar.costo_urbanizacion"
+                                disabled required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Numero Lote:" v-model="detalle_editar.numero_lote"
+                                required></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row class="justify-center">
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Ancho del Frente:" v-model="detalle_editar.ancho_frente"
+                                required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Ancho de Atrás:" v-model="detalle_editar.ancho_atras"
+                                required></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row class="justify-center">
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Longitud del Lado Izquierdo:"
+                                v-model="detalle_editar.l_izquiero" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Longitud del Lado Derecho:"
+                                v-model="detalle_editar.l_derecho" required></v-text-field>
+                        </v-col>
+                    </v-row>
+
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+
 
 
 </template>
@@ -86,19 +195,23 @@ export default {
     components: {
         VDataTable
     },
- 
+    props: {
+        prop_dialogo_formulario: {
+            type: Boolean
+        }
+    },
     data() {
         return {
             dialogoFormulario: true,
             dialogoFormularioEditarDetalle: false,
-            dialogoFormularioVista: true,
             listaCiudad: [],
             listaBarrio: [],
             listaProducto: [],
             listaUrbanizar: [],
             listaManzana: [],
             indiceGlobal: 0,
-            
+
+       
             formulario: {
                 nombre_urb: '',
                 fechaD: '',
@@ -111,7 +224,6 @@ export default {
                 descripcionM: '',
                 manzana: ''
             },
-        
             detalle_cabecera: {
                 producto: '',
                 // manzana: ''
@@ -122,7 +234,7 @@ export default {
                 ancho_atras: '',
                 l_izquiero: '',
                 l_derecho: '',
-                costo_lote: '',
+                costo_urbanizacion: '',
 
             },
 
@@ -142,8 +254,8 @@ export default {
                 { title: 'Ancho de Atrás:', key: 'ancho_atras', align: 'center' },
                 { title: 'Longitud del Lado Izquierdo:', key: 'l_izquiero', align: 'center' },
                 { title: 'Longitud del Lado Derecho:', key: 'l_derecho', align: 'center' },
-                { title: 'Costo por Lote:', key: 'costo_lote', align: 'center' },
-                
+                { title: 'Costo por Lote:', key: 'costo_urbanizacion', align: 'center' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' }
             ],
             listadoDeLaTabla: []
         }
@@ -243,7 +355,7 @@ export default {
                     ancho_atras: '',
                     l_izquiero: '',
                     l_derecho: '',
-                    costo_lote: '',
+                    costo_urbanizacion: '',
                     action: '',
                 });
             }
@@ -262,13 +374,13 @@ export default {
             this.detalle_editar.l_izquiero = parametro.l_izquiero
             this.detalle_editar.l_derecho = parametro.l_derecho
             this.formulario.manzana = parametro.manzana
-            this.detalle_editar.costo_lote = this.formulario.costo / this.formulario.total_lote_generar;
+            this.detalle_editar.costo_urbanizacion = this.formulario.costo / this.formulario.total_lote_generar;
             this.detalle_editar.numero_lote = parametro.numero_lote
 
 
         },
-        cerrarDialogoVista() {
-            this.$emit('cerrar-dialogo-v')
+        cerrarDialogo() {
+            this.$emit('cerrar-dialogo')
         },
 
 
@@ -294,11 +406,11 @@ export default {
                     ancho_atras: elemento.ancho_atras,
                     long_izquierdo: elemento.l_izquiero,
                     long_derecho: elemento.l_derecho,
-                    costo_lote: elemento.costo_lote,
+                    costo_urbanizacion: elemento.costo_urbanizacion,
 
                 }))
             }).then(() => {
-                this.cerrarDialogoVista()
+                this.cerrarDialogo()
             });
         },
         guardarFormularioEditarDetalle() {
@@ -313,10 +425,31 @@ export default {
             this.listadoDeLaTabla[indice].l_izquiero = this.detalle_editar.l_izquiero;
             this.listadoDeLaTabla[indice].l_derecho = this.detalle_editar.l_derecho;
             this.listadoDeLaTabla[indice].numero_lote = this.detalle_editar.numero_lote;
-            this.listadoDeLaTabla[indice].costo_lote = this.detalle_editar.costo_lote;
+            this.listadoDeLaTabla[indice].costo_urbanizacion = this.detalle_editar.costo_urbanizacion;
 
 
             this.dialogoFormularioEditarDetalle = false;
+        },
+
+        ObtenerCodigoOrden() {
+            // Verifica que se haya ingresado un número de orden
+            if (!this.formulario.numero_orden) {
+                // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
+                return;
+            }
+
+            // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
+            UrbanizacionApi.getById(this.formulario.numero_orden).then(({ data }) => {
+                this.formulario = {
+                    ...this.formulario,
+                    proveedor: data.idProveedor,
+                    fechaD: data.Fecha_pedi,
+                    itemsDetalle: data.detalle,
+
+                };
+            });
+
+            this.dialogoFormulario = true;
         },
     }
 }

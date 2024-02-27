@@ -28,7 +28,7 @@
                 {{ formatearFecha(item.raw.fechaD) }}
             </template>
             <template v-slot:item.action="{ item }">
-                <v-icon color="primary" size="small" @click="MostrarUrbanizacion">
+                <v-icon color="primary" size="small" @click="MostrarUrbanizacion(item.raw)">
                     mdi-file-eye-outline
                 </v-icon>
                 <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
@@ -37,7 +37,7 @@
         </v-data-table>
     </v-card>
     <UrbanizacionFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
-    <UrbanizacionFormularioVista v-if="dialogoFormularioVista" @cerrar-dialogo-v="dialogoFormularioVista = false" />
+    <UrbanizacionFormularioVista v-if="dialogoFormularioVista" @cerrar-dialogo-v="dialogoFormularioVista = false" :datosSelec="datosSelecionado"/>
 
 </template>
 <script>
@@ -71,7 +71,8 @@ export default {
             ],
             buscador: '',
             dialogoFormulario: false,
-            dialogoFormularioVista:false
+            dialogoFormularioVista:false,
+            datosSelecionado: null,
         }
     },
     computed: {
@@ -85,41 +86,12 @@ export default {
             this.dialogoFormulario = true;
         },
         MostrarUrbanizacion(item){
+            this.datosSelecionado = item
             this.dialogoFormularioVista = true;
-            // this.formulario.codigo = item.id
-            this.formulario.nombre_urb = item.Nombre_Urbanizacion
-            this.formulario.fechaD = item.fechaD
         },
         formatearFecha(fechaD) {
             return dayjs(fechaD).format('DD/MM/YYYY')
         }
     },
-    confirmarCambiarEstado(elemento) {
-    },
-
-    ObtenerUrbanizacion() {
-            UrbanizacionApi.getAll().then(({ data }) => {
-                this.listado_urbanizacion = data.map(item => {
-                    return {
-                        id: item.idUrbanizacion,
-                        fechaD: item.fecha_urb,
-                        nombre_urb: item.Nombre_Urbanizacion,
-                        area: item.Area,
-                        ladoA: item.LadoA,
-                        ladoB: item.LadoB,
-                        cantidad: item.Cantidad_manzana,
-                        manzana: item.idManzana,
-                        ubicacion: item.Ubicacion,
-                        costo: item.Costo_total,
-                        precio: item.Precio,
-                        idCiudad: item.idCiudad,
-                        nombreciudad: item.nombreciudad,
-                        idBarrio: item.idBarrio,
-                        nombrebarrio: item.nombrebarrio,
-                        detalleItems: item.detalle
-                    }
-                })
-            })
-        },
 }
 </script>

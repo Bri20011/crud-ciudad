@@ -498,7 +498,7 @@ export default {
     methods:
     {
         ObtenerProducto() {
-            ProductoAPI.getAll().then(({ data }) => {
+            ProductoAPI.findByTipo(2).then(({ data }) => {
                 this.listaProducto = data.map(item => {
                     return {
                         id: item.idProducto,

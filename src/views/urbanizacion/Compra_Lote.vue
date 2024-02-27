@@ -667,7 +667,7 @@ export default {
         cambiarEstadoCompra() {
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
-                ComprasLoteAPI.update(this.elementoACambiarEstado.id, { estado_compras: true }
+                ComprasLoteAPI.update(this.elementoACambiarEstado.id, { estado_compra_lote: true }
                 ).then(() => {
                     // Actualiza la tabla después de que la actualización se haya completado
                     this.items = [];

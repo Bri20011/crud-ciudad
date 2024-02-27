@@ -2,20 +2,20 @@
 
 <template>
     <v-container>
-        <UrbanizacionLista :prop_listado_urbanizacion="listado_urbanizacion" />
+        <PrecioLista :prop_listado_precio="listado_precio" />
     </v-container>
 </template>
 <script>
-import UrbanizacionLista from './urbanizacion-lista.vue'
+import PrecioLista from './precio-lista.vue'
 import { UrbanizacionApi } from '@/services/urbanizacion.api'
 import { CiudadAPI } from '@/services/ciudad.api'
 export default {
     components: {
-        UrbanizacionLista
+        PrecioLista
     },
     data() {
         return {
-            listado_urbanizacion: []
+            listado_precio: []
         }
     },
     created() {
@@ -24,7 +24,7 @@ export default {
     methods: {
         ObtenerUrbanizacion() {
             UrbanizacionApi.getAll().then(({ data }) => {
-                this.listado_urbanizacion = data.map(item => {
+                this.listado_precio = data.map(item => {
                     return {
                         id: item.idUrbanizacion,
                         fechaD: item.fecha_urb,
@@ -41,7 +41,7 @@ export default {
                         nombreciudad: item.nombreciudad,
                         idBarrio: item.idBarrio,
                         nombrebarrio: item.nombrebarrio,
-                        detalleItems: item.detalle
+                        detalleItems: item.detalle_urbanizacion
                     }
                 })
             })
