@@ -40,9 +40,9 @@
               :prepend-icon="icon" :to="link"></v-list-item>
           </v-list-group>
           
-          <v-list-group value="Produccion">
+          <v-list-group  value="Produccion">
             <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Produccion"></v-list-item>
+              <v-list-item v-bind="props"  prepend-icon="mdi-image-filter-hdr" title="Produccion"></v-list-item>
             </template>
             <v-list-item v-for="([title, icon, link], i) in Produccion" :key="i" :value="title" :title="title"
               :prepend-icon="icon" :to="link"></v-list-item>
@@ -111,14 +111,13 @@ export default {
       ],
   
       Produccion: [
-        // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
-        ['Orden de Compra Urbanizacion', 'mdi-plus-outline', 'orden_compra_lote'],
-        ['x-Registro de Compras de Lotes', 'mdi-plus-outline', '/compra_lote'],
-        ['*Registro Urbanizacion', 'mdi-plus-outline', '/urbanizacion'],
-        ['x-Registro Precio de Lotes', 'mdi-plus-outline', '/precio'],
-        ['x-Registro Contrato', 'mdi-plus-outline', '/contrato'],
-        ['x-Registro Rescision de Contrato', 'mdi-plus-outline', '/rescision_contrato'],
-        ['x-Registro Cesión de Derechos y Deudas', 'mdi-plus-outline', '/cesion_derecho_deuda'],
+        ['Orden de Compra Urbanizacion', 'mdi-image-filter-hdr', 'orden_compra_lote'],
+        ['x-Registro de Compras de Lotes', 'mdi-image-filter-hdr', '/compra_lote'],
+        ['*Registro Urbanizacion', 'mdi-image-filter-hdr', '/urbanizacion'],
+        ['x-Registro Precio de Lotes', 'mdi-image-filter-hdr', '/precio'],
+        ['x-Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],
+        ['x-Registro Rescision de Contrato', 'mdi-image-filter-hdr', '/rescision_contrato'],
+        ['x-Registro Cesión de Derechos y Deudas', 'mdi-image-filter-hdr', '/cesion_derecho_deuda'],
       
       ],
 
@@ -163,12 +162,12 @@ export default {
         ['Forma de Cobro', 'mdi-cog-outline', '/forma_cobro'],
         ['Efectivo', 'mdi-cog-outline', '/efectivo'],
         ['Login1', 'mdi-cog-outline', '/logint'],
-        // ['Login2', 'mdi-cog-outline', '/loginusuario'],
+        ['Tipo Producto', 'mdi-cog-outline', '/tipo_producto'],
+      
         
       ],
         
       informe: [
-        // ['Pedido Urbanizacion', 'mdi-plus-outline', '/pedido_urbanizacion'],
         ['Informe de Ciudades', 'mdi-plus-outline', '/informe_ciudad'],
 
       ],

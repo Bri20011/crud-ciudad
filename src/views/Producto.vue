@@ -35,6 +35,10 @@
               <v-col cols="12" sm="4" md="4">
                 <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI" item-value="id" v-model="formulario.iva"></v-autocomplete>
               </v-col>
+              <v-col cols="12" sm="4" md="4">
+                <v-autocomplete variant="outlined" label="Tipo Producto" :items="listaTipoProd" item-title="descripcionTip" item-value="id" v-model="formulario.tipoproducto"></v-autocomplete>
+              </v-col>
+
 
             </v-row>
             <v-row>
@@ -89,6 +93,9 @@
 
               <v-col cols="12" sm="4" md="4">
                 <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI" item-value="id" v-model="formulario.iva"></v-autocomplete>
+              </v-col>
+              <v-col cols="12" sm="4" md="4">
+                <v-autocomplete variant="outlined" label="Tipo Producto" :items="listaTipoProd" item-title="descripcionTip" item-value="id" v-model="formulario.tipoproducto"></v-autocomplete>
               </v-col>
             </v-row>
 
@@ -185,6 +192,8 @@
   import { MarcaApi } from '@/services/marca.api'
   import { CategoriaApi } from '@/services/Categoria.api'
   import { IvaAPI } from '@/services/iva.api'
+  import { TipoProductoAPI } from '@/services/tipo_producto.api'
+
   
   export default {
     components: {
@@ -202,7 +211,8 @@
           PrecioCompra: '',
           marca: '',
           categoria: '',
-          iva: ''
+          iva: '',
+          tipoproducto: ''
         },
         limit1: 45,
         limite2: 15,
@@ -229,6 +239,7 @@
           { title: 'Marca', key: 'nombremarca' },
           { title: 'Categoria', key: 'nombrecategoria'},
           { title: 'Iva', key: 'nombreiva'},
+          { title: 'Tipo Producto', key: 'nombretipoProd'},
           { title: 'Accion', key: 'action', sortable: false, align: 'end' },
         ],
         items: [
@@ -296,6 +307,19 @@
           })
         })
       },
+
+      ObtenerTipoProducto() {
+        TipoProductoAPI.getAll().then(({ data }) => {
+          this.listaTipoProd = data.map(item => {
+            return {
+              id: item.idtipo_producto,
+              descripcionTip: item.descripcion,
+              
+
+            }
+          })
+        })
+      },
       generarCodigo() {
         const nuevoCodigo = this.contador++;
         return nuevoCodigo;
@@ -314,7 +338,8 @@
             PrecioCompra: this.formulario.PrecioCompra,
             idmarca: this.formulario.marca,
             idcategoria: this.formulario.categoria,
-            idIva: this.formulario.iva
+            idIva: this.formulario.iva,
+            idtipo_producto: this.formulario.tipoproducto
           }
         ).then(()=> {
           this.ObtenerProducto()
@@ -346,7 +371,9 @@
             PrecioCompra: this.formulario.PrecioCompra,
             idmarca: this.formulario.marca,
             idcategoria: this.formulario.categoria,
-            idIva: this.formulario.iva
+            idIva: this.formulario.iva,
+            idtipo_producto: this.formulario.tipoproducto
+
           }
         ).then(()=> {
           this.ObtenerProducto()
@@ -362,6 +389,7 @@
         this.formulario.marca = parametro.idmarca
         this.formulario.categoria = parametro.idcategoria
         this.formulario.iva = parametro.idIva
+        this.formulario.tipoproducto = parametro.idtipo_producto
       },
       confirmarEliminarCiudad(elemento) {
         // Abre el diálogo de confirmación y guarda el elemento a eliminar
@@ -398,6 +426,8 @@
               nombrecategoria: item.nombrecategoria,
               idIva: item.idIva,
               nombreiva: item.nombreiva,
+              idtipo_producto: item.idtipo_producto,
+              nombretipoProd: item.nombretipoProd,
             
 
              
@@ -417,6 +447,7 @@
       this.obtenerMarca()
       this.ObtenerCategoria()
       this.ObtenerIva()
+      this.ObtenerTipoProducto()
 
       
     },
