@@ -21,11 +21,15 @@
                         <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                                :error="excededLimit" :error-messages="errorMessage" required
+                                @change="tipoDocumentoChanged">
+                            </v-autocomplete>
+
                         </v-col>
                         <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
-                               disabled required></v-autocomplete>
+                            <v-autocomplete ref="numeroCajaInput" variant="outlined" label="Caja" :items="listaCaja"
+                                item-title="descripcionCa" item-value="id" v-model="formulario.caja"
+                                :disabled="formulario.documento !== 1" required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="4" md="4">
@@ -84,11 +88,12 @@
                     </v-row>
 
                     <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn prepend-icon="mdi mdi-plus-thick" color="#90A4AE" class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
 
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn v-if="formulario.documento === 2" prepend-icon="mdi mdi-plus-thick" color="#90A4AE"
+                                class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario">GuardarPricn</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -270,95 +275,110 @@
         <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
 
         <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
-        <v-card class="rounded-xl">
-            <v-container>
-                <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
-                <v-form>
-                    <v-row class="d-flex justify-center"> 
-                        <v-col cols="12" sm="4" md="4" >
-                            <input class="custom-input" v-model="formulario.fechaD" type="date"
-                                placeholder="Fecha de Operacion" @input="formatDate" />
-                        </v-col>
+            <v-card class="rounded-xl">
+                <v-container>
+                    <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
+                    <v-form>
+                        <v-row class="d-flex justify-center">
 
-                        <v-col cols="12" sm="5" md="5">
-                            <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
-                                required></v-text-field>
-                        </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field variant="outlined" label="Observacion" v-model="CuentaPagar.observacion"
+                                    required></v-text-field>
+                            </v-col>
 
-                       
+                            <v-col cols="12" sm="6" md="6">
+                                <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
+                                    item-title="descripcionP" item-value="id" v-model="CuentaPagar.proveedor" 
+                                   disabled required></v-autocomplete>
+                            </v-col>
+                            <v-divider></v-divider>
+
+                            <v-col cols="12" sm="4" md="4">
+                                <input class="custom-input" v-model="CuentaPagar.fechaD" type="date"
+                                    placeholder="Fecha de Operacion" @input="formatDate" />
+                            </v-col>
+
+                            <v-col cols="12" sm="5" md="5">
+                                <v-text-field variant="outlined" label="Monto" v-model="CuentaPagar.monto"
+                                    required></v-text-field>
+                            </v-col>
+
+
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
-                                    @click="AgregarDetallePago">Agregar P</v-btn>
+                                    @click="AgregarDetallePago">Agregar Pagos</v-btn>
                             </v-col>
-                      
-
-                        <!-- INICIO DETALLE -->
-                        <v-divider class="mt-0"></v-divider>
-
-                        <!-- FIN DETALLE -->
 
 
+                            <!-- INICIO DETALLE -->
+                            <v-divider class="mt-0"></v-divider>
 
-                        <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar" :items="itemsDetalle">
+                            <!-- FIN DETALLE -->
 
-                            <template v-slot:item.fechaD="{ item }">
-                               {{ formatearFecha(item.raw.fechaD) }}
-                                 </template>
-                            <template v-slot:item.action="{ item }">
-                                <v-icon size="small" class="me-2" @click="editarDetallePagos(item.raw)">
-                                    mdi-pencil
-                                </v-icon>
-                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+
+
+                            <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar"
+                                :items="itemsDetallePagos">
+
+                                <template v-slot:item.fechaD="{ item }">
+                                    {{ formatearFecha(item.raw.fechaD) }}
+                                </template>
+                                <template v-slot:item.action="{ item }">
+                                    <v-icon size="small" class="me-2" @click="editarDetallePagos(item.raw)">
+                                        mdi-pencil
+                                    </v-icon>
+                                    <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
                                     mdi-trash-can-outline
                                 </v-icon> -->
-                            </template>
+                                </template>
 
-                        </v-data-table>
+                            </v-data-table>
 
-                    </v-row>
+                        </v-row>
 
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+                        <v-row>
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="#E0E0E0" class="mx-2"
+                                    @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
+                                <v-btn color="primary" @click="guardarFormularioPagos">GuardarPa</v-btn>
 
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-        </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-container>
+            </v-card>
             <!-- INICIO EDITAR DETALLE PAGOS -->
-        <v-dialog max-width="600" v-model="dialogoFormularioEditarDetallePagos" persistent>
-        <v-card class="rounded-xl">
-            <v-container>
-                <h1 class="mb-3">Editar Detalle Pagos</h1>
-                <v-form>
-                    <v-row class="justify-center">
+            <v-dialog max-width="600" v-model="dialogoFormularioEditarDetallePagos" persistent>
+                <v-card class="rounded-xl">
+                    <v-container>
+                        <h1 class="mb-3">Editar Detalle Pagos</h1>
+                        <v-form>
+                            <v-row class="justify-center">
 
-                        <v-col cols="12" sm="4" md="4" >
-                            <input class="custom-input" v-model="formulario.fechaD" type="date"
-                                placeholder="Fecha de Operacion" @input="formatDate" />
-                        </v-col>
+                                <v-col cols="12" sm="4" md="4">
+                                    <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                        placeholder="Fecha de Operacion" @input="formatDate" />
+                                </v-col>
 
-                        <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
-                                required></v-text-field>
-                        </v-col>
+                                <v-col ols="12" sm="4" md="4">
+                                    <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
+                                        required></v-text-field>
+                                </v-col>
 
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2"
-                                @click="dialogoFormularioEditarDetallePagos = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarDetallePago">Guardar</v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-        </v-card>
-    </v-dialog>
-      <!-- INICIO EDITAR DETALLE PAGOS -->
-    </v-dialog>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="12" class="d-flex justify-end">
+                                    <v-btn color="#E0E0E0" class="mx-2"
+                                        @click="dialogoFormularioEditarDetallePagos = false">Cancelar</v-btn>
+                                    <v-btn color="primary" @click="guardarFormularioEditarDetallePago">Guardar</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-container>
+                </v-card>
+            </v-dialog>
+            <!-- INICIO EDITAR DETALLE PAGOS -->
+        </v-dialog>
 
 
         <!-- FIN DIALOGO REGISTRAR CUENTAS A PAGAR -->
@@ -373,6 +393,9 @@ import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
+import { CajaAPI } from '@/services/caja.api'
+import { CuentaPagarApi } from '@/services/cuenta_pagar.api'
+
 
 
 import dayjs from 'dayjs'
@@ -390,7 +413,7 @@ export default {
 
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
-            dialogoFormularioGenerarCuota:false,
+            dialogoFormularioGenerarCuota: false,
             ordenCompraSeleccionada: null,
             dialogoFormularioEditarDetallePagos: false,
 
@@ -399,11 +422,13 @@ export default {
             formulario: {
                 proveedor: '',
                 documento: '',
+                caja: '',
                 fechaO: null,
                 fechaD: null,
                 timbrado: '',
                 numero_factura: '',
                 monto: '',
+                total: ''
             },
             detalle: {
                 fechaD: null,
@@ -424,6 +449,12 @@ export default {
                 descripcionI: ''
 
             },
+            CuentaPagar:{
+                observacion: '',
+                proveedor: '',
+                fechaD: null,
+                monto: ''
+            },
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
@@ -432,6 +463,7 @@ export default {
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
+                { title: 'Caja', key: 'caja', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersCompra: [
@@ -446,10 +478,10 @@ export default {
                 { title: 'Total', key: 'total', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
-            headersCuentasPagar:[
-            { title: 'Fecha de Pago', key: 'fechaD', align: 'star' },
-            { title: 'Monto', key: 'monto', align: 'center' },
-            { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+            headersCuentasPagar: [
+                { title: 'Fecha de Pago', key: 'fechaD', align: 'star' },
+                { title: 'Monto', key: 'monto', align: 'center' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
                 {
@@ -459,10 +491,13 @@ export default {
                     action: '',
                     timbrado: '',
                     numero_factura: '',
-                    proveedor: ''
+                    proveedor: '',
+                    caja: ''
                 }
             ],
             itemsDetalle: [],
+            itemsDetallePagos: [],
+           
             dialogoEliminar: false,
             elementoAEliminar: null,
 
@@ -471,6 +506,7 @@ export default {
             listaProducto: [],
 
         }
+      
     },
 
     computed: {
@@ -536,7 +572,19 @@ export default {
             })
         },
 
-
+        ObtenerCaja() {
+            CajaAPI.getAll().then(({ data }) => {
+                this.listaCaja = data.map(item => {
+                    return {
+                        id: item.idCaja,
+                        descripcionCa: item.nombrecaja,
+                        numero_caja: item.Cajahabilitada,
+                        idSucursal: item.idSucursal,
+                        nombreSucursal: item.nombreSucursal
+                    }
+                })
+            })
+        },
         // INICIO NUEVO 
         Obtenerorden_compra() {
             OrdenCompraApi.getAll().then(({ data }) => {
@@ -546,7 +594,7 @@ export default {
                 //         id: item.idorden_compra,
                 //         descripcionPr: item.Descripcion,
                 //         fechaD: item.Fecha_pedi,
-                //         proveedor: item.idProveedor,
+                //       
                 //         itemsDetalle: item.Detalle
                 //     }
                 // }
@@ -569,14 +617,8 @@ export default {
                     fechaD: data.Fecha_pedi,
                     itemsDetalle: data.detalle,
 
-
-
-
-
-
-
-
                 };
+
             });
 
             this.dialogoFormulario = true;
@@ -626,12 +668,22 @@ export default {
             return nuevoCodigo;
         },
 
-        guardarFormulario() {
-            if (!this.formulario.numero_factura) {
 
-                this.emptyFieldError = true;
-                return;
+        guardarFormulario() {
+            if (this.formulario.documento === 1 && !this.formulario.caja) {
+                // Si se seleccionó contado y el campo de número de caja está vacío, muestra un mensaje de error o toma la acción apropiada
+                // Por ejemplo, mostrar un mensaje de error
+                this.$toast.error('Por favor completa el campo de número de caja.');
+                return; // Detener el proceso de guardado
             }
+
+            // Aquí puedes agregar la lógica para guardar los datos, por ejemplo:
+            // Comprobación adicional si es necesario antes de guardar
+
+            // Luego, cierra el diálogo o realiza otras acciones necesarias después de guardar
+            this.dialogoFormulario = false;
+
+
 
 
             ComprasAPI.create({
@@ -642,8 +694,14 @@ export default {
                 Numero_fact: this.formulario.numero_factura,
                 idTipo_Documento: this.formulario.documento,
                 idProveedor: this.formulario.proveedor,
+                idCaja: this.formulario.caja,
                 idorden_compra: this.formulario.numero_orden, //nuevo 
-                Detalle: this.formulario.itemsDetalle
+                Detalle: this.formulario.itemsDetalle,
+                CuentaPagar: {
+                    cabecera: this.CuentaPagar,
+                    detalle: this.itemsDetallePagos
+                }
+
 
 
             },
@@ -728,19 +786,19 @@ export default {
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
                 ComprasAPI.update(this.elementoACambiarEstado.id, { estado_compras: true }
-                ).then(()=> {
-                        // Actualiza la tabla después de que la actualización se haya completado
-                        this.items = [];
-                        this.ObtenerCompras();
-                        
-                    })
-                   
-                   
-                        // Cierra el diálogo de confirmación
-                        this.dialogoCambiarEstado = false;
-                        this.elementoACambiarEstado = null;
-                      
-                    
+                ).then(() => {
+                    // Actualiza la tabla después de que la actualización se haya completado
+                    this.items = [];
+                    this.ObtenerCompras();
+
+                })
+
+
+                // Cierra el diálogo de confirmación
+                this.dialogoCambiarEstado = false;
+                this.elementoACambiarEstado = null;
+
+
 
 
             }
@@ -755,7 +813,7 @@ export default {
                         proveedor: item.idProveedor,
                         numero_factura: item.Numero_fact,
                         documento: item.idTipo_Documento,
-                        proveedor: item.idProveedor,
+                        caja: item.idCaja,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
                         detalleItems: item.detalle
@@ -893,51 +951,95 @@ export default {
                 return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
             }
         },
+      
 
         abrirformulariogenerarcuentas() {
+
             // Abrir el modal y cargar el código aquí
             this.dialogoFormularioGenerarCuota = true;
-            this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+            this.CuentaPagar.proveedor = this.formulario.proveedor
+            this.CuentaPagar.fechaD = this.fecha
+            this.CuentaPagar.monto = this.formulario.total
+            // this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+            // this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
         },
-
-        AgregarDetallePago(){
-            this.itemsDetalle.push({
-                fecha: this.formulario.fechaD,
-                monto: this.formulario.monto,
+       
+        AgregarDetallePago() {
+            this.itemsDetallePagos.push({
+                fecha: this.CuentaPagar.fechaD,
+                monto: this.CuentaPagar.monto,
                 action: '',
 
             }),
-            this.formulario.fechaD = ''
-            this.formulario.monto = ''
+            this.CuentaPagar.fechaD = ''
+            this.CuentaPagar.monto = ''
         },
 
         editarDetallePagos(parametro) {
             this.dialogoFormularioEditarDetallePagos = true
-            this.formulario.fechaD = parametro.fechaD
-            this.formulario.monto = parametro.monto
+            this.CuentaPagar.fechaD = parametro.fechaD
+            this.CuentaPagar.monto = parametro.monto
 
             // Calcula el total al abrir el diálogo
-            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
-            this.formulario.iva = parametro.idIva
+            // this.formulario.total = this.formulario.cantidad * this.formulario.precio;
+            // this.formulario.iva = parametro.idIva
+        },
+        guardarFormularioPagos() {
+            if ( !this.CuentaPagar.observacion || !this.CuentaPagar.proveedor) {
+
+                this.emptyFieldError = true;
+                return;
+            }
+            this.dialogoFormularioGenerarCuota = false;
         },
 
         guardarFormularioEditarDetallePago() {
-            if (!this.detalle.fechaD || !this.formulario.monto) {
+            if (!this.CuentaPagar.fechaD || !this.CuentaPagar.monto) {
                 this.emptyFieldError = true;
                 return;
             }
 
             // Busca el índice del elemento que se va a editar
-            const index = this.itemsDetalle.findIndex(item => item.monto === this.formulario.monto);
+            const index = this.itemsDetallePagos.findIndex(item => item.monto === this.CuentaPagar.monto);
 
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
-                this.itemsDetalle[index].fechaD = this.formulario.fechaD;
-                this.itemsDetalle[index].monto = this.formulario.monto;
-            } 
+                this.itemsDetallePagos[index].fechaD = this.CuentaPagar.fechaD;
+                this.itemsDetallePagos[index].monto = this.CuentaPagar.monto;
+            }
             this.dialogoFormularioEditarDetallePagos = false;
+
+         
+
         },
+
+
+
+
+        tipoDocumentoChanged() {
+            if (this.formulario.documento === 1) {
+                // Habilitar el campo de número de caja si el tipo de documento es "Contado"
+                this.$refs.numeroCajaInput.disabled = false;
+            } else if (this.formulario.documento === 2) {
+                // Habilitar el botón si el tipo de documento es "Crédito"
+                this.$refs.generarCuotasButton.disabled = false;
+            }
+        },
+        // ObtenerCuentaPagar() {
+        //     CuentaPagarApi.getAll().then(({ data }) => {
+        //         this.items = data.map(item => {
+        //             return {
+        //                 id: item.idcuenta_pagar,
+        //                 proveedor: item.proveedor,
+        //                 observacion: item.observacion,  
+        //                 detalleItems: item.detalle
+
+        //             }
+        //         })
+        //     })
+        // },
+    
+        
     },
 
 
@@ -950,6 +1052,9 @@ export default {
         this.ObtenerProducto()
         this.Obtenerorden_compra()
         this.ObtenerIva()
+        this.ObtenerCaja()
+        // this.ObtenerCuentaPagar()
+
 
     },
 

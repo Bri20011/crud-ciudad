@@ -34,7 +34,7 @@
 
           <v-list-group value="Compras">
             <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Compras"></v-list-item>
+              <v-list-item v-bind="props"  prepend-icon="mdi-folder-plus"  title="Compras"></v-list-item>
             </template>
             <v-list-item v-for="([title, icon, link], i) in compras" :key="i" :value="title" :title="title"
               :prepend-icon="icon" :to="link"></v-list-item>
@@ -50,7 +50,7 @@
 
           <v-list-group value="Ventas">
             <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Ventas"></v-list-item>
+              <v-list-item v-bind="props"   prepend-icon="mdi-printer-pos"  title="Ventas"></v-list-item>
             </template>
             <v-list-item v-for="([title, icon, link], i) in ventas" :key="i" :value="title" :title="title"
               :prepend-icon="icon" :to="link"></v-list-item>
@@ -58,7 +58,7 @@
 
           <v-list-group value="Mantemiento">
             <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Mantenimiento"></v-list-item>
+              <v-list-item v-bind="props"  prepend-icon="mdi-wrench-cog-outline"  title="Mantenimiento"></v-list-item>
             </template>
             <v-list-item v-for="([title, icon, link], i) in mantenimiento" :key="i" :title="title" :prepend-icon="icon"
               :value="title" :to="link"></v-list-item>
@@ -99,14 +99,14 @@ export default {
     
       compras: [
        
-        ['Pedido', 'mdi-cog-outline', '/frmpedido'],
-        ['Presupuesto', 'mdi-cog-outline', '/presupuesto'],
-        ['Orden de Compras', 'mdi-cog-outline', '/orden_compra'],
-        ['*Compras', 'mdi-cog-outline', '/compras'],
-        ['*Nota de Credito', 'mdi-cog-outline', '/nota_credito_compras'],
-        ['*Nota de Debito', 'mdi-cog-outline','/nota_debito_compra'],
-        ['Nota de Remision', 'mdi-cog-outline','/nota_remision_compra'],
-        ['x-Obtener Libro de Compras', 'mdi-cog-outline', '/obtener_libro_compras'],
+        ['Pedido', 'mdi-folder-plus', '/frmpedido'],
+        ['Presupuesto', 'mdi-folder-plus', '/presupuesto'],
+        ['Orden de Compras', 'mdi-folder-plus', '/orden_compra'],
+        ['Compras', 'mdi-folder-plus', '/compras'],
+        ['*Nota de Credito', 'mdi-folder-plus', '/nota_credito_compras'],
+        ['*Nota de Debito', 'mdi-folder-plus','/nota_debito_compra'],
+        ['Nota de Remision', 'mdi-folder-plus','/nota_remision_compra'],
+        ['x-Obtener Libro de Compras', 'mdi-folder-plus', '/obtener_libro_compras'],
 
       ],
   
@@ -122,17 +122,17 @@ export default {
       ],
 
       ventas: [
-        ['x-Apertura de Caja', 'mdi-file-outline', '/frmaperturacaja'],
-        ['x-Cierre de Caja', 'mdi-file-outline', '/cierrecaja'],
-        ['x-Arqueo de Caja', 'mdi-file-outline', '/arqueo_caja'],
-        ['x-Recaudaciones a depositar', 'mdi-file-outline', '/recaudacion_depositar'],
-        ['x-Pedido de Cliente', 'mdi-file-outline', '/pedido_cliente'],
-        ['x-Venta y Cuentas a pagar', 'mdi-file-outline', '/venta_cuenta_cobrar'],
-        ['x-Cobranzas por forma de cobro', 'mdi-file-outline', '/cobranza_forma_cobro'],
-        ['x-Registrar Nota de Remisión', 'mdi-file-outline', '/nota_remision_venta'],
-        ['x-Registrar Nota de Credito', 'mdi-file-outline', '/nota_credito_venta'],
-        ['x-Registrar Nota de Debito', 'mdi-file-outline', '/nota_debito_venta'],
-        ['x-Obtener Libro Ventas', 'mdi-file-outline', '/obtener_libro_venta'],
+        ['x-Apertura de Caja', 'mdi-printer-pos', '/frmaperturacaja'],
+        ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
+        ['x-Arqueo de Caja', 'mdi-printer-pos', '/arqueo_caja'],
+        ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
+        ['x-Pedido de Cliente', 'mdi-printer-pos', '/pedido_cliente'],
+        ['x-Venta y Cuentas a pagar', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
+        ['x-Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza_forma_cobro'],
+        ['x-Registrar Nota de Remisión','mdi-printer-pos', '/nota_remision_venta'],
+        ['x-Registrar Nota de Credito', 'mdi-printer-pos', '/nota_credito_venta'],
+        ['x-Registrar Nota de Debito', 'mdi-printer-pos', '/nota_debito_venta'],
+        ['x-Obtener Libro Ventas', 'mdi-printer-pos', '/obtener_libro_venta'],
       ],
 
       mantenimiento: [

@@ -21,13 +21,14 @@
                         <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
-                               required></v-autocomplete>
+                                :error="excededLimit" :error-messages="errorMessage" required
+                                @change="tipoDocumentoChanged">
+                            </v-autocomplete>
                         </v-col>
-
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Caja" :items="listaCaja"
-                                item-title="descripcionC" item-value="id" v-model="formulario.caja"
-                                required></v-autocomplete>
+                        <v-col cols="12" sm="2" md="2">
+                            <v-autocomplete ref="numeroCajaInput" variant="outlined" label="Caja" :items="listaCaja"
+                                item-title="descripcionCa" item-value="id" v-model="formulario.caja"
+                                :disabled="formulario.documento !== 1" required></v-autocomplete>
                         </v-col>
                        
                         <v-col cols="12" sm="4" md="4">
@@ -87,11 +88,10 @@
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn prepend-icon="mdi mdi-plus-thick" color="#90A4AE" class="mx-2"
-                                @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
+                            <v-btn v-if="formulario.documento === 2" prepend-icon="mdi mdi-plus-thick" color="#90A4AE"
+                                class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
-
+                            <v-btn color="primary" @click="guardarFormulario">GuardarPricn</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -243,29 +243,41 @@
         </v-dialog>
         <!-- FIN DIALOGO -->
 
+  <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
 
-        <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
-
-        <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
+  <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
             <v-card class="rounded-xl">
                 <v-container>
                     <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
                     <v-form>
                         <v-row class="d-flex justify-center">
+
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field variant="outlined" label="Observacion" v-model="CuentaPagar.observacion"
+                                    required></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                                <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
+                                    item-title="descripcionP" item-value="id" v-model="CuentaPagar.proveedor" 
+                                   disabled required></v-autocomplete>
+                            </v-col>
+                            <v-divider></v-divider>
+
                             <v-col cols="12" sm="4" md="4">
-                                <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                <input class="custom-input" v-model="CuentaPagar.fechaD" type="date"
                                     placeholder="Fecha de Operacion" @input="formatDate" />
                             </v-col>
 
                             <v-col cols="12" sm="5" md="5">
-                                <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
+                                <v-text-field variant="outlined" label="Monto" v-model="CuentaPagar.monto"
                                     required></v-text-field>
                             </v-col>
 
 
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
-                                    @click="AgregarDetallePago">Agregar P</v-btn>
+                                    @click="AgregarDetallePago">Agregar Pagos</v-btn>
                             </v-col>
 
 
@@ -277,7 +289,7 @@
 
 
                             <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar"
-                                :items="itemsDetalle">
+                                :items="itemsDetallePagos">
 
                                 <template v-slot:item.fechaD="{ item }">
                                     {{ formatearFecha(item.raw.fechaD) }}
@@ -299,7 +311,7 @@
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="#E0E0E0" class="mx-2"
                                     @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
-                                <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
+                                <v-btn color="primary" @click="guardarFormularioPagos">GuardarPa</v-btn>
 
                             </v-col>
                         </v-row>
@@ -377,7 +389,16 @@ export default {
             dialogoFormularioEditarDetallePagos: false,
 
 
-
+            CuentaPagar:{
+                observacion: '',
+                proveedor: '',
+                fechaD: null,
+                monto: ''
+            },
+            detalle: {
+                fechaD: null,
+                monto: '',
+            },
             formulario: {
                 proveedor: '',
                 documento: '',
@@ -459,6 +480,7 @@ export default {
             ],
             itemsDetalle: [],
             dialogoEliminar: false,
+            itemsDetallePagos: [],
             elementoAEliminar: null,
 
             listaProveedor: [],
@@ -563,6 +585,19 @@ export default {
           })
         })
       },
+      ObtenerCaja() {
+            CajaAPI.getAll().then(({ data }) => {
+                this.listaCaja = data.map(item => {
+                    return {
+                        id: item.idCaja,
+                        descripcionCa: item.nombrecaja,
+                        numero_caja: item.Cajahabilitada,
+                        idSucursal: item.idSucursal,
+                        nombreSucursal: item.nombreSucursal
+                    }
+                })
+            })
+        },
 
 
         // INICIO NUEVO 
@@ -633,8 +668,8 @@ export default {
                 numero_factura: this.formulario.numero_factura,
                 idTipo_Documento: this.formulario.documento,
                 idProveedor: this.formulario.proveedor,
-                idorde_compra_lote: this.formulario.numero_orden, //nuevo 
                 idCaja: this.formulario.caja,
+                idorde_compra_lote: this.formulario.numero_orden, //nuevo 
                 Detalle: this.formulario.itemsDetalle
 
 
@@ -858,6 +893,16 @@ export default {
             }
             this.dialogoFormularioEditarDetallePagos = false;
         },
+
+        tipoDocumentoChanged() {
+            if (this.formulario.documento === 1) {
+                // Habilitar el campo de número de caja si el tipo de documento es "Contado"
+                this.$refs.numeroCajaInput.disabled = false;
+            } else if (this.formulario.documento === 2) {
+                // Habilitar el botón si el tipo de documento es "Crédito"
+                this.$refs.generarCuotasButton.disabled = false;
+            }
+        },
     },
 
 
@@ -873,6 +918,7 @@ export default {
         this.ObtenerCaja()
         this.ObtenerBarrio()
         this.ObtenerCiudades()
+        
 
     },
 
