@@ -394,7 +394,7 @@ import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
 import { CajaAPI } from '@/services/caja.api'
-import { CuentaPagarApi } from '@/services/cuenta_pagar.api'
+import { CuentaPagarApi } from '@/services/cuenta_pagar_compra.api'
 
 
 

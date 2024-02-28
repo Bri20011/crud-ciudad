@@ -6,15 +6,16 @@
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nº de factura Asociado" v-model="formulario.numero_orden"
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Nº de factura Asociado"
+                                v-model="formulario.numero_orden" required></v-text-field>
                         </v-col>
                         <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoCompra">Calcular</v-btn>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero de Nota de Credito" v-model="formulario.numero_nc"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                            <v-text-field variant="outlined" label="Numero de Nota de Credito"
+                                v-model="formulario.numero_nc" :error="excededLimit" :error-messages="errorMessage"
+                                required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
                             <input class="custom-input" v-model="formulario.fechaO" type="date"
@@ -24,11 +25,6 @@
                             <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                        <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
-                                item-title="descripcionD" item-value="id" v-model="formulario.documento"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
 
                         <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
@@ -36,14 +32,27 @@
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
-                        <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="Caja" v-model="formulario.numer_caja"
-                               disabled required></v-autocomplete>
+
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaTipoDoc"
+                                item-title="descripcionTip" item-value="id" v-model="formulario.documento" required
+                                @change="tipoDocumentoChanged"></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                            disabled  placeholder="Fecha de Operacion" @input="formatDate" />
+
+                        <v-col v-if="formulario.documento === 1" cols="12" sm="2" md="2">
+                            <v-autocomplete variant="outlined" item-value="id" label="Caja" :items="listaCaja"
+                                v-model="formulario.numerCaja" item-title="descripcionCa" required></v-autocomplete>
                         </v-col>
+
+                        <v-col v-if="formulario.documento === 2" cols="12" sm="2" md="2">
+                            <input class="custom-input" v-model="formulario.fechaVto" type="date"
+                                placeholder="Fecha de Operacion" @input="formatDate" />
+                        </v-col>
+
+
+
+
+
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">
@@ -84,7 +93,7 @@
             </v-container>
         </v-card>
     </v-dialog>
-   
+
     <!-- INICIO EDITAR DETALLE -->
     <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
         <v-card class="rounded-xl">
@@ -214,6 +223,8 @@ import { ProveedorAPI } from '@/services/proveedor.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
 import { ComprasAPI } from '@/services/compras.api'
+import { CajaAPI } from '@/services/caja.api'
+import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
 
 
 import dayjs from 'dayjs'
@@ -230,8 +241,8 @@ export default {
             dialogoFormulario: false,
             dialogoCambiarEstado: false,
 
-        
-            
+
+
             dialogoFormularioEditarDetalle: false,
             ordenCompraSeleccionada: null,
 
@@ -244,6 +255,9 @@ export default {
                 fechaD: null,
                 timbrado: '',
                 numero_nc: '',
+                numerCaja: '',
+                fechaVto: null,
+
 
 
             },
@@ -312,7 +326,7 @@ export default {
             if (!this.buscador) return this.items
             return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
-       
+
     },
     methods:
     {
@@ -327,7 +341,7 @@ export default {
             })
         },
 
-       
+
 
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
@@ -354,7 +368,31 @@ export default {
         },
 
 
-     
+        ObtenerCaja() {
+            CajaAPI.getAll().then(({ data }) => {
+                this.listaCaja = data.map(item => {
+                    return {
+                        id: item.idCaja,
+                        descripcionCa: item.nombrecaja,
+                        numerCaja: item.Cajahabilitada
+                    }
+                })
+            })
+        },
+        ObtenerTipoD() {
+            TipoDocumentoAPI.getAll().then(({ data }) => {
+                this.listaTipoDoc = data.map(item => {
+                    return {
+                        id: item.idTipo_Documento,
+                        descripcionTip: item.Descripcion,
+
+                    }
+                })
+            })
+        },
+
+
+
 
         ObtenerCodigoCompra() {
             // Verifica que se haya ingresado un número de orden
@@ -419,6 +457,8 @@ export default {
                 Timbrado: this.formulario.timbrado,
                 Numero_doc: this.formulario.numero_nc,
                 idProveedor: this.formulario.proveedor,
+                idCaja: this.formulario.numerCaja,
+                fechaVto: this.formulario.fechaVto,
                 idCompras: this.VARIABLE_PARA_GUARDAR_ID_COMPRA,
                 Detalle: this.formulario.itemsDetalle
 
@@ -434,6 +474,8 @@ export default {
             this.formulario.numero_nc = '';
             this.formulario.documento = '';
             this.formulario.proveedor = '';
+            this.formulario.numerCaja = '';
+            this.formulario.fechaVto = '';
             this.dialogoFormulario = false;
         },
 
@@ -455,19 +497,19 @@ export default {
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
                 NDCompraApi.update(this.elementoACambiarEstado.id, { estado_nc: true }
-                ).then(()=> {
-                        // Actualiza la tabla después de que la actualización se haya completado
-                        this.items = [];
-                        this.ObtenerNota_Debito_C();
-                        
-                    })
-                   
-                   
-                        // Cierra el diálogo de confirmación
-                        this.dialogoCambiarEstado = false;
-                        this.elementoACambiarEstado = null;
-                      
-                    
+                ).then(() => {
+                    // Actualiza la tabla después de que la actualización se haya completado
+                    this.items = [];
+                    this.ObtenerNota_Debito_C();
+
+                })
+
+
+                // Cierra el diálogo de confirmación
+                this.dialogoCambiarEstado = false;
+                this.elementoACambiarEstado = null;
+
+
 
 
             }
@@ -482,7 +524,7 @@ export default {
                         proveedor: item.idProveedor,
                         numero_nc: item.Numero_doc,
                         idProveedor: item.idProveedor,
-                        razonsocial:item.razonsocial,
+                        razonsocial: item.razonsocial,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
                         itemsDetalle: data.detalle,
@@ -590,6 +632,16 @@ export default {
                 return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
             }
         },
+        tipoDocumentoChanged() {
+            if (this.formulario.documento === 1) {
+                // Si se seleccionó Contado, muestra el campo de número de caja y oculta el campo de fecha
+                this.formulario.fechaVto = null; // Reiniciar el valor de fechaO
+            } else if (this.formulario.documento === 2) {
+                // Si se seleccionó Crédito, muestra el campo de fecha y oculta el campo de número de caja
+                this.formulario.numerCaja = null; // Reiniciar el valor de numer_caja
+            }
+        },
+
     },
 
 
@@ -597,9 +649,11 @@ export default {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
         this.ObtenerProveedor()
-       // this.ObtenerProducto()
+        // this.ObtenerProducto()
         this.ObtenerIva()
         this.ObtenerNota_Debito_C()
+        this.ObtenerCaja()
+        this.ObtenerTipoD()
 
     },
 

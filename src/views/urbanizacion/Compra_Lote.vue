@@ -367,6 +367,8 @@ import { CajaAPI } from '@/services/caja.api'
 import { BarrioAPI } from '@/services/barrio.api'
 import { CiudadAPI } from '@/services/ciudad.api'
 import { OrdenUrbApi } from '@/services/orde_compra_lote.api'
+import { CuentaPagarApi } from '@/services/cuenta_pagar.api'
+
 
 
 import dayjs from 'dayjs'
@@ -670,7 +672,11 @@ export default {
                 idProveedor: this.formulario.proveedor,
                 idCaja: this.formulario.caja,
                 idorde_compra_lote: this.formulario.numero_orden, //nuevo 
-                Detalle: this.formulario.itemsDetalle
+                Detalle: this.formulario.itemsDetalle,
+                CuentaPagar: {
+                    cabecera: this.CuentaPagar,
+                    detalle: this.itemsDetallePagos
+                }
 
 
             },
@@ -850,48 +856,58 @@ export default {
         abrirformulariogenerarcuentas() {
             // Abrir el modal y cargar el código aquí
             this.dialogoFormularioGenerarCuota = true;
-            this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+            this.CuentaPagar.proveedor = this.formulario.proveedor
+            // this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+            // this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
         },
 
-        AgregarDetallePago() {
-            this.itemsDetalle.push({
-                fecha: this.formulario.fechaD,
-                monto: this.formulario.monto,
+         AgregarDetallePago() {
+            this.itemsDetallePagos.push({
+                fecha: this.CuentaPagar.fechaD,
+                monto: this.CuentaPagar.monto,
                 action: '',
 
             }),
-                this.formulario.fechaD = ''
-            this.formulario.monto = ''
+            this.CuentaPagar.fechaD = ''
+            this.CuentaPagar.monto = ''
         },
 
         editarDetallePagos(parametro) {
             this.dialogoFormularioEditarDetallePagos = true
-            this.formulario.fechaD = parametro.fechaD
-            this.formulario.monto = parametro.monto
+            this.CuentaPagar.fechaD = parametro.fechaD
+            this.CuentaPagar.monto = parametro.monto
 
             // Calcula el total al abrir el diálogo
-            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
-            this.formulario.iva = parametro.idIva
-       
+            // this.formulario.total = this.formulario.cantidad * this.formulario.precio;
+            // this.formulario.iva = parametro.idIva
+        },
+        guardarFormularioPagos() {
+            if ( !this.CuentaPagar.observacion || !this.CuentaPagar.proveedor) {
 
+                this.emptyFieldError = true;
+                return;
+            }
+            this.dialogoFormularioGenerarCuota = false;
         },
 
         guardarFormularioEditarDetallePago() {
-            if (!this.detalle.fechaD || !this.formulario.monto) {
+            if (!this.CuentaPagar.fechaD || !this.CuentaPagar.monto) {
                 this.emptyFieldError = true;
                 return;
             }
 
             // Busca el índice del elemento que se va a editar
-            const index = this.itemsDetalle.findIndex(item => item.monto === this.formulario.monto);
+            const index = this.itemsDetallePagos.findIndex(item => item.monto === this.CuentaPagar.monto);
 
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
-                this.itemsDetalle[index].fechaD = this.formulario.fechaD;
-                this.itemsDetalle[index].monto = this.formulario.monto;
+                this.itemsDetallePagos[index].fechaD = this.CuentaPagar.fechaD;
+                this.itemsDetallePagos[index].monto = this.CuentaPagar.monto;
             }
             this.dialogoFormularioEditarDetallePagos = false;
+
+         
+
         },
 
         tipoDocumentoChanged() {
