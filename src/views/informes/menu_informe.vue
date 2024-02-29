@@ -77,6 +77,7 @@
                             </v-card-text>
                         </v-card>
                     </v-window-item>
+
                     <v-window-item value="option-2">
                         <v-card flat>
                             <v-tabs v-model="tabProduccion" color="blue-grey">
@@ -122,24 +123,107 @@
                             </v-card-text>
                         </v-card>
                     </v-window-item>
+
                     <v-window-item value="option-3">
                         <v-card flat>
-                            <v-card-text>
-                                <p>
-                                    Fusce a quam. Phasellus nec sem in justo pellentesque facilisis. Nam eget dui. Proin
-                                    viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan nisi
-                                    mauris ac eros. In dui magna, posuere eget, vestibulum et, tempor auctor, justo.
-                                </p>
+                            <v-tabs v-model="tabVenta" color="blue-grey">
+                                <v-tab value="option-venta-1">Apertura de Caja</v-tab>
+                                <v-tab value="option-venta-2">Cierre de Caja </v-tab>
+                                <v-tab value="option-venta-3">Arqueo de Cajas</v-tab>
+                                <v-tab value="option-venta-4">Recaudaciones a depositar</v-tab>
+                                <v-tab value="option-venta-5">Registro de Ventas</v-tab>
+                                <v-tab value="option-venta-6">Cobranza por forma de Cobro</v-tab>
+                                <v-tab value="option-venta-7">Registro de Notas de Creditos</v-tab>
+                                <v-tab value="option-venta-8">Registro de Notas de Debitos</v-tab>
+                                <v-tab value="option-venta-9">Registro de Notas de Remision</v-tab>
+                             
+                            </v-tabs>
 
-                                <p class="mb-0">
-                                    Cras sagittis. Phasellus nec sem in justo pellentesque facilisis. Proin sapien ipsum,
-                                    porta a, auctor quis, euismod ut, mi. Donec quam felis, ultricies nec, pellentesque eu,
-                                    pretium quis, sem. Nam at tortor in tellus interdum sagittis.
-                                </p>
+                            <v-card-text>
+                                <v-window v-model="tabVenta">
+                                    <v-window-item value="option-venta-1">
+                                        Apertura de Caja
+                                    </v-window-item>
+
+                                    <v-window-item value="option-venta-2">
+                                        Cierre de Caja 
+                                    </v-window-item>
+
+                                    <v-window-item value="option-venta-3">
+                                        Orden de compra
+                                    </v-window-item>
+
+                                    <v-window-item value="option-venta-4">
+                                        Compras
+                                    </v-window-item>
+
+                                    <v-window-item value="option-venta-5">
+                                        Nota de Credito
+                                    </v-window-item>
+
+                                    <v-window-item value="option-venta-6">
+                                        Nota de Debito
+                                    </v-window-item>
+
+                                    <v-window-item value="option-venta-7">
+                                        Nota de Remision
+                                    </v-window-item>
+                                </v-window>
                             </v-card-text>
                         </v-card>
                     </v-window-item>
+
+                    <v-window-item value="option-4">
+                        <v-card flat>
+                            <v-tabs v-model="tabmantenimiento" color="blue-grey">
+                                <v-tab value="option-mantenimiento-1">Barrio</v-tab>
+                                <v-tab value="option-mantenimiento-2">Caja</v-tab>
+                                <v-tab value="option-mantenimiento-3">Categoria</v-tab>
+                                <v-tab value="option-mantenimiento-4">Ciudad</v-tab>
+                                <v-tab value="option-mantenimiento-5">Cliente</v-tab>
+                                <v-tab value="option-mantenimiento-6">Efectivo</v-tab>
+                                <v-tab value="option-mantenimiento-7">Forma de Cobro</v-tab>
+                                <v-tab value="option-mantenimiento-8">Funcionario</v-tab>
+                                <v-tab value="option-mantenimiento-9">Iva</v-tab>
+                             
+                            </v-tabs>
+
+                            <v-card-text>
+                                <v-window v-model="tabmantenimiento">
+                                    <v-window-item value="option-mantenimiento-1">
+                                        Apertura de Caja
+                                    </v-window-item>
+
+                                    <v-window-item value="option-mantenimiento-2">
+                                        Cierre de Caja 
+                                    </v-window-item>
+
+                                    <v-window-item value="option-mantenimiento-3">
+                                        Orden de compra
+                                    </v-window-item>
+
+                                    <v-window-item value="option-mantenimiento-4">
+                                        Compras
+                                    </v-window-item>
+
+                                    <v-window-item value="option-mantenimiento-5">
+                                        Nota de Credito
+                                    </v-window-item>
+
+                                    <v-window-item value="option-mantenimiento-6">
+                                        Nota de Debito
+                                    </v-window-item>
+
+                                    <v-window-item value="option-mantenimiento-7">
+                                        Nota de Remision
+                                    </v-window-item>
+                                </v-window>
+                            </v-card-text>
+                        </v-card>
+                    </v-window-item>
+
                 </v-window>
+                
             </div>
         </v-card>
     </v-container>
@@ -155,6 +239,7 @@ export default {
         tab: 'option-1',
         tabCompras: 'option-compras-1',
         tabProduccion: 'option-produccion-1',
+        tabVenta: 'option-venta-1',
     }),
 }
 </script>

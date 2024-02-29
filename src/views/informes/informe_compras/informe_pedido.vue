@@ -36,11 +36,21 @@ export default {
     methods: {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
-            doc.text('Reporte de Pedidos:', 60, 10);
+            doc.setFontSize(16);
+            doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
+            doc.setFontSize(12);
+
+            
 
             autoTable(doc, {
                 head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')])
+                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]),
+                theme: 'grid', // Agrega bordes a la tabla
+                styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
+                columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+
+
+                
             });
             doc.output('dataurlnewwindow');
         },

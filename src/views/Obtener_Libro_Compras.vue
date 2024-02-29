@@ -1,14 +1,11 @@
 <template>
-    <v-dialog max-width="1200" v-model="dialogoFormulario" persistent>
-        <v-card class="rounded-xl">
+  
+        <v-card class="rounded-xl ">
             <v-container>
+               
                 <h1 class="mb-3">Obtener Libro de Compras</h1>
                 <v-form>
                     <v-row>
-                        <!-- <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Nº de factura Asociado" v-model="formulario.numero_orden"
-                                required></v-text-field>
-                        </v-col> -->
                        
                         <v-col cols="12" sm="2" md="2">
                         <v-autocomplete variant="outlined" label="Nº Factura" :items="listaDocumento"
@@ -16,11 +13,6 @@
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
                         
-                        <!-- <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
-                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>  -->
                         <v-col cols="12" sm="1" md="1" class="mx-0"><H5>Fecha Desde:</H5></v-col>
 
                         <v-col cols="12" sm="2" md="2" >
@@ -40,7 +32,7 @@
                             <v-btn color="primary" @click="ObtenerCodigoCompra">Obtener</v-btn>
                         </v-col>
 
-                        <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
+                        <v-data-table  items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">
                             <template v-slot:tfoot>
                                 <tr>
@@ -78,128 +70,11 @@
                 </v-form>
             </v-container>
         </v-card>
-    </v-dialog>
+  
    
-    <!-- INICIO EDITAR DETALLE -->
-    <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
-        <v-card class="rounded-xl">
-            <v-container>
-                <h1 class="mb-3">Ingresar Precio</h1>
-                <v-form>
-                    <v-row class="justify-center">
+   
 
-
-                        <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
-
-                        <v-col ols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Cantidad" @input="recalcularTotal"
-                                v-model="formulario.cantidad"></v-text-field>
-                        </v-col>
-                        <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Precio Unitario" @input="recalcularTotal"
-                                v-model="formulario.precio"></v-text-field>
-                        </v-col>
-                        <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.total"
-                                readonly></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI"
-                                item-value="id" v-model="formulario.iva" :error="excededLimit"
-                                :error-messages="errorMessage" required>
-                            </v-autocomplete>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2"
-                                @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-        </v-card>
-    </v-dialog>
-
-    <!-- FIN EDITAR DETALLE -->
-
-    <v-container>
-        <v-row>
-            <v-col cols="12" sm="5" md="5">
-                <v-text-field :loading="loading" density="compact" v-model="buscador" variant="solo" label="Buscar"
-                    append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
-            </v-col>
-
-            <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de NC: {{ items.length }}
-            </v-col>
-
-        </v-row>
-
-        <v-card class="mt-5 rounded-xl">
-            <v-data-table items-per-page-text="Item por pagina" :headers="headers" :items="itemsComputed">
-                <template v-slot:top>
-                    <v-toolbar flat color="white">
-                        <v-toolbar-title>
-                            <p class="font-weight-bold">Registro de Notas de Credito Proveedor</p>
-                        </v-toolbar-title>
-
-                        <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
-                            @click="abrirDialogo">Registrar
-                        </v-btn>
-
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.fecha="{ item }">
-                    {{ formatearFecha(item.raw.fechaD) }}
-                </template>
-                <template v-slot:item.action="{ item }">
-                    <!-- <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
-                        mdi-pencil
-                    </v-icon> -->
-
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
-                        Anular
-                    </v-btn>
-
-                </template>
-            </v-data-table>
-        </v-card>
-
-        <v-row>
-            <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
-                <v-btn>Cancelar </v-btn>
-            </v-col>
-        </v-row>
-        <!-- Diálogo de confirmación -->
-        <v-dialog v-model="dialogoCambiarEstado" max-width="400">
-            <v-card>
-                <v-container>
-                    <v-card-title class="headline">Confirmar Eliminación</v-card-title>
-                    <v-card-text>
-                        ¿Está seguro de que desea Anular este elemento?
-                    </v-card-text>
-
-
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" text @click="cambiarEstadoCompra">Anular</v-btn>
-                            <v-btn color="primary" text @click="cancelarCambiarEstado">Cancelar</v-btn>
-                        </v-col>
-                    </v-row>
-
-
-                </v-container>
-            </v-card>
-
-        </v-dialog>
-        <!-- FIN DIALOGO -->
-    </v-container>
+    
 </template>
   
 <script>
@@ -267,6 +142,14 @@ export default {
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersCompra: [
+                { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
+                { title: 'Numero de Factura', key: 'numero_factura' },
+                { title: 'Tipo Documento', key: 'documento' },
+                { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
+                { title: 'Timbrado', key: 'timbrado', align: 'star' },
+                { title: 'Proveedor', key: 'proveedor', align: 'star' },
+                { title: 'Caja', key: 'caja', align: 'star' },
+
                 { title: 'Producto', key: 'idProducto', align: 'center' },
                 { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
                 { title: 'Cantidad', key: 'Cantidad', align: 'center' },
@@ -308,15 +191,7 @@ export default {
             if (!this.buscador) return this.items
             return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
-        // excededLimit() {
-        //     return this.formulario.descripcion.length > this.limit;
-        // },
-        // errorMessage() {
-        //     if (this.excededLimit) {
-        //         return 'Superaste el límite de 45 letras';
-        //     }
-        //     return '';
-        // }
+      
     },
     methods:
     {

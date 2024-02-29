@@ -103,8 +103,8 @@ export default {
         ['Presupuesto', 'mdi-folder-plus', '/presupuesto'],
         ['Orden de Compras', 'mdi-folder-plus', '/orden_compra'],
         ['Compras', 'mdi-folder-plus', '/compras'],
-        ['*Nota de Credito', 'mdi-folder-plus', '/nota_credito_compras'],
-        ['*Nota de Debito', 'mdi-folder-plus', '/nota_debito_compra'],
+        ['Nota de Credito', 'mdi-folder-plus', '/nota_credito_compras'],
+        ['Nota de Debito', 'mdi-folder-plus', '/nota_debito_compra'],
         ['Nota de Remision', 'mdi-folder-plus', '/nota_remision_compra'],
         ['x-Obtener Libro de Compras', 'mdi-folder-plus', '/obtener_libro_compras'],
 
@@ -112,7 +112,7 @@ export default {
 
       Produccion: [
         ['Orden de Compra Urbanizacion', 'mdi-image-filter-hdr', 'orden_compra_lote'],
-        ['x-Registro de Compras de Lotes', 'mdi-image-filter-hdr', '/compra_lote'],
+        ['*Registro de Compras de Lotes', 'mdi-image-filter-hdr', '/compra_lote'],
         ['*Registro Urbanizacion', 'mdi-image-filter-hdr', '/urbanizacion'],
         ['x-Registro Precio de Lotes', 'mdi-image-filter-hdr', '/precio'],
         ['x-Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],

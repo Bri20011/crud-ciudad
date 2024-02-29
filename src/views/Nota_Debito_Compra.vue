@@ -283,6 +283,7 @@ export default {
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
+                { title: 'Caja', key: 'idCaja', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             headersCompra: [
@@ -524,6 +525,7 @@ export default {
                         proveedor: item.idProveedor,
                         numero_nc: item.Numero_doc,
                         idProveedor: item.idProveedor,
+                        idCaja: item.idCaja,
                         razonsocial: item.razonsocial,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
