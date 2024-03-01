@@ -47,15 +47,15 @@
                             <v-card-text>
                                 <v-window v-model="tabCompras">
                                     <v-window-item value="option-compras-1">
-                                        <ComponenteInformePedido />
+                                        <ComponenteInformePedido/>
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-2">
-                                        Presupuesto
+                                        <ComponenteInformePresupuesto />
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-3">
-                                        Orden de compra
+                                        <ComponenteOrdenCompra/>
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-4">
@@ -93,15 +93,15 @@
                             <v-card-text>
                                 <v-window v-model="tabProduccion">
                                     <v-window-item value="option-produccion-1">
-                                        Pedido
+                                        <ComponenteOrdenCompraLote/>
                                     </v-window-item>
 
                                     <v-window-item value="option-produccion-2">
-                                        Presupuesto
+                                        <ComponenteCompraLote/>
                                     </v-window-item>
 
                                     <v-window-item value="option-produccion-3">
-                                        Orden de compra
+                                        <ComponenteUrbanizacion/>
                                     </v-window-item>
 
                                     <v-window-item value="option-produccion-4">
@@ -178,8 +178,8 @@
                             <v-tabs v-model="tabmantenimiento" color="blue-grey">
                                 <v-tab value="option-mantenimiento-1">Barrio</v-tab>
                                 <v-tab value="option-mantenimiento-2">Caja</v-tab>
-                                <v-tab value="option-mantenimiento-3">Categoria</v-tab>
-                                <v-tab value="option-mantenimiento-4">Ciudad</v-tab>
+                                <v-tab value="option-mantenimiento-3">Ciudad</v-tab>
+                                <v-tab value="option-mantenimiento-4">Categoria</v-tab>
                                 <v-tab value="option-mantenimiento-5">Cliente</v-tab>
                                 <v-tab value="option-mantenimiento-6">Efectivo</v-tab>
                                 <v-tab value="option-mantenimiento-7">Forma de Cobro</v-tab>
@@ -191,15 +191,15 @@
                             <v-card-text>
                                 <v-window v-model="tabmantenimiento">
                                     <v-window-item value="option-mantenimiento-1">
-                                        Apertura de Caja
+                                        <ComponenteBarrio/>
                                     </v-window-item>
 
                                     <v-window-item value="option-mantenimiento-2">
-                                        Cierre de Caja 
+                                        <ComponenteCaja/>
                                     </v-window-item>
 
                                     <v-window-item value="option-mantenimiento-3">
-                                        Orden de compra
+                                        <ComponenteCiudad/>
                                     </v-window-item>
 
                                     <v-window-item value="option-mantenimiento-4">
@@ -231,15 +231,33 @@
 
 <script>
 import ComponenteInformePedido from './informe_compras/informe_pedido.vue';
+import ComponenteOrdenCompra from './informe_compras/informe_orden_compra.vue';
+import ComponenteInformePresupuesto from './informe_compras/informe_presupuesto.vue';
+import ComponenteBarrio from './informe_mantenimiento/informe_barrio.vue';
+import ComponenteCaja from './informe_mantenimiento/informe_caja.vue';
+import ComponenteCiudad from './informe_mantenimiento/informe_ciudad.vue';
+import ComponenteOrdenCompraLote from './informe_produccion/informe_orden_compra_lote.vue';
+import ComponenteCompraLote from './informe_produccion/informe_compra_lote.vue';
+import ComponenteUrbanizacion from './informe_produccion/informe_urbanizacion.vue';
 export default {
     components: {
-        ComponenteInformePedido
+        ComponenteInformePedido,
+        ComponenteInformePresupuesto,
+        ComponenteOrdenCompra,
+        ComponenteBarrio,
+        ComponenteCaja,
+        ComponenteCiudad,
+        ComponenteOrdenCompraLote,
+        ComponenteCompraLote,
+        ComponenteUrbanizacion
+
     },
     data: () => ({
         tab: 'option-1',
         tabCompras: 'option-compras-1',
         tabProduccion: 'option-produccion-1',
         tabVenta: 'option-venta-1',
+        tabmantenimiento: 'option-mantenimiento-1'
     }),
 }
 </script>

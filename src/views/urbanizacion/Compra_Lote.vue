@@ -1,6 +1,6 @@
 <template>
     <v-dialog max-width="1600" v-model="dialogoFormulario" persistent>
-        <v-card  class="rounded-xl">
+        <v-card class="rounded-xl">
             <v-container>
                 <h1 class="mb-3">Registrar Compras de Lote</h1>
                 <v-form>
@@ -30,7 +30,7 @@
                                 item-title="descripcionCa" item-value="id" v-model="formulario.caja"
                                 :disabled="formulario.documento !== 1" required></v-autocomplete>
                         </v-col>
-                       
+
                         <v-col cols="12" sm="4" md="4">
                             <input class="custom-input" v-model="formulario.fechaO" type="date"
                                 placeholder="Fecha de Operacion" @input="formatDate" />
@@ -57,6 +57,11 @@
                             <template v-slot:tfoot>
 
                                 <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -91,15 +96,17 @@
                             <v-btn v-if="formulario.documento === 2" prepend-icon="mdi mdi-plus-thick" color="#90A4AE"
                                 class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">GuardarPricn</v-btn>
+
+                            <v-btn color="primary" @click="guardarFormulario"
+                                :disabled="formulario.documento === 2 && !seRealizoAgregarPagos">GuardarPricn</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
             </v-container>
         </v-card>
     </v-dialog>
-   
-  
+
+
 
     <!-- INICIO EDITAR DETALLE -->
     <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
@@ -113,14 +120,13 @@
                         <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="formulario.producto"
-                                 required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio"
-                                item-title="descripcionB" item-value="id" v-model="formulario.ciudad"
                                 required></v-autocomplete>
                         </v-col>
-                        
+                        <v-col cols="12" sm="3" md="3">
+                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio" item-title="descripcionB"
+                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
+                        </v-col>
+
                         <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad"
                                 item-title="descripcionCi" item-value="id" v-model="formulario.barrio"
@@ -133,9 +139,9 @@
 
                         <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
-                               required></v-text-field>
+                                required></v-text-field>
                         </v-col>
-                     
+
                         <v-col ols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Nombre del Lote" @input="recalcularTotal"
                                 v-model="formulario.nombreLoteado"></v-text-field>
@@ -154,10 +160,10 @@
                                 :error-messages="errorMessage" required>
                             </v-autocomplete>
                         </v-col>
-                     
+
                         <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Dimension Total" v-model="formulario.dimensionTotal"
-                               required></v-text-field>
+                                required></v-text-field>
                         </v-col>
 
                     </v-row>
@@ -218,7 +224,7 @@
             </v-data-table>
         </v-card>
 
-      
+
         <!-- Diálogo de confirmación -->
         <v-dialog v-model="dialogoCambiarEstado" max-width="400">
             <v-card>
@@ -243,9 +249,9 @@
         </v-dialog>
         <!-- FIN DIALOGO -->
 
-  <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
+        <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
 
-  <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
+        <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
             <v-card class="rounded-xl">
                 <v-container>
                     <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
@@ -259,8 +265,8 @@
 
                             <v-col cols="12" sm="6" md="6">
                                 <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
-                                    item-title="descripcionP" item-value="id" v-model="CuentaPagar.proveedor" 
-                                   disabled required></v-autocomplete>
+                                    item-title="descripcionP" item-value="id" v-model="CuentaPagar.proveedor" disabled
+                                    required></v-autocomplete>
                             </v-col>
                             <v-divider></v-divider>
 
@@ -292,8 +298,22 @@
                                 :items="itemsDetallePagos">
 
                                 <template v-slot:item.fechaD="{ item }">
+
                                     {{ formatearFecha(item.raw.fechaD) }}
                                 </template>
+
+
+                                <template v-slot:tfoot>
+
+                                    <tr>
+                                        <td></td>
+                                        <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotalPagos('total') }}
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </template>
+
+
                                 <template v-slot:item.action="{ item }">
                                     <v-icon size="small" class="me-2" @click="editarDetallePagos(item.raw)">
                                         mdi-pencil
@@ -383,7 +403,7 @@ export default {
         return {
             dialogoFormulario: false,
             dialogoCambiarEstado: false,
-
+            seRealizoAgregarPagos: false,
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
             dialogoFormularioGenerarCuota: false,
@@ -391,7 +411,7 @@ export default {
             dialogoFormularioEditarDetallePagos: false,
 
 
-            CuentaPagar:{
+            CuentaPagar: {
                 observacion: '',
                 proveedor: '',
                 fechaD: null,
@@ -409,15 +429,15 @@ export default {
                 timbrado: '',
                 numero_factura: '',
                 costo: '',
-                cantidad:'',
-                dimensionTotal:'',
+                cantidad: '',
+                dimensionTotal: '',
                 nombreLoteado: '',
                 caja: '',
             },
             detalle: {
                 fechaD: null,
                 cantidad_lote: '',
-                costo_lote:'',
+                costo_lote: '',
                 ciudad: '',
                 barrio: '',
             },
@@ -450,7 +470,7 @@ export default {
             headersCompra: [
                 { title: 'Producto', key: 'idProducto', align: 'center' },
                 { title: 'Descripcion', key: 'nombreProducto', align: 'center' },
-                {title: 'Nombre Urbzanizacion', key: 'Descripcion_lote', align: 'center'},
+                { title: 'Nombre Urbzanizacion', key: 'Descripcion_lote', align: 'center' },
                 { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
                 { title: 'Barrio', key: 'barrio', align: 'center' },
                 { title: 'Ciudad', key: 'ciudad', align: 'center' },
@@ -467,6 +487,7 @@ export default {
             headersCuentasPagar: [
                 { title: 'Fecha de Pago', key: 'fechaD', align: 'star' },
                 { title: 'Monto', key: 'monto', align: 'center' },
+
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
@@ -568,26 +589,26 @@ export default {
             })
         },
         ObtenerBarrio() {
-        BarrioAPI.getAll().then(({ data }) => {
-          this.listaBarrio = data.map(item => {
-            return {
-              id: item.idBarrio,
-              descripcionB: item.descripcion
-            }
-          })
-        })
-      },
-      ObtenerCiudades() {
-        CiudadAPI.getAll().then(({ data }) => {
-          this.listaCiudad = data.map(item => {
-            return {
-              id: item.idCiudad,
-              descripcionCi: item.Descripcion
-            }
-          })
-        })
-      },
-      ObtenerCaja() {
+            BarrioAPI.getAll().then(({ data }) => {
+                this.listaBarrio = data.map(item => {
+                    return {
+                        id: item.idBarrio,
+                        descripcionB: item.descripcion
+                    }
+                })
+            })
+        },
+        ObtenerCiudades() {
+            CiudadAPI.getAll().then(({ data }) => {
+                this.listaCiudad = data.map(item => {
+                    return {
+                        id: item.idCiudad,
+                        descripcionCi: item.Descripcion
+                    }
+                })
+            })
+        },
+        ObtenerCaja() {
             CajaAPI.getAll().then(({ data }) => {
                 this.listaCaja = data.map(item => {
                     return {
@@ -606,7 +627,7 @@ export default {
         ObtenerOrden_compraLote() {
             ComprasLoteAPI.getAll().then(({ data }) => {
 
-               
+
             })
         },
 
@@ -619,7 +640,7 @@ export default {
 
             // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
             OrdenUrbApi.getById(this.formulario.numero_orden).then(({ data }) => {
-              
+
                 this.formulario = {
                     ...this.formulario,
                     fechaD: data.fecha,
@@ -655,7 +676,7 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_factura) {
+            if (!this.formulario.numero_factura || !this.formulario.documento || !this.formulario.caja || !this.formulario.proveedor || !this.formulario.fechaD || !this.formulario.timbrado || !this.formulario.numero_orden || !this.formulario.itemsDetalle.length) {
 
                 this.emptyFieldError = true;
                 return;
@@ -755,7 +776,7 @@ export default {
             }
 
         },
-      
+
 
         editarDetalle(parametro) {
             this.dialogoFormularioEditarDetalle = true
@@ -764,13 +785,13 @@ export default {
             this.formulario.costo = parametro.costo_lote
             this.formulario.idCiudad = parametro.idCiudad
             this.formulario.barrio = parametro.idBarrio
-    
+
 
 
             // Calcula el total al abrir el diálogo
             this.formulario.total = this.formulario.cantidad * this.formulario.costo;
             this.formulario.iva = parametro.idIva
-     o
+            o
 
 
 
@@ -821,7 +842,7 @@ export default {
             } else {
                 // Si no se encontró el elemento, agrega uno nuevo
                 const nuevoItem = {
-            
+
                 };
                 this.formulario.itemsDetalle.push(nuevoItem);
             }
@@ -853,41 +874,57 @@ export default {
             }
         },
 
+        sumarTotalPagos(columna) {
+            // Verifica que this.formulario.itemsDetalle tenga un valor y sea un array
+            if (this.CuentaPagar.itemsDetallePagos && Array.isArray(this.CuentaPagar.itemsDetallePagos)) {
+                // Redondea cada valor de la columna antes de sumarlos
+                return Math.round(this.CuentaPagar.itemsDetallePagos.reduce((monto, item) => monto + item[columna], 0));
+            } else {
+                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
+            }
+        },
+
+
         abrirformulariogenerarcuentas() {
             // Abrir el modal y cargar el código aquí
             this.dialogoFormularioGenerarCuota = true;
             this.CuentaPagar.proveedor = this.formulario.proveedor
+            this.CuentaPagar.monto = this.formulario.total
+
             // this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
             // this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
         },
 
-         AgregarDetallePago() {
+        AgregarDetallePago() {
+
             this.itemsDetallePagos.push({
                 fecha: this.CuentaPagar.fechaD,
                 monto: this.CuentaPagar.monto,
                 action: '',
 
             }),
-            this.CuentaPagar.fechaD = ''
+                this.CuentaPagar.fechaD = ''
             this.CuentaPagar.monto = ''
         },
 
         editarDetallePagos(parametro) {
             this.dialogoFormularioEditarDetallePagos = true
             this.CuentaPagar.fechaD = parametro.fechaD
-            this.CuentaPagar.monto = parametro.monto
+            this.CuentaPagar.monto = formulario.total
 
             // Calcula el total al abrir el diálogo
             // this.formulario.total = this.formulario.cantidad * this.formulario.precio;
             // this.formulario.iva = parametro.idIva
         },
         guardarFormularioPagos() {
-            if ( !this.CuentaPagar.observacion || !this.CuentaPagar.proveedor) {
+            if (!this.CuentaPagar.observacion || !this.CuentaPagar.proveedor) {
 
                 this.emptyFieldError = true;
                 return;
             }
+            this.seRealizoAgregarPagos = true;
             this.dialogoFormularioGenerarCuota = false;
+
         },
 
         guardarFormularioEditarDetallePago() {
@@ -906,7 +943,7 @@ export default {
             }
             this.dialogoFormularioEditarDetallePagos = false;
 
-         
+
 
         },
 
@@ -934,7 +971,7 @@ export default {
         this.ObtenerCaja()
         this.ObtenerBarrio()
         this.ObtenerCiudades()
-        
+
 
     },
 
@@ -957,4 +994,5 @@ export default {
     /* Incluir el borde en el tamaño total */
     outline: none;
     /* Quitar el contorno al hacer clic */
-}</style>
+}
+</style>

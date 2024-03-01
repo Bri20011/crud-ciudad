@@ -112,7 +112,7 @@ export default {
 
       Produccion: [
         ['Orden de Compra Urbanizacion', 'mdi-image-filter-hdr', 'orden_compra_lote'],
-        ['*Registro de Compras de Lotes', 'mdi-image-filter-hdr', '/compra_lote'],
+        ['Registro de Compras de Lotes', 'mdi-image-filter-hdr', '/compra_lote'],
         ['*Registro Urbanizacion', 'mdi-image-filter-hdr', '/urbanizacion'],
         ['x-Registro Precio de Lotes', 'mdi-image-filter-hdr', '/precio'],
         ['x-Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],

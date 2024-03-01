@@ -122,7 +122,7 @@
   
   <script>
   import { VDataTable } from 'vuetify/labs/VDataTable'
-  import { TipoProductoPI } from '@/services/tipo_producto.api'
+  import { TipoProductoAPI } from '@/services/tipo_producto.api'
   import jsPDF from 'jspdf'
   import autoTable from 'jspdf-autotable'
   export default {
@@ -215,7 +215,7 @@
           return;
         }
   
-        TipoProductoPI.create(
+        TipoProductoAPI.create(
           {
             idtipo_producto: this.formulario.codigo,
             descripcion: this.formulario.descripcion
@@ -238,7 +238,7 @@
           return;
         }
   
-        TipoProductoPI.update(
+        TipoProductoAPI.update(
           this.formulario.codigo,
           {
             idtipo_producto: this.formulario.codigo,
@@ -269,7 +269,7 @@
       eliminarCiudad() {
         if (this.elementoAEliminar) {
           // Realiza la eliminación aquí
-          TipoProductoPI.delete(this.elementoAEliminar.id).then(() => {
+          TipoProductoAPI.delete(this.elementoAEliminar.id).then(() => {
             this.ObtenerTipoProducto();
           });
           // Cierra el diálogo de confirmación
@@ -280,7 +280,7 @@
   
   
       ObtenerTipoProducto() {
-        TipoProductoPI.getAll().then(({ data }) => {
+        TipoProductoAPI.getAll().then(({ data }) => {
           this.items = data.map(item => {
             return {
               id: item.idtipo_producto,

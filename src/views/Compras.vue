@@ -93,7 +93,8 @@
                             <v-btn v-if="formulario.documento === 2" prepend-icon="mdi mdi-plus-thick" color="#90A4AE"
                                 class="mx-2" @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">GuardarPricn</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario"
+                             :disabled="formulario.documento === 2 && !seRealizoAgregarPagos">GuardarPricn</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -410,7 +411,7 @@ export default {
         return {
             dialogoFormulario: false,
             dialogoCambiarEstado: false,
-
+            seRealizoAgregarPagos: false,
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
             dialogoFormularioGenerarCuota: false,
@@ -990,6 +991,7 @@ export default {
                 this.emptyFieldError = true;
                 return;
             }
+            this.seRealizoAgregarPagos = true;
             this.dialogoFormularioGenerarCuota = false;
         },
 
