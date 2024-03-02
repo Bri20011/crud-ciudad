@@ -77,8 +77,10 @@ export default {
             if (this.filtros.fecha) {
                 items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
             }
+          
             if (this.filtros.numero_factura) {
-                items = items.filter(item => item.numero_factura === this.filtros.numero_factura)
+                const filtroRuc = parseFloat(this.filtros.numero_factura); // Convertir el valor del filtro a tipo double
+                items = items.filter(item => parseFloat(item.numero_factura) === filtroRuc);
             }
             return items
         },
