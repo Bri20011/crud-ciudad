@@ -3,12 +3,12 @@
         <toolbar flat>
             <v-row>
                 <v-col cols="4">
-                    <v-text-field variant="outlined" v-model="filtros.descripcion" density="compact"
-                        label="Fitro por descripcion" required></v-text-field>
+                    <v-text-field variant="outlined" v-model="filtros.numero" density="compact" label="Numero de Establecimiento"
+                        required></v-text-field>
                 </v-col>
                 <v-col cols="4">
-                    <input class="input-date" type="date" v-model="filtros.fecha" placeholder="Filtro por Fecha"
-                        @input="formatDate" />
+                    <v-text-field variant="outlined" v-model="filtros.descripcion" density="compact"
+                        label="Fitro por descripcion" required></v-text-field>
                 </v-col>
                 <v-col cols="4">
                     <v-btn size="large" @click="descargarReporte" color="primary">Exportar informe <v-icon class="ml-2"
@@ -19,16 +19,15 @@
     </v-container>
 </template>
 <script>
-import { PedidoAPI } from '@/services/pedido.api'
+import { EstablecimientoAPI } from '@/services/establecimiento.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import dayjs from 'dayjs'
 export default {
     data() {
         return {
             items: [],
             filtros: {
-                fecha: '',
+                numero: '',
                 descripcion: ''
             }
         }
@@ -37,39 +36,38 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
+            doc.text('Reporte de Establecimientos', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
-            
+
 
             autoTable(doc, {
-                head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]),
+                head: [['Codigo', 'Numero de Establecimientos', 'Descripcion']],
+                body: itemsFiltrados.map(item => [item.id, item.numero, item.descripcion]),
                 theme: 'grid', // Agrega bordes a la tabla
                 styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
                 columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
 
 
-                
+
             });
             doc.output('dataurlnewwindow');
         },
-        async obtenerPedido() {
-            await PedidoAPI.getAll().then(({ data }) => {
+        async ObtenerEstablecimiento() {
+            EstablecimientoAPI.getAll().then(({ data }) => {
                 this.items = data.map(item => {
                     return {
-                        id: item.idPedido,
+                        id: item.idEstablecimiento,
                         descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        detalleItems: item.detalle
+                        numero: item.Numero_establec
                     }
                 })
             })
         },
         filtrarItems() {
             let items = this.items
-            if (this.filtros.fecha) {
-                items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
+            if (this.filtros.numero) {
+                items = items.filter(item => item.numero === this.filtros.numero)
             }
             if (this.filtros.descripcion) {
                 items = items.filter(item => item.descripcion === this.filtros.descripcion)
@@ -77,7 +75,7 @@ export default {
             return items
         },
         async descargarReporte() {
-            await this.obtenerPedido()
+            await this.ObtenerEstablecimiento()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },

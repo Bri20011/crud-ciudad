@@ -2,14 +2,16 @@
     <v-container>
         <toolbar flat>
             <v-row>
+             
                 <v-col cols="4">
-                    <v-text-field variant="outlined" v-model="filtros.descripcion" density="compact"
-                        label="Fitro por descripcion" required></v-text-field>
+                    <v-text-field variant="outlined" v-model="filtros.razonsocial" density="compact"
+                        label="Fitro por Razon Social" required></v-text-field>
                 </v-col>
                 <v-col cols="4">
-                    <input class="input-date" type="date" v-model="filtros.fecha" placeholder="Filtro por Fecha"
-                        @input="formatDate" />
+                    <v-text-field variant="outlined" v-model="filtros.ruc" density="compact"
+                        label="Fitro por Ruc" required></v-text-field>
                 </v-col>
+               
                 <v-col cols="4">
                     <v-btn size="large" @click="descargarReporte" color="primary">Exportar informe <v-icon class="ml-2"
                             icon="mdi-download"></v-icon></v-btn>
@@ -19,7 +21,7 @@
     </v-container>
 </template>
 <script>
-import { PedidoAPI } from '@/services/pedido.api'
+  import { ProveedorAPI } from '@/services/proveedor.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import dayjs from 'dayjs'
@@ -28,8 +30,9 @@ export default {
         return {
             items: [],
             filtros: {
-                fecha: '',
-                descripcion: ''
+                ruc: '',
+                razonsocial: '',
+               
             }
         }
     },
@@ -37,14 +40,14 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
+            doc.text('Reporte de Proveedores', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
             
 
             autoTable(doc, {
-                head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]),
+                head: [['Codigo','Razon Social', 'Ruc']],
+                body: itemsFiltrados.map(item => [item.id, item.razonsocial, item.ruc]),
                 theme: 'grid', // Agrega bordes a la tabla
                 styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
                 columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
@@ -54,30 +57,37 @@ export default {
             });
             doc.output('dataurlnewwindow');
         },
-        async obtenerPedido() {
-            await PedidoAPI.getAll().then(({ data }) => {
-                this.items = data.map(item => {
-                    return {
-                        id: item.idPedido,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        detalleItems: item.detalle
-                    }
-                })
-            })
-        },
+        async  ObtenerProveedor() {
+        ProveedorAPI.getAll().then(({data}) => {
+          this.items = data.map(item=> {
+            return {
+              id: item.idProveedor,
+              ruc: item.Ruc,
+              razonsocial: item.Razon_social,
+              direccion: item.Direccion,
+              telefono: item.Telefono,
+              idBarrio: item.idBarrio,
+              nombrebarrio: item.nombrebarrio,
+              idCiudad: item.idCiudad,
+              nombreciudad: item.nombreciudad,
+             
+            }
+          })
+        })
+      },
+  
         filtrarItems() {
             let items = this.items
-            if (this.filtros.fecha) {
-                items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
+            if (this.filtros.razonsocial) {
+                items = items.filter(item => item.razonsocial === this.filtros.razonsocial)
             }
-            if (this.filtros.descripcion) {
-                items = items.filter(item => item.descripcion === this.filtros.descripcion)
+            if (this.filtros.ruc) {
+                items = items.filter(item => item.ruc === this.filtros.ruc)
             }
             return items
         },
         async descargarReporte() {
-            await this.obtenerPedido()
+            await this.ObtenerProveedor()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },

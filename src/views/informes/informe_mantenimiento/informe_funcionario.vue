@@ -2,13 +2,14 @@
     <v-container>
         <toolbar flat>
             <v-row>
+             
                 <v-col cols="4">
-                    <v-text-field variant="outlined" v-model="filtros.descripcion" density="compact"
-                        label="Fitro por descripcion" required></v-text-field>
+                    <v-text-field variant="outlined" v-model="filtros.nombres" density="compact"
+                        label="Fitro por Razon Social" required></v-text-field>
                 </v-col>
                 <v-col cols="4">
-                    <input class="input-date" type="date" v-model="filtros.fecha" placeholder="Filtro por Fecha"
-                        @input="formatDate" />
+                    <v-text-field variant="outlined" v-model="filtros.apellidos" density="compact"
+                        label="Fitro por Apellidos" required></v-text-field>
                 </v-col>
                 <v-col cols="4">
                     <v-btn size="large" @click="descargarReporte" color="primary">Exportar informe <v-icon class="ml-2"
@@ -19,17 +20,17 @@
     </v-container>
 </template>
 <script>
-import { PedidoAPI } from '@/services/pedido.api'
+  import { FuncionarioAPI } from '@/services/funcionario.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import dayjs from 'dayjs'
 export default {
     data() {
         return {
             items: [],
             filtros: {
-                fecha: '',
-                descripcion: ''
+                nombres: '',
+                apellidos: '',
+               
             }
         }
     },
@@ -37,14 +38,14 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
+            doc.text('Reporte de Funcionarios', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
             
 
             autoTable(doc, {
-                head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]),
+                head: [['Codigo','Nombres', 'Apellidos']],
+                body: itemsFiltrados.map(item => [item.id, item.nombres, item.apellidos]),
                 theme: 'grid', // Agrega bordes a la tabla
                 styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
                 columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
@@ -54,30 +55,37 @@ export default {
             });
             doc.output('dataurlnewwindow');
         },
-        async obtenerPedido() {
-            await PedidoAPI.getAll().then(({ data }) => {
-                this.items = data.map(item => {
-                    return {
-                        id: item.idPedido,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        detalleItems: item.detalle
-                    }
-                })
-            })
-        },
+        async  ObtenerFuncionario() {
+        FuncionarioAPI.getAll().then(({data}) => {
+          this.items = data.map(item=> {
+            return {
+              id: item.idFuncionario,
+              nombres: item.nombres,
+              apellidos: item.apellidos,
+              direccion: item.Direccion,
+              telefono: item.Telefono,
+              idBarrio: item.idBarrio,
+              nombrebarrio: item.nombrebarrio,
+              idCiudad: item.idCiudad,
+              nombreciudad: item.nombreciudad,
+             
+            }
+          })
+        })
+      },
+  
         filtrarItems() {
             let items = this.items
-            if (this.filtros.fecha) {
-                items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
+            if (this.filtros.nombres) {
+                items = items.filter(item => item.nombres === this.filtros.nombres)
             }
-            if (this.filtros.descripcion) {
-                items = items.filter(item => item.descripcion === this.filtros.descripcion)
+            if (this.filtros.apellidos) {
+                items = items.filter(item => item.apellidos === this.filtros.apellidos)
             }
             return items
         },
         async descargarReporte() {
-            await this.obtenerPedido()
+            await this.ObtenerFuncionario()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },

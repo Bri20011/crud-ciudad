@@ -15,7 +15,7 @@
     </v-container>
 </template>
 <script>
-import { CiudadAPI } from '@/services/ciudad.api'
+import { CategoriaApi } from '@/services/Categoria.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import dayjs from 'dayjs'
@@ -24,7 +24,6 @@ export default {
         return {
             items: [],
             filtros: {
-                fecha: '',
                 descripcion: ''
             }
         }
@@ -33,7 +32,7 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Ciudades', 105, 10, { align: 'center' });
+            doc.text('Reporte de Categoria', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
 
@@ -50,28 +49,27 @@ export default {
             });
             doc.output('dataurlnewwindow');
         },
-        async ObtenerCiudades() {
-            CiudadAPI.getAll().then(({ data }) => {
+        async ObtenerCategoria() {
+            CategoriaApi.getAll().then(({ data }) => {
                 this.items = data.map(item => {
                     return {
-                        id: item.idCiudad,
+                        id: item.idcategoria,
                         descripcion: item.Descripcion
                     }
                 })
+
             })
         },
         filtrarItems() {
             let items = this.items
-            if (this.filtros.fecha) {
-                items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
-            }
+           
             if (this.filtros.descripcion) {
                 items = items.filter(item => item.descripcion === this.filtros.descripcion)
             }
             return items
         },
         async descargarReporte() {
-            await this.ObtenerCiudades()
+            await this.ObtenerCategoria()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },

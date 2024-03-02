@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar color="blue-grey">
+    <v-toolbar color="#68869a">
       <v-app-bar-nav-icon @click="toggleSecondCard"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Inmobiliaria Nuevo Horizonte</v-toolbar-title>
@@ -9,7 +9,7 @@
 
     </v-toolbar>
 
-    <v-navigation-drawer v-model="showSecondCard" color="blue-grey" width="700px" theme="dark" temporary>
+    <v-navigation-drawer v-model="showSecondCard" color="#68869a" width="700px" theme="dark" temporary>
       <v-card class="color=black"></v-card>
 
 
