@@ -40,22 +40,26 @@ export default {
             doc.text('Reporte de Presupuestos', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
-            
-
-            autoTable(doc, {
-                head: [['Codigo', 'Descripcion', 'Fecha de Pres']],
-                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]),
-                theme: 'grid', // Agrega bordes a la tabla
-                styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
-                columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
-
-
-                
-            });
+            itemsFiltrados.forEach(item => {
+        autoTable(doc, {
+            head: [['Codigo', 'Descripcion', 'Fecha de Pedido', 'Nombre Proveedor']],
+            body: [[item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY'), item.proveedor]],
+            theme: 'grid', // Agrega bordes a la tabla
+            styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
+            columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+        });
+        autoTable(doc, {
+            head: [['Producto', 'Cantidad', 'Precio']],
+            body: item.detalleItems.map(det => [det.nomnbreProducto, det.Cantidad, det.Precio]),
+            theme: 'grid', // Agrega bordes a la tabla
+            styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
+            columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+        });
+    });
             doc.output('dataurlnewwindow');
         },
         async ObtenerPresupuesto() {
-        PresupuestoApi.getAll().then(({ data }) => {
+       await PresupuestoApi.getAll().then(({ data }) => {
 
             this.items = data.map(item => {
                 return {

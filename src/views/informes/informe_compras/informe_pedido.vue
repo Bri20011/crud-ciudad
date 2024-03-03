@@ -35,35 +35,30 @@ export default {
     },
     methods: {
         generarReporte(itemsFiltrados) {
-            const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
-            doc.setFontSize(12);
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
+    doc.setFontSize(12);
 
-            itemsFiltrados.forEach(item => {
-                autoTable(doc, {
-                    head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                    body: [[item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]],
-                    theme: 'grid', // Agrega bordes a la tabla
-                    styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
-                    columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
-                });
-                autoTable(doc, {
-                    head: [['Producto', 'Cantidad']],
-                    body: item.detalleItems.map(det => [det.nomnbreProducto, det.Cantidad]),
-                    theme: 'grid', // Agrega bordes a la tabla
-                    styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
-                    columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
-                });
+    itemsFiltrados.forEach(item => {
+        autoTable(doc, {
+            head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
+            body: [[item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]],
+            theme: 'grid', // Agrega bordes a la tabla
+            styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
+            columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+        });
+        autoTable(doc, {
+            head: [['Producto', 'Cantidad']],
+            body: item.detalleItems.map(det => [det.nomnbreProducto, det.Cantidad]),
+            theme: 'grid', // Agrega bordes a la tabla
+            styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
+            columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+        });
+    });
 
-                autoTable(doc,{})
-                autoTable(doc,{})
-                autoTable(doc,{})
-            })
-
-
-            doc.output('dataurlnewwindow');
-        },
+    doc.output('dataurlnewwindow');
+},
         async obtenerPedido() {
             await PedidoAPI.getAll().then(({ data }) => {
                 this.items = data.map(item => {

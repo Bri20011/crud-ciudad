@@ -106,7 +106,7 @@ export default {
         ['Nota de Credito', 'mdi-folder-plus', '/nota_credito_compras'],
         ['Nota de Debito', 'mdi-folder-plus', '/nota_debito_compra'],
         ['Nota de Remision', 'mdi-folder-plus', '/nota_remision_compra'],
-        ['x-Obtener Libro de Compras', 'mdi-folder-plus', '/obtener_libro_compras'],
+        ['Obtener Libro de Compras', 'mdi-folder-plus', '/obtener_libro_compras'],
 
       ],
 

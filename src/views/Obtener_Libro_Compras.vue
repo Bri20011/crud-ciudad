@@ -5,61 +5,53 @@
             <h1 class="mb-3">Obtener Libro de Compras</h1>
             <v-form>
                 <v-row>
-                    <v-col cols="12" sm="2" md="2">
+                    <v-col cols="12" sm="6" md="6">
                         <v-autocomplete variant="outlined" label="Obtener por Numero de Factura" :items="listaCompras"
                             item-title="numero_factura" item-value="id" v-model="formulario.compras"
                             required></v-autocomplete>
                     </v-col>
-                    <v-col cols="12" sm="2" md="2">
+                    <v-col cols="12" sm="6" md="6">
                         <v-autocomplete variant="outlined" label="Obtener por Proveedor" :items="listaProveedor"
                             item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
                             required></v-autocomplete>
                     </v-col>
 
-                    <v-col cols="12" sm="2" md="2">
+                    <v-col cols="12" sm="6" md="6">
                         <v-autocomplete variant="outlined" label="Obtener por Tipo de Documento" :items="listaDocumento"
                             item-title="descripcionD" item-value="id" v-model="formulario.documento"
                             required></v-autocomplete>
                     </v-col>
 
-                    <v-col cols="12" sm="1" md="1" class="mx-0">
-                        <H5>Fecha Desde:</H5>
-                    </v-col>
-
-                    <v-col cols="12" sm="2" md="2">
-
-                        <input class="custom-input" v-model="formulario.fechaO" type="date" placeholder="Fecha de Desde"
-                            @input="formatDate" />
-                    </v-col>
-
-
-                    <v-col cols="12" sm="1" md="1">
-                        <H5>Fecha Hasta:</H5>
-                    </v-col>
-                    <v-col cols="12" sm="2" md="2">
-                        <input class="custom-input" v-model="formulario.fechaO" type="date" placeholder="Fecha de Hasta"
-                            @input="formatDate" />
-                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                                <v-text-field type="date" variant="outlined" label="Filtrar por Fecha" v-model="formulario.fechaD"
+                                required></v-text-field>
+                            </v-col>
 
                     <v-col cols="12" class="d-flex justify-end">
                         <v-btn color="primary" @click="filtrarItems">Obtener</v-btn>
                     </v-col>
 
                     <v-data-table items-per-page-text="Articulos" :headers="headersCompra" :items="listaComprasFiltradas">
-
+                        <template v-slot:item.fechaD="{ item }">
+                                    {{ formatearFecha(item.raw.fechaD) }}
+                                </template>
                         <template v-slot:item.total="{ item }">
                              {{ calcularTotal(item) }}
                          </template>
-                         <template v-slot:item.iva10="{ item }">
-                             {{ calcularTotalIva10(item) }}
-                         </template>
+                         
+
                     </v-data-table>
 
                 </v-row>
-
+                   <v-col cols="12" class="d-flex justify-end">
+                        <v-btn color="primary" @click="descargarReporte">Exportar informe</v-btn>
+                    </v-col>
             </v-form>
         </v-container>
+        
+        
     </v-card>
+    
 </template>
   
 <script>
@@ -93,17 +85,18 @@ export default {
                 compras: ''
 
             },
+            
 
-           
             listaCompras: [],
             listaComprasFiltradas: [],
             headersCompra: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Numero de Factura', key: 'numero_factura' },
                 { title: 'Tipo Documento', key: 'documento' },
-                { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
+                { title: 'Fecha de Factura', key: 'fechaD', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
+                // { title: 'Proveedor', key: 'Razon_social_proveedor', align: 'star' },
                 // { title: 'Caja', key: 'caja', align: 'star' },
 
                 // { title: 'Producto', key: 'idProducto', align: 'center' },
@@ -111,15 +104,16 @@ export default {
                 // { title: 'Cantidad', key: 'Cantidad', align: 'center' },
                 // { title: 'Total', key: 'Precio', align: 'center' },
                 // { title: 'Iva', key: 'iva', align: 'center' },
-                { title: 'Exenta', key: 'exenta', align: 'center' },
-                { title: 'Total Iva 5%', key: 'iva5', align: 'center' },
-                { title: 'Total Iva 10%', key: 'iva10', align: 'center' },
+                // { title: 'Exenta', key: 'exenta', align: 'center' },
+                // { title: 'Total Iva 5%', key: 'iva5', align: 'center' },
+                // { title: 'Total Iva 10%', key: 'iva10', align: 'center' },
                 { title: 'Total', key: 'total', align: 'center' },
                 // { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
 
             ],
+
     
 
             listaProveedor: [],
@@ -206,42 +200,30 @@ export default {
 
             if(this.formulario.compras){
                 items = items.filter(item => item.id === this.formulario.compras)
-            }   
-
-            // if (this.filtros.fecha) {
-            //     items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
-            // }
-            // if (this.filtros.descripcion) {
-            //     items = items.filter(item => item.descripcion === this.filtros.descripcion)
-            // }
+            }
+            if(this.formulario.proveedor){
+                items = items.filter(item => item.proveedor === this.formulario.proveedor)
+            }
+            if(this.formulario.documento){
+                items = items.filter(item => item.documento === this.formulario.documento)
+            }
+               
+            if(this.formulario.fechaD){
+                items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.formulario.fechaD).format('YYYY-MM-DD'))
+            }
             this.listaComprasFiltradas = items
         },
         async descargarReporte() {
-            await this.obtenerPedido()
+            await this.ObtenerCodigoCompra()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },
 
-//         [
-//     {
-//         "idCompras": 1,
-//         "idProducto": 1,
-//         "nombreProducto": "Computador",
-//         "Precio": 350,
-//         "Cantidad": 5
-//     }
-// ]
         calcularTotal(item) {
             return item.raw.detalleItems.reduce((total, detalle) => total + (detalle.Precio * detalle.Cantidad), 0)
         },
 
-        calcularTotalIva10(item) {
-           const total = this.calcularTotal(item)
-           return total / 11
-        },
-
-
-
+ 
         formatearFecha(fecha) {
             return dayjs(fecha).format('DD/MM/YYYY')
         },

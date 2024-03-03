@@ -59,19 +59,19 @@
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-4">
-                                        Compras
+                                        <ComponenteCompra/>
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-5">
-                                        Nota de Credito
+                                        <ComponenteNotaCreditoCompra/>
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-6">
-                                        Nota de Debito
+                                       <ComponenteNotaDebitoCompra/>
                                     </v-window-item>
 
                                     <v-window-item value="option-compras-7">
-                                        Nota de Remision
+                                        <ComponenteNotaRemisionCompra/>
                                     </v-window-item>
                                 </v-window>
                             </v-card-text>
@@ -310,6 +310,10 @@
 import ComponenteInformePedido from './informe_compras/informe_pedido.vue';
 import ComponenteOrdenCompra from './informe_compras/informe_orden_compra.vue';
 import ComponenteInformePresupuesto from './informe_compras/informe_presupuesto.vue';
+import ComponenteCompra from './informe_compras/informe_compra.vue';
+import ComponenteNotaCreditoCompra from './informe_compras/informe_nota_credito_compra.vue';
+import ComponenteNotaDebitoCompra from './informe_compras/informe_nota_debito_compra.vue';
+import ComponenteNotaRemisionCompra from './informe_compras/informe_nota_remision_compra.vue';
 import ComponenteBarrio from './informe_mantenimiento/informe_barrio.vue';
 import ComponenteCaja from './informe_mantenimiento/informe_caja.vue';
 import ComponenteCiudad from './informe_mantenimiento/informe_ciudad.vue';
@@ -344,6 +348,10 @@ export default {
         ComponenteInformePedido,
         ComponenteInformePresupuesto,
         ComponenteOrdenCompra,
+        ComponenteCompra,
+        ComponenteNotaCreditoCompra,
+        ComponenteNotaDebitoCompra,
+        ComponenteNotaRemisionCompra,
         ComponenteBarrio,
         ComponenteCaja,
         ComponenteCiudad,
