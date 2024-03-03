@@ -3,8 +3,8 @@
         <toolbar flat>
             <v-row>
                 <v-col cols="4">
-                    <v-text-field variant="outlined" v-model="filtros.descripcion" density="compact"
-                        label="Fitro por descripcion" required></v-text-field>
+                    <v-text-field variant="outlined" v-model="filtros.numero_factura" density="compact"
+                        label="Fitro por Numero de Factura" required></v-text-field>
                 </v-col>
                 <v-col cols="4">
                     <input class="input-date" type="date" v-model="filtros.fecha" placeholder="Filtro por Fecha"
@@ -19,7 +19,7 @@
     </v-container>
 </template>
 <script>
-import { PedidoAPI } from '@/services/pedido.api'
+import { ComprasLoteAPI } from '@/services/compras_lote.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import dayjs from 'dayjs'
@@ -29,7 +29,7 @@ export default {
             items: [],
             filtros: {
                 fecha: '',
-                descripcion: ''
+                numero_factura: ''
             }
         }
     },
@@ -37,41 +37,37 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Pedidos', 105, 10, { align: 'center' });
+            doc.text('Reporte de Compras de Lotes', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
-            itemsFiltrados.forEach(item => {
-                autoTable(doc, {
-                    head: [['Codigo', 'Descripcion', 'Fecha de Pedido']],
-                    body: [[item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]],
-                    theme: 'grid', // Agrega bordes a la tabla
-                    styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
-                    columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
-                });
-                autoTable(doc, {
-                    head: [['Producto', 'Cantidad']],
-                    body: item.detalleItems.map(det => [det.nomnbreProducto, det.Cantidad]),
-                    theme: 'grid', // Agrega bordes a la tabla
-                    styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
-                    columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
-                });
+            
 
-                autoTable(doc,{})
-                autoTable(doc,{})
-                autoTable(doc,{})
-            })
+            autoTable(doc, {
+                head: [['Codigo', 'Numero de Factura', 'Fecha de Compras']],
+                body: itemsFiltrados.map(item => [item.id, item.numero_factura, dayjs(item.fechaD).format('DD/MM/YYYY')]),
+                theme: 'grid', // Agrega bordes a la tabla
+                styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
+                columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
 
 
+                
+            });
             doc.output('dataurlnewwindow');
         },
-        async obtenerPedido() {
-            await PedidoAPI.getAll().then(({ data }) => {
+        async ObtenerComprasLote() {
+            ComprasLoteAPI.getAll().then(({ data }) => {
                 this.items = data.map(item => {
                     return {
-                        id: item.idPedido,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
+                        id: item.idcompras_lote,
+                        fechaD: item.fecha_doc,
+                        timbrado: item.timbrado,
+                        numero_factura: item.numero_factura,
+                        documento: item.idTipo_Documento,
+                        proveedor: item.idProveedor,
+                        numero_orden: item.idorde_compra_lote,
+                        caja: item.idCaja,
                         detalleItems: item.detalle
+
                     }
                 })
             })
@@ -81,16 +77,21 @@ export default {
             if (this.filtros.fecha) {
                 items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
             }
-            if (this.filtros.descripcion) {
-                items = items.filter(item => item.descripcion === this.filtros.descripcion)
+          
+            if (this.filtros.numero_factura) {
+                const filtroRuc = parseFloat(this.filtros.numero_factura); // Convertir el valor del filtro a tipo double
+                items = items.filter(item => parseFloat(item.numero_factura) === filtroRuc);
             }
             return items
         },
         async descargarReporte() {
-            await this.obtenerPedido()
+            await this.ObtenerComprasLote()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },
+
+
+        
     }
 }
 </script>

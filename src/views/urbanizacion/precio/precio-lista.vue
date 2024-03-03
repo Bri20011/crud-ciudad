@@ -6,7 +6,7 @@
         </v-col>
 
         <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-            Cantidad de Urbanizacion: {{ prop_listado_precio.length }}
+            Cantidad de Listado de Precios: {{ prop_listado_precio.length }}
         </v-col>
 
     </v-row>
@@ -15,7 +15,7 @@
             <template v-slot:top>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>
-                        <p class="font-weight-bold">Registro de Urbanizacion</p>
+                        <p class="font-weight-bold">Registro de Listado de Precios</p>
                     </v-toolbar-title>
 
                     <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -28,7 +28,7 @@
                 {{ formatearFecha(item.raw.fechaD) }}
             </template>
             <template v-slot:item.action="{ item }">
-                <v-icon color="primary" size="small" @click="MostrarUrbanizacion(item.raw)">
+                <v-icon color="primary" size="small" @click="MostrarPrecios(item.raw)">
                     mdi-file-eye-outline
                 </v-icon>
                 <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
@@ -61,7 +61,7 @@ export default {
         return {
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Fecha de Urbanizacion', key: 'fechaD', align: 'star' },
+                { title: 'Fecha de Precio', key: 'fechaD', align: 'star' },
                 { title: 'Nombre de Urbanizacion', key: 'nombre_urb' },
                 { title: 'Ciudad', key: 'nombreciudad', align: 'center' },
                 { title: 'Barrio', key: 'nombrebarrio', align: 'center' },
@@ -85,7 +85,7 @@ export default {
         abrirDialogo() {
             this.dialogoFormulario = true;
         },
-        MostrarUrbanizacion(item){
+        MostrarPrecios(item){
             this.datosSelecionado = item
             this.dialogoFormularioVista = true;
         },

@@ -7,8 +7,7 @@
 </template>
 <script>
 import PrecioLista from './precio-lista.vue'
-import { UrbanizacionApi } from '@/services/urbanizacion.api'
-import { CiudadAPI } from '@/services/ciudad.api'
+import { PrecioApi } from '@/services/precio.api'
 export default {
     components: {
         PrecioLista
@@ -19,28 +18,17 @@ export default {
         }
     },
     created() {
-        this.ObtenerUrbanizacion()
+        this.ObtenerPrecio()
     },
     methods: {
-        ObtenerUrbanizacion() {
-            UrbanizacionApi.getAll().then(({ data }) => {
+        ObtenerPrecio() {
+            PrecioApi.getAll().then(({ data }) => {
                 this.listado_precio = data.map(item => {
                     return {
-                        id: item.idUrbanizacion,
-                        fechaD: item.fecha_urb,
+                        id: item.idListado_precio,
                         nombre_urb: item.Nombre_Urbanizacion,
-                        area: item.Area,
-                        ladoA: item.LadoA,
-                        ladoB: item.LadoB,
-                        cantidad: item.Cantidad_manzana,
-                        manzana: item.idManzana,
-                        ubicacion: item.Ubicacion,
-                        costo: item.Costo_total,
-                        precio: item.Precio,
-                        idCiudad: item.idCiudad,
-                        nombreciudad: item.nombreciudad,
-                        idBarrio: item.idBarrio,
-                        nombrebarrio: item.nombrebarrio,
+                        fechaD: item.Fecha,
+                        idUrbanizacion: item.idUrbanizacion,
                         detalleItems: item.detalle_urbanizacion
                     }
                 })

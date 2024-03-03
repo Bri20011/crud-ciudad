@@ -5,21 +5,23 @@
     <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registrar Urbanizacion</h1>
+                <h1 class="mb-3">Registrar Precios de Lotes</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Nº OC" v-model="formulario.numero_orden"
-                                required></v-text-field>
-                        </v-col>
+
+                        <v-col cols="12" sm="6" md="6" class="mt-0">
+                            <v-autocomplete variant="outlined" label="Selecione Urbanizacion" :items="listaUrbanizar"
+                                item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
+                                required></v-autocomplete>
+                        </v-col> 
 
                         <v-col cols="12" class="mt-4" sm="2" md="2">
-                            <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
+                            <v-btn @click="ObtenerCodigoOrden">Obtener</v-btn>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6">
+                        <!-- <v-col cols="12" sm="6" md="6">
                             <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
                                 required></v-text-field>
-                        </v-col>
+                        </v-col> -->
 
                         <v-col cols="12" sm="3" md="3">
                             <input class="custom-input" v-model="formulario.fechaD" type="date"
@@ -57,11 +59,11 @@
                         <!-- INICIO DETALLE -->
                         <v-divider class="mt-0"></v-divider>
 
-                        <v-col cols="12" sm="2" md="2" class="mt-5">
+                        <!-- <v-col cols="12" sm="2" md="2" class="mt-5">
                             <v-autocomplete variant="outlined" label="Lote a Urbanizar" :items="listaUrbanizar"
                                 item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
                                 required></v-autocomplete>
-                        </v-col>
+                        </v-col> -->
 
                         <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-autocomplete variant="outlined" label="Manzana" :items="listaManzana"
@@ -92,7 +94,7 @@
 
 
                         <v-data-table class="mt-5" max-width="1500" items-per-page-text="Articulos" :headers="headers"
-                            :items="listadoDeLaTabla" :group-by="groupBy">
+                            :items="datosUrbanizacion.itemsDetalle" :group-by="groupBy">
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarDetalleAntesGuardar(item.raw)">
                                     mdi-pencil
@@ -224,6 +226,9 @@ export default {
                 descripcionM: '',
                 manzana: ''
             },
+            datosUrbanizacion: {
+                itemsDetalle: []
+            },
             detalle_cabecera: {
                 producto: '',
                 // manzana: ''
@@ -239,21 +244,21 @@ export default {
             },
 
             groupBy: [
-                { title: 'Numero ', key: 'manzana', order: 'asc' },
+                { title: 'Numero ', key: 'nombreManzana', order: 'asc' },
 
             ],
             headers: [
                 { title: 'Manzanas', key: 'data-table-group', order: 'asc' },
-                { title: 'Producto', key: 'producto', align: 'center' },
-                { title: 'Descripcion', key: 'descripcionPr', align: 'center' },
+                { title: 'Producto', key: 'idProducto', align: 'center' },
+                { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
                 { title: 'Codigo', key: 'id', align: 'center' },
                 { title: 'Nombre de Urbanizacion', key: 'nombre_urb', align: 'center' },
-                { title: 'Numero de Lote', key: 'numero_lote', align: 'center' },
-                { title: 'Numero Manzana', key: 'manzana', align: 'center' },
+                { title: 'Numero de Lote', key: 'Numero_lote', align: 'center' },
+                { title: 'Numero Manzana', key: 'nombreManzana', align: 'center' },
                 { title: 'Ancho del Frente:', key: 'ancho_frente', align: 'center' },
                 { title: 'Ancho de Atrás:', key: 'ancho_atras', align: 'center' },
-                { title: 'Longitud del Lado Izquierdo:', key: 'l_izquiero', align: 'center' },
-                { title: 'Longitud del Lado Derecho:', key: 'l_derecho', align: 'center' },
+                { title: 'Longitud del Lado Izquierdo:', key: 'long_izquierdo', align: 'center' },
+                { title: 'Longitud del Lado Derecho:', key: 'long_derecho', align: 'center' },
                 { title: 'Costo por Lote:', key: 'costo_urbanizacion', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' }
             ],
@@ -266,6 +271,7 @@ export default {
         this.ObtenerBarrio();
         this.ObtenerStock_Lote();
         this.ObtenerManzana();
+        this.ObtenerUrbanizacion();
     },
     methods: {
         ObtenerProducto() {
@@ -300,10 +306,11 @@ export default {
             })
         },
         ObtenerStock_Lote() {
-            StockLoteAPI.findByTipo(4).then(({ data }) => {
+            StockLoteAPI.findByTipo(2).then(({ data }) => {
                 this.listaUrbanizar = data.map(item => {
                     return {
                         id: item.idStock_Lote,
+                        idProducto: item.idProducto,
                         descripcionU: item.nombreproducto
                     }
                 })
@@ -316,6 +323,30 @@ export default {
                         id: item.idManzana,
                         numero_manzana: item.numero_manzana,
                         descripcionM: item.Descripcion
+                    }
+                })
+            })
+        },
+        ObtenerUrbanizacion() {
+            UrbanizacionApi.getAll().then(({ data }) => {
+                this.listaUrbanizacion = data.map(item => {
+                    return {
+                        id: item.idUrbanizacion,
+                        fechaD: item.fecha_urb,
+                        nombre_urb: item.Nombre_Urbanizacion, 
+                        area: item.Area,
+                        ladoA: item.LadoA,
+                        ladoB: item.LadoB,
+                        cantidad: item.Cantidad_manzana,
+                        manzana: item.idManzana,
+                        ubicacion: item.Ubicacion,
+                        costo: item.Costo_total,
+                        precio: item.Precio,
+                        idCiudad: item.idCiudad,
+                        nombreciudad: item.nombreciudad,
+                        idBarrio: item.idBarrio,
+                        nombrebarrio: item.nombrebarrio,
+                        detalleItems: item.detalle_urbanizacion
                     }
                 })
             })
@@ -433,20 +464,17 @@ export default {
 
         ObtenerCodigoOrden() {
             // Verifica que se haya ingresado un número de orden
-            if (!this.formulario.numero_orden) {
+            if (!this.formulario.urbanizacion) {
                 // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
                 return;
             }
 
             // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
-            UrbanizacionApi.getById(this.formulario.numero_orden).then(({ data }) => {
-                this.formulario = {
-                    ...this.formulario,
-                    proveedor: data.idProveedor,
-                    fechaD: data.Fecha_pedi,
-                    itemsDetalle: data.detalle,
+            UrbanizacionApi.getById(this.formulario.urbanizacion).then(({ data }) => {
+                this.datosUrbanizacion.itemsDetalle = data.detalle_urbanizacionetalle
+                this.formulario.costo = data.Costo_total
+                this.formulario.ubicacion = data.Ubicacion
 
-                };
             });
 
             this.dialogoFormulario = true;
