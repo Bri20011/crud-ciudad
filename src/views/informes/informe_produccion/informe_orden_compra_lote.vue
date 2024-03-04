@@ -35,40 +35,45 @@ export default {
     },
     methods: {
         generarReporte(itemsFiltrados) {
-            const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text('Reporte de Orden de Compra Lote', 105, 10, { align: 'center' });
-            doc.setFontSize(12);
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Reporte de OC', 105, 10, { align: 'center' });
+    doc.setFontSize(12);
 
-            
+    itemsFiltrados.forEach(item => {
+        autoTable(doc, {
+            head: [['Codigo', 'Descripcion', 'Fecha de OC']],
+            body: [[item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]],
+            theme: 'grid', // Agrega bordes a la tabla
+            styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
+            columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+        });
+        autoTable(doc, {
+            head: [['Producto', 'Cantidad', 'Costo']],
+            body: item.detalleItems.map(det => [det.nombreProducto, det.cantidad_lote, det.costo_lote]),   
+            theme: 'grid', // Agrega bordes a la tabla
+            styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
+            columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
+        });
+    });
 
-            autoTable(doc, {
-                head: [['Codigo', 'Descripcion', 'Fecha de  Orden de Compra Lote']],
-                body: itemsFiltrados.map(item => [item.id, item.descripcion, dayjs(item.fechaD).format('DD/MM/YYYY')]),
-                theme: 'grid', // Agrega bordes a la tabla
-                styles: { fillColor: [0, 170, 171] }, // Color de fondo de las celdas
-                columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
-
-
-                
-            });
-            doc.output('dataurlnewwindow');
-        },
-        async ObtenerOrdenUrbanizacion() {
-            await 
-            OrdenUrbApi.getAll().then(({ data }) => {
-                console.log(data)
-                this.items = data.map(item => {
-                    return {
-                        id: item.idorde_compra_lote,
-                        descripcion: item.descripcion,
-                        fechaD: item.fecha,
-                        detalleItems: item.detalle
-
-                    }
-                })
-            })
-        },
+    doc.output('dataurlnewwindow');
+},
+async ObtenerOrdenUrbanizacion() {
+             
+             await OrdenUrbApi.getAll().then(({ data }) => {
+     
+                 this.items = data.map(item => {
+                     return {
+                         id: item.idorde_compra_lote,
+                         descripcion: item.descripcion,
+                         fechaD: item.fecha,
+                         detalleItems: item.detalle
+                         
+                     }
+                 })
+             })
+         },
         filtrarItems() {
             let items = this.items
             if (this.filtros.fecha) {

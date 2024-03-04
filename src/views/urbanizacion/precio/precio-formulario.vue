@@ -474,6 +474,8 @@ export default {
                 this.datosUrbanizacion.itemsDetalle = data.detalle_urbanizacionetalle
                 this.formulario.costo = data.Costo_total
                 this.formulario.ubicacion = data.Ubicacion
+                this.formulario.barrio = data.idBarrio
+                this.formulario.ciudad = data.idCiudad
 
             });
 
