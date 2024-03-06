@@ -27,9 +27,15 @@ export default {
                     return {
                         id: item.idListado_precio,
                         nombre_urb: item.Nombre_Urbanizacion,
-                        fechaD: item.Fecha,
+                        fechaD: item.fecha,
+                        idBarrio: item.idBarrio,
+                        nombrebarrio: item.nombrebarrio,
+                        idCiudad: item.idCiudad,
+                        nombreciudad: item.nombreciudad,
+                        costo: item.Costo_total,
+                        ubicacion: item.Ubicacion,
                         idUrbanizacion: item.idUrbanizacion,
-                        detalleItems: item.detalle_urbanizacion
+                        detalleItems: item.detalle
                     }
                 })
             })

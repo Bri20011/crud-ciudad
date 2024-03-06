@@ -28,8 +28,8 @@
                 {{ formatearFecha(item.raw.fechaD) }}
             </template>
             <template v-slot:item.action="{ item }">
-                <v-icon color="primary" size="small" @click="MostrarPrecios(item.raw)">
-                    mdi-file-eye-outline
+                <v-icon color="primary" size="small" @click="abrirFormularioEditar(item.raw)">
+                    mdi-pencil
                 </v-icon>
                 <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
                     mdi-trash-can-outline
@@ -37,12 +37,13 @@
         </v-data-table>
     </v-card>
     <PrecioFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
-    <!-- <UrbanizacionFormularioVista v-if="dialogoFormularioVista" @cerrar-dialogo-v="dialogoFormularioVista = false" :datosSelec="datosSelecionado"/> -->
+    <PrecioFormularioEditar v-if="dialogoFormularioEditar" @cerrar-dialogo-v="dialogoFormularioEditar = false" :datosSelec="datosSelecionado"/>
 
 </template>
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import PrecioFormulario from './precio-formulario.vue'
+import PrecioFormularioEditar from './precio-formulario-editar.vue'
 // import UrbanizacionFormularioVista from './urbanizacion-formulario-vista.vue'
 
 import dayjs from 'dayjs'
@@ -50,6 +51,7 @@ export default {
     components: {
         VDataTable,
         PrecioFormulario,
+        PrecioFormularioEditar,
         // UrbanizacionFormularioVista
     },
     props: {
@@ -71,7 +73,7 @@ export default {
             ],
             buscador: '',
             dialogoFormulario: false,
-            dialogoFormularioVista:false,
+            dialogoFormularioEditar:false,
             datosSelecionado: null,
         }
     },
@@ -85,9 +87,9 @@ export default {
         abrirDialogo() {
             this.dialogoFormulario = true;
         },
-        MostrarPrecios(item){
+        abrirFormularioEditar(item){
             this.datosSelecionado = item
-            this.dialogoFormularioVista = true;
+            this.dialogoFormularioEditar = true;
         },
         formatearFecha(fechaD) {
             return dayjs(fechaD).format('DD/MM/YYYY')
