@@ -109,7 +109,7 @@
                                     </v-window-item>
 
                                     <v-window-item value="option-produccion-5">
-                                        Nota de Credito
+                                       <ComponenteContrato/>
                                     </v-window-item>
 
                                     <v-window-item value="option-produccion-6">
@@ -343,6 +343,7 @@ import ComponenteUsuario from './informe_mantenimiento/informe_usuario.vue';
 import ComponenteOrdenCompraLote from './informe_produccion/informe_orden_compra_lote.vue';
 import ComponenteCompraLote from './informe_produccion/informe_compra_lote.vue';
 import ComponenteUrbanizacion from './informe_produccion/informe_urbanizacion.vue';
+import ComponenteContrato from './informe_produccion/informe_contrato.vue';
 export default {
     components: {
         ComponenteInformePedido,
@@ -381,6 +382,7 @@ export default {
         ComponenteOrdenCompraLote,
         ComponenteCompraLote,
         ComponenteUrbanizacion,
+        ComponenteContrato,
        
 
     },

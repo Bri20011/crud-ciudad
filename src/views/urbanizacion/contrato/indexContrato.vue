@@ -2,31 +2,32 @@
 
 <template>
     <v-container>
-        <PrecioLista :prop_listado_precio="listado_precio" />
+        <ContratoLista :prop_listado_contrato="listado_contrato" />
     </v-container>
 </template>
 <script>
-import PrecioLista from './precio-lista.vue'
-import { PrecioApi } from '@/services/precio.api'
+import ContratoLista from './contrato-lista.vue'
+import { ContratoApi } from '@/services/contrato.api'
 export default {
     components: {
-        PrecioLista
+        ContratoLista
     },
     data() {
         return {
-            listado_precio: []
+            listado_contrato: []
         }
     },
     created() {
-        this.ObtenerPrecio()
+        
+        this.ObtenerContrato()
     },
     methods: {
-        ObtenerPrecio() {
-            PrecioApi.getAll().then(({ data }) => {
+        ObtenerContrato() {
+            ContratoApi.getAll().then(({ data }) => {
                 this.listado_precio = data.map(item => {
                     return {
                         id: item.idListado_precio,
-                        nombre_urb: item.Nombre_Urbanizacion,
+                        descripcionLP: item.Nombre_Urbanizacion,
                         fechaD: item.fecha,
                         idBarrio: item.idBarrio,
                         nombrebarrio: item.nombrebarrio,

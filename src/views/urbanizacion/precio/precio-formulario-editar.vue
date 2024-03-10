@@ -13,10 +13,12 @@
                        v-model="formulario.Codigo">
                     </v-text-field>
                 </v-col>
-                            <v-col cols="12" sm="8" md="8" class="mt-0">
-                                    <v-text-field variant="outlined" label="Nombre de Urbanizacion" disabled
-                                v-model="formulario.urbanizacion">
-                                </v-text-field>
+                           
+                                
+                          
+                <v-col cols="12" sm="8" md="8" class="mt-0">
+                            <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="formulario.nombre_urb"
+                                disabled required></v-text-field>
                             </v-col>
                     
                         <v-col cols="12" sm="2" md="2" class="mt-0">
@@ -137,6 +139,10 @@
                          required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4" md="4">
+                    <v-text-field variant="outlined" label="Precio Contado" v-model="detalle_editarGuardado.cantidadCuota"
+                         required></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="4" md="4">
                     <v-text-field variant="outlined" label="Monto Cuota Credito" v-model="detalle_editarGuardado.montoCredito"
                          required></v-text-field>
                 </v-col>  
@@ -210,6 +216,7 @@ export default {
                 manzana: '',
                 Numero_lote: '',
                 precioContado: '',
+                cantidadCuota: '',
                 precioCredito: '',
                 montoCredito: '',
                 nombre_urb: '',
@@ -235,6 +242,7 @@ export default {
                 // { title: 'Costo por Lote:', key: 'costo_urbanizacion', align: 'center' },
                 { title: 'Precio Contado:', key: 'precioContado', align: 'center' },
                 { title: 'Precio Credito:', key: 'precioCredito', align: 'center' },
+                { title: 'Precio Contado:', key: 'cantidadCuota', align: 'center' },
                 { title: 'Monto Cuota Credito:', key: 'montoCredito', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' }
             ],
@@ -245,6 +253,7 @@ export default {
         console.log('datosSelec: ', this.datosSelec);
         this.formulario.Codigo = this.datosSelec.id;
         this.formulario.urbanizacion = this.datosSelec.idUrbanizacion;
+        this.formulario.nombre_urb = this.datosSelec.nombre_urb
         this.formulario.ubicacion = this.datosSelec.ubicacion
         this.formulario.fechaD = this.datosSelec.fechaD
         this.formulario.barrio = this.datosSelec.idBarrio
@@ -274,6 +283,7 @@ export default {
             this.detalle_editarGuardado.id_detalle = parametro.id_detalle
             this.detalle_editarGuardado.precioContado = parametro.precioContado
             this.detalle_editarGuardado.precioCredito = parametro.precioCredito
+            this.detalle_editarGuardado.cantidadCuota = parametro.cantidadCuota
             this.detalle_editarGuardado.montoCredito = parametro.montoCredito
         },
         cerrarDialogoVista() {
@@ -293,6 +303,7 @@ export default {
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
                 this.datosUrbanizacion.itemsDetalle[index].precioContado = this.detalle_editarGuardado.precioContado;
+                this.datosUrbanizacion.itemsDetalle[index].cantidadCuota = this.detalle_editarGuardado.cantidadCuota;
                 this.datosUrbanizacion.itemsDetalle[index].precioCredito = this.detalle_editarGuardado.precioCredito;
                 this.datosUrbanizacion.itemsDetalle[index].montoCredito = this.detalle_editarGuardado.montoCredito;
             } 
@@ -306,9 +317,10 @@ export default {
                 this.formulario.Codigo, 
                 {
                 idListado_precio: this.formulario.Codigo,
-                // Nombre_Urbanizacion: this.detalle_editar.nombre_urb,
+                idUrbanizacion: this.formulario.urbanizacion,
                 fecha: this.formulario.fechaD,
                 Ubicacion: this.formulario.ubicacion,
+                fecha: this.formulario.fechaD,
                 idCiudad: this.formulario.ciudad,
                 idBarrio: this.formulario.barrio,
                 Costo_total: this.formulario.costo,
@@ -318,9 +330,11 @@ export default {
                 }
                 ).then(() => {
                 this.ObtenerPrecio()
+              
             })
                 this.detalle_editarGuardado.Codigo = "";
                 this.detalle_editarGuardado.precioContado = "";
+                this.detalle_editarGuardado.cantidadCuota = "";
                 this.detalle_editarGuardado.precioCredito = "";
                 this.detalle_editarGuardado.montoCredito = "";
                 this.itemsDetalle = []

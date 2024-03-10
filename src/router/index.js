@@ -299,7 +299,7 @@ const routes = [
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexContrato.vue'),
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/contrato/indexContrato.vue'),
     },
     {
       path: 'rescision_contrato',

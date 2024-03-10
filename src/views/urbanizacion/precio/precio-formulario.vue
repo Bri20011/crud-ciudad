@@ -49,15 +49,19 @@
                         <v-divider class="mt-0 mb-1"></v-divider>
 
                      
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Precio Contado" v-model="detalle_cabecera.precioContado"
                                  required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Cantidad de Cuota" v-model="detalle_cabecera.cantidadCuota"
+                                 required></v-text-field>
+                        </v-col>  
+                        <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Monto Total Credito" v-model="detalle_cabecera.precioCredito"
                                  required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col cols="12" sm="3" md="3">
                             <v-text-field variant="outlined" label="Monto Cuota Credito" v-model="detalle_cabecera.montoCredito"
                                  required></v-text-field>
                         </v-col>      
@@ -145,25 +149,34 @@
                             <v-text-field variant="outlined" label="Longitud del Lado Derecho:"
                             disabled  v-model="detalle_editar.long_izquierdo" required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                     
+                    </v-row>
+                   <v-row class="justify-center">
+                    <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Codigo:"
                             disabled  v-model="detalle_editar.id_detalle" required></v-text-field>
                         </v-col>
-                    </v-row>
-                   <v-row class="justify-center">
                     <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Precio Contado" v-model="detalle_editar.precioContado"
                                  required></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="4" md="4">
+                      
+                   </v-row> 
+                   <v-row class="justify-center">
+                    <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Monto Total Credito" v-model="detalle_editar.precioCredito"
                                  required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Cantidad de Cuotas" v-model="detalle_editar.cantidadCuota"
+                                 required></v-text-field>
+                        </v-col>  
+                        <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Monto Cuota Credito" v-model="detalle_editar.montoCredito"
                                  required></v-text-field>
                         </v-col>  
-                   </v-row> 
+                       
+                    </v-row>
 
 
                     <v-row>
@@ -248,6 +261,7 @@ export default {
                 precioContado: '',
                 precioCredito: '',
                 montoCredito: '',
+                cantidadCuota: '',
 
             },
 
@@ -271,6 +285,7 @@ export default {
                 { title: 'Costo por Lote:', key: 'costo_urbanizacion', align: 'center' },
                 { title: 'Precio Contado:', key: 'precioContado', align: 'center' },
                 { title: 'Precio Credito:', key: 'precioCredito', align: 'center' },
+                { title: 'Cantidad de Cuota:', key: 'cantidadCuota', align: 'center' },
                 { title: 'Monto Cuota Credito:', key: 'montoCredito', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' }
             ],
@@ -374,12 +389,14 @@ export default {
         detalle.precioContado = this.detalle_cabecera.precioContado;
         detalle.precioCredito = this.detalle_cabecera.precioCredito;
         detalle.montoCredito = this.detalle_cabecera.montoCredito; 
+        detalle.cantidadCuota = this.detalle_cabecera.cantidadCuota;
         // Otros campos de detalle que necesites actualizar
     }
     // Limpia los campos después de actualizar los detalles si es necesario
     this.detalle_cabecera.precioContado = '';
     this.detalle_cabecera.precioCredito = '';
     this.detalle_cabecera.montoCredito = '';
+    this.detalle_cabecera.cantidadCuota = '';
 },
 
         editarDetalleAntesGuardar(parametro) {
@@ -397,6 +414,8 @@ export default {
             this.detalle_editar.precioCredito = parametro.precioCredito
             this.detalle_editar.montoCredito = parametro.montoCredito
             this.detalle_editar.Numero_lote = parametro.Numero_lote
+            this.detalle_editar.cantidadCuota = parametro.cantidadCuota
+
          
 
 
@@ -430,6 +449,7 @@ export default {
                     long_derecho: elemento.long_derecho,
                     precioContado: elemento.precioContado,
                     precioCredito: elemento.precioCredito,
+                    cantidadCuota: elemento.cantidadCuota,
                     montoCredito: elemento.montoCredito,
 
                 }))
@@ -453,6 +473,7 @@ export default {
             this.datosUrbanizacion.itemsDetalle[indice].Numero_lote = this.detalle_editar.Numero_lote;
             this.datosUrbanizacion.itemsDetalle[indice].costo_urbanizacion = this.detalle_editar.costo_urbanizacion;
             this.datosUrbanizacion.itemsDetalle[indice].precioContado = this.detalle_editar.precioContado;
+            this.datosUrbanizacion.itemsDetalle[indice].cantidadCuota = this.detalle_editar.cantidadCuota;
             this.datosUrbanizacion.itemsDetalle[indice].precioCredito = this.detalle_editar.precioCredito;
             this.datosUrbanizacion.itemsDetalle[indice].montoCredito = this.detalle_editar.montoCredito;
 
@@ -479,14 +500,15 @@ export default {
                 // Calcula el precio al contado aplicando un porcentaje adicional
                 const porcentajeContado = 5; // Puedes ajustar este porcentaje según tus necesidades
                 this.detalle_cabecera.precioContado = this.formulario.costo * (1 + porcentajeContado / 100);
-
+                this.detalle_cabecera.cantidadCuota = 120;
                 // Calcula el precio a crédito a 120 meses
                 const plazoCredito = 120;
                 const porcentajeCredito = 10; // Puedes ajustar este porcentaje según tus necesidades
                 const interesMensual = 0.5; // Tasa de interés mensual (ejemplo)
                 const cuotaMensual = (this.formulario.costo * (1 + porcentajeCredito / 100)) / plazoCredito;
                 const cuotaTotal = cuotaMensual * plazoCredito * (1 + interesMensual * plazoCredito / 2); // Fórmula de cuota total con interés compuesto
-                this.detalle_cabecera.precioCredito = cuotaTotal;
+                this.detalle_cabecera.precioCredito = cuotaTotal.toFixed(0); // Redondeado a 0 decimales
+                this.detalle_cabecera.precioCredito = Number(this.detalle_cabecera.precioCredito); // Convertir a número
                 this.detalle_cabecera.montoCredito = (cuotaTotal/120).toFixed(0); // Redondeado a 0 decimales
                 this.detalle_cabecera.montoCredito = Number(this.detalle_cabecera.montoCredito); // Convertir a número
 
