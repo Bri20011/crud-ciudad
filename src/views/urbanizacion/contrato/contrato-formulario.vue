@@ -199,7 +199,7 @@ export default {
             ],
             headersDetalleContado: [
                 { title: 'N° ', key: 'id', align: 'center' },
-                { title: 'Fecha', key: 'fechaVto', align: 'center' },
+                { title: 'Fecha', key: 'fechaP', align: 'center' },
                 { title: 'Importe', key: 'montoContado', align: 'center' },
             ],
 
@@ -350,7 +350,7 @@ export default {
             console.log('LoteSeleccionado', LoteSeleccionado)
         },
         agregarDetalleAntesGuardar() {
-            //Estp hace cuando Tipo de Venta es Credito (2)
+            //Esto hace cuando Tipo de Venta es Credito (2)
             this.listadoDeLaTabla = []
             if (this.formulario.tipoventa === 2) {
             for (let i = 1; i <= this.formulario.cantidadCuota; i++) {
@@ -369,7 +369,7 @@ export default {
                 this.listadoDeLaTabla.push({
                     id: 1,
                     // cantidadCuota: 1,
-                    fechaVto: this.formulario.fechaP,
+                    fechaP: this.formulario.fechaP,
                     montoContado: this.formulario.montoContado
                 })
             }
@@ -406,31 +406,33 @@ export default {
 
         guardarFormulario(){ 
             ContratoApi.create({
-                //aqui se envian los datos al backend
                 idContrato: '',
-
                 idListado_precio: this.formulario.precio,
-                idCliente: this.formulario.cliente,
-                idtipo_venta: this.formulario.tipoventa,
+                nombre_urbanizacion: this.formulario.precio.descripcionLP,
                 fecha_contrato: this.formulario.fechaD,
-                fecha_inicio: this.formulario.fechaP,
-                plazo_venta: this.formulario.plazoVenta,
+                idCliente: this.formulario.cliente,
+                idCiudad: this.formulario.precio.idCiudad,
+                idtipo_venta: this.formulario.tipoventa,
+                ubicacion: this.formulario.precio.ubicacion,
                 numero_manzana: this.formulario.idManzana,
                 numero_lote: this.formulario.detallePrecio,
-                nombre_urbanizacion: this.formulario.precio.descripcionLP,
-                ubicacion: this.formulario.precio.ubicacion,
-                idCiudad: this.formulario.precio.idCiudad,
                 detalle: this.listadoDeLaTabla.map(item => ({
-                    id: item.id,
-                    fechaVto: item.fechaVto,
-                    fechaP: item.fechaP,
-                    importeCuota: item.importeCuota,
-                    montoContado: item.montoContado
+                    idContrato: item.id,
+                    fecha_vto: item.fechaVto,
+                    importe_cuota: item.importeCuota,
+                    cantidad_cuota: item.cantidadCuota,
+                    monto_contado: item.montoContado,
+                    id_detalle: item.id_detalle,
+
+
+                    
                 }))
             }).then(() => {
                 this.cerrarDialogo()
             });
         },
+
+       
     },
 }
 </script>

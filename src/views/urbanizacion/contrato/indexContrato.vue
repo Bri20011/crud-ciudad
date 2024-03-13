@@ -24,32 +24,27 @@ export default {
     methods: {
         ObtenerContrato() {
             ContratoApi.getAll().then(({ data }) => {
-                this.listado_precio = data.map(item => {
-                    return {
-                        id: item.idListado_precio,
-                        descripcionLP: item.Nombre_Urbanizacion,
-                        fechaD: item.fecha,
-                        idBarrio: item.idBarrio,
-                        nombrebarrio: item.nombrebarrio,
+                this.listado_contrato = data.map(item => {
+                    return {                       
+                        id: item.idContrato,
+                        idListado_precio: item.idListado_precio,
                         idCiudad: item.idCiudad,
-                        nombreciudad: item.nombreciudad,
-                        costo: item.Costo_total,
-                        ubicacion: item.Ubicacion,
-                        idUrbanizacion: item.idUrbanizacion,
-                        detalleItems: item.detalle.map(detalle => ({
-                        idProducto: detalle.idProducto,
-                        id_detalle: detalle.id_detalle,
-                        idManzana: detalle.idManzana,
-                        numeroLote: detalle.Numero_lote,
-                        ancho_frente: detalle.ancho_frente,
-                        ancho_atras: detalle.ancho_atras,
-                        long_izquierdo: detalle.long_izquierdo,
-                        long_derecho: detalle.long_derecho,
-                        precioContado: detalle.precioContado,
-                        precioCredito: detalle.precioCredito,
-                        montoCredito: detalle.montoCredito,
-                        cantidadCuota: detalle.cantidadCuota
-                    }))
+                        ciudad: item.nombreciudad, 
+                        idCliente: item.idCliente,
+                        cliente: item.nombreCliente,
+                        rucC: item.rucCliente,
+                        direccionCliente: item.direccionCliente,
+                        ciudadCliente: item.ciudadCliente,
+                        idtipo_venta: item.idtipo_venta,
+                        tipoventa: item.nombretipoventa,
+                        fecha_contrato: item.fecha_contrato,
+                        plazo_venta: item.plazo_venta,
+                        numero_manzana: item.numero_manzana,
+                        numero_lote: item.numero_lote,
+                        nombre_urbanizacion: item.nombre_urbanizacion,
+                        ubicacion: item.ubicacion,
+                        detalle: item.detalle
+
                     }
                 })
             })
