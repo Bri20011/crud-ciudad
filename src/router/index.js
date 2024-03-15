@@ -379,7 +379,7 @@ const routes = [
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/venta/Venta_Cuenta_Cobrar.vue'),
+      component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/venta/ventas/Venta_Cuenta_Cobrar.vue'),
     },
     {
       path: 'cobranza_forma_cobro',

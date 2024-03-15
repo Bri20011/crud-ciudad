@@ -115,19 +115,18 @@ export default {
         ['Registro de Compras de Lotes', 'mdi-image-filter-hdr', '/compra_lote'],
         ['.Registro Urbanizacion', 'mdi-image-filter-hdr', '/urbanizacion'],
         ['.Registro Precio de Lotes', 'mdi-image-filter-hdr', '/precio'],
-        ['*-Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],
+        ['.Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],
         ['x-Registro Rescision de Contrato', 'mdi-image-filter-hdr', '/rescision_contrato'],
         ['x-Registro Cesión de Derechos y Deudas', 'mdi-image-filter-hdr', '/cesion_derecho_deuda'],
 
       ],
 
       ventas: [
-        ['x-Apertura de Caja', 'mdi-printer-pos', '/frmaperturacaja'],
-        ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
+        ['x-Apertura y Cierre de Caja', 'mdi-printer-pos', '/frmaperturacaja'],
+        // ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
         ['x-Arqueo de Caja', 'mdi-printer-pos', '/arqueo_caja'],
-        ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
-        ['x-Pedido de Cliente', 'mdi-printer-pos', '/pedido_cliente'],
         ['x-Venta y Cuentas a pagar', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
+        ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
         ['x-Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza_forma_cobro'],
         ['x-Registrar Nota de Remisión', 'mdi-printer-pos', '/nota_remision_venta'],
         ['x-Registrar Nota de Credito', 'mdi-printer-pos', '/nota_credito_venta'],

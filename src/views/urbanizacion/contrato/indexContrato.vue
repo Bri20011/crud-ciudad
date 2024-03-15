@@ -28,6 +28,8 @@ export default {
                     return {                       
                         id: item.idContrato,
                         idListado_precio: item.idListado_precio,
+                        precioCredito:item.precioCredito,
+                        precioContado:item.precioContado,
                         idCiudad: item.idCiudad,
                         ciudad: item.nombreciudad, 
                         idCliente: item.idCliente,
