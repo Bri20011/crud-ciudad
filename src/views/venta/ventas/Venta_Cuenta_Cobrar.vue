@@ -21,9 +21,8 @@
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="numeros" 
-                                item-title="numeros" item-value="id" v-model="numerosVenta"
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="numeros" item-title="numeros" item-value="id"
+                                v-model="numerosVenta" required></v-text-field>
                         </v-col>
 
 
@@ -37,15 +36,18 @@
                                 required></v-autocomplete>
                         </v-col>
 
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Tipo de Documento" 
-                                item-title="descripcionD" item-value="id" v-model="formulario.documento"
+                        <v-col cols="12" sm="4" md="4">
+                            <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
+                                disabled item-title="tipo_venta" item-value="id" v-model="formulario.tipo_venta"
                                 required></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="N° Caja" :items="listaCaja" item-title="cajanum"
-                                item-value="id" v-model="formulario.caja" required></v-autocomplete>
+
+                        <v-col cols="12" sm="4" md="4">
+                            <v-autocomplete variant="outlined" label="Caja" :items="listaCaja" item-title="descripcion"
+                                :disabled="formulario.tipo_venta !== 'Contado'" item-value="id"
+                                v-model="formulario.caja" required></v-autocomplete>
                         </v-col>
+
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">
@@ -56,12 +58,11 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
                                     <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
                                     <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
-                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}
-                                    </td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </template>
@@ -97,24 +98,12 @@
                 <h1 class="mb-3">Ingresar Precio</h1>
                 <v-form>
                     <v-row class="justify-center">
-
-
-                        <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
-
-                        <v-col ols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Cantidad" @input="recalcularTotal"
-                                v-model="formulario.cantidad"></v-text-field>
-                        </v-col>
-                        <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Precio Unitario" @input="recalcularTotal"
-                                v-model="formulario.precio"></v-text-field>
+                        <v-col ols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Numero de Cuota" v-model="detalle.numero_cuota"
+                                readonly></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.total"
+                            <v-text-field variant="outlined" label="Total" v-model="detalle.monto_total"
                                 readonly></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
@@ -303,7 +292,7 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { TimbradoAPI } from '@/services/timbrado.api'
 import { ClienteAPI } from '@/services/cliente.api'
-import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
+import { TipoVentaAPI } from '@/services/tipoventa.api'
 import { CajaAPI } from '@/services/caja.api'
 import { VentaAPI } from '@/services/venta.api'
 import { ContratoApi } from '@/services/contrato.api'
@@ -344,7 +333,8 @@ export default {
                 numeros: '',
                 numero_contrato: '',
                 fechaD: '',
-                
+                tipo_venta: '',
+
 
 
             },
@@ -405,10 +395,21 @@ export default {
                     proveedor: ''
                 }
             ],
+
+            detalle: {
+                numero_cuota: '',
+                monto_total: '',
+                iva: '',
+                exenta: '',
+                iva5: '',
+                iva10: '',
+                total: '',
+
+            },
             itemsDetalle: [],
             dialogoEliminar: false,
             elementoAEliminar: null,
-            ConteoFactura:'',  
+            ConteoFactura: '',
 
             listaDocumento: [],
             listaProducto: [],
@@ -470,16 +471,11 @@ export default {
             ContratoApi.getById(this.formulario.numero_contrato).then(({ data }) => {
                 //aqui tengo un console.log de lo que me retorna la api
                 console.log('data:', data)
-               
-                this.formulario = {
-                    
-                    
-                    formulario: [{documento: data[0].idtipo_venta}],
-                
-                    itemsDetalle:[{monto_totalNuevo: data[0].monto_totalNuevo, idContrato: data[0].idContrato}  ],
-                    
-                    
-                };
+
+                this.formulario.idtipo_venta = data[0].idtipo_venta
+                this.formulario.tipo_venta = data[0].nombreTipoVenta
+                this.formulario.itemsDetalle =  [{ monto_totalNuevo: data[0].monto_totalNuevo, idContrato: data[0].idContrato }]
+
             });
 
             this.dialogoFormulario = true;
@@ -510,28 +506,38 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_factura) {
+            if (!this.formulario.numero_contrato ) {
 
                 this.emptyFieldError = true;
                 return;
             }
 
-
             VentaAPI.create({
-
-                idCompras: this.formulario.codigo,
-                Fecha_doc: this.formulario.fechaD,
-                Timbrado: this.formulario.timbrado,
-                Numero_fact: this.formulario.numero_factura,
-                idTipo_Documento: this.formulario.documento,
-                idProveedor: this.formulario.proveedor,
-                idorden_compra: this.formulario.numero_contrato, //nuevo 
-                Detalle: this.formulario.itemsDetalle
-
+                   //aqui envio al backend cabecera y detall
+                idventa: this.formulario.codigo,
+                Fecha: this.fechaO,
+                Numero_fact: this.numerosVenta,
+                idtipo_venta: this.formulario.idtipo_venta,
+                idCliente: this.formulario.cliente,
+                idTimbrado: this.formulario.timbrado,
+                idAperturacaja: this.formulario.apertura,
+                idCaja: this.formulario.caja,
+                detalle: this.formulario.itemsDetalle.map(item => {
+                    return {
+                        idventa: this.formulario.codigo,
+                        idContrato: item.idContrato,
+                        monto_total: item.monto_totalNuevo,
+                        cantidad: 1,
+                        iva5: item.iva5,
+                        iva10: item.iva10,
+                        exenta: item.exenta,
+                    }
+                })
+          
 
             },
             ).then(() => {
-                this.ObtenerCompras()
+                this.ObtenerVentas()
             })
 
             this.formulario.codigo = '';
@@ -587,7 +593,8 @@ export default {
                         id: item.idCompras,
                         proveedor: item.idProveedor,
                         numero_factura: item.Numero_fact,
-                        // documento: item.idTipo_Documento,
+                        tipo_venta: item.idtipo_venta,
+                        caja: item.idCaja,
                         proveedor: item.idProveedor,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
@@ -609,69 +616,51 @@ export default {
 
         editarDetalle(parametro) {
             this.dialogoFormularioEditarDetalle = true
-            this.formulario.producto = parametro.idProducto
-            this.formulario.cantidad = parametro.Cantidad
-            this.formulario.precio = parametro.Precio
-            // Calcula el total al abrir el diálogo
-            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
-            this.formulario.iva = parametro.idIva
-
+            this.detalle.numero_cuota = parametro.idContrato
+            this.detalle.monto_total = parametro.monto_totalNuevo
+            // this.detalle.total = this.detalle.monto_total
+           
 
 
         },
         guardarFormularioEditarDetalle() {
-            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.precio) {
+            if (!this.detalle.numero_cuota || !this.detalle.monto_total) {
                 this.emptyFieldError = true;
                 return;
             }
 
             // Busca el índice del elemento que se va a editar
-            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
-            console.log(index)
-            console.log(this.formulario.itemsDetalle)
+            const index = this.formulario.itemsDetalle.findIndex(item => item.idContrato === this.detalle.numero_cuota);
+
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
-                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
-                this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
+                // this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
+                // this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
 
-                this.formulario.itemsDetalle[index].total = this.formulario.cantidad * this.formulario.precio;
+                // this.formulario.itemsDetalle[index].total = this.formulario.cantidad * this.formulario.precio;
                 this.formulario.itemsDetalle[index].iva = this.formulario.iva;
-
+                this.formulario.itemsDetalle[index].total = this.detalle.monto_total;
+//Aqui hago el calculo de los iva  switch case
                 switch (this.formulario.iva) {
                     case 1:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = 0;
-                        this.formulario.itemsDetalle[index].iva10 = 0;
+                        this.formulario.itemsDetalle[index].exenta = this.formulario.itemsDetalle[index].monto_totalNuevo
+                        this.formulario.itemsDetalle[index].iva5 = 0
+                        this.formulario.itemsDetalle[index].iva10 = 0
                         break;
                     case 2:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = Math.round(this.formulario.itemsDetalle[index].total / 21);
-                        this.formulario.itemsDetalle[index].iva10 = 0;
+                        this.formulario.itemsDetalle[index].exenta = 0
+                        this.formulario.itemsDetalle[index].iva5 = this.formulario.itemsDetalle[index].monto_totalNuevo * 0.05
+                        this.formulario.itemsDetalle[index].iva10 = 0
                         break;
                     case 3:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = 0;
-                        this.formulario.itemsDetalle[index].iva10 = Math.round(this.formulario.itemsDetalle[index].total / 11);
-                        break;
-                    default:
-                        // Manejar otro caso si es necesario
+                        this.formulario.itemsDetalle[index].exenta = 0
+                        this.formulario.itemsDetalle[index].iva5 = 0
+                        this.formulario.itemsDetalle[index].iva10 = this.formulario.itemsDetalle[index].monto_totalNuevo * 0.1
                         break;
                 }
-            } else {
-                // Si no se encontró el elemento, agrega uno nuevo
-                const nuevoItem = {
-                    producto: this.formulario.producto,
-                    cantidad: this.formulario.cantidad,
-                    precio: this.formulario.precio,
-                    total: this.formulario.cantidad * this.formulario.precio, // Calcula el total
-                    iva: this.formulario.iva,
-                    exenta: 0,
-                    iva5: 0,
-                    iva10: 0,
-                    action: '',
-                };
-                this.formulario.itemsDetalle.push(nuevoItem);
             }
+
+             
 
             this.dialogoFormularioEditarDetalle = false;
         },
@@ -758,11 +747,11 @@ export default {
             })
         },
         ObtenerTipoD() {
-            TipoDocumentoAPI.getAll().then(({ data }) => {
+            TipoVentaAPI.getAll().then(({ data }) => {
                 this.listaDocumento = data.map(item => {
                     return {
-                        id: item.idTipo_Documento,
-                        descripcionD: item.Descripcion
+                        id: item.idtipo_venta,
+                        tipo_venta: item.nombreTipoVenta
                     }
                 })
             })
@@ -785,13 +774,13 @@ export default {
                 })
             })
         },
-      async  ObtenerNumeroFactura(id) {
-           
-          await VentaAPI.ObtenerNumeroFactura(id).then(({ data }) => {
+        async ObtenerNumeroFactura(id) {
+
+            await VentaAPI.ObtenerNumeroFactura(id).then(({ data }) => {
                 console.log('data: ', data[0].Siguiente_numero_factura)
                 this.ConteoFactura = data[0].Siguiente_numero_factura
-                
-                
+
+
             })
         },
 
@@ -816,7 +805,7 @@ export default {
                         numeroExpedicion: item.numeroExpedicion,
                         numeroEstablecimiento: item.idEstablecimiento,
                         establecimiento: item.idEstablecimiento,
-                        tipoDoc: item.idtipo_venta,
+                        nombreTipoVenta: item.idtipo_venta,
                         numeros: `${String(item.numeroEstablecimiento).padStart(3, '0')}-${String(item.numeroExpedicion).padStart(3, '0')}`
                     }
                 });
@@ -829,9 +818,10 @@ export default {
     },
 
     watch: {
-       async 'formulario.timbrado'(value) {
+        async 'formulario.timbrado'(value) {
             console.log('value: ', value)
-           await this.ObtenerNumeroFactura(value.id)   
+
+            await this.ObtenerNumeroFactura(value.id)
             this.numerosVenta = `${value.numeros}-${String(this.ConteoFactura).padStart(7, '0')}`
 
         }
@@ -845,7 +835,7 @@ export default {
         this.ObtenerCaja()
         this.ObtenerVentas()
         this.ObtenerCodigoContrato()
-       
+
 
 
         this.ObtenerProducto()
