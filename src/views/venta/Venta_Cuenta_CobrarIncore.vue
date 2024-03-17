@@ -241,6 +241,9 @@
                     <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
                         Anular
                     </v-btn>
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="descargarFactura(item.raw)">
+                        Descargar Factura
+                    </v-btn>
 
                 </template>
             </v-data-table>
@@ -391,6 +394,7 @@ import { OrdenCompraApi } from '@/services/orden_compra.api'
 
 
 import dayjs from 'dayjs'
+import { VentaAPI } from '@/services/venta.api'
 
 
 
@@ -441,7 +445,7 @@ export default {
             },
             buscador: '',
             headers: [
-                { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
+                { title: 'Codigzzo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Numero de Factura', key: 'numero_factura' },
                 { title: 'Tipo Documento', key: 'documento' },
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
@@ -732,6 +736,11 @@ export default {
             // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
             this.elementoACambiarEstado = elemento;
             this.dialogoCambiarEstado = true;
+        },
+        descargarFactura(elemento) {
+            VentaAPI.ObtenerNumeroFactura(elemento.id).then(({ data }) => {
+                console.log(data)
+            })
         },
         cancelarCambiarEstado() {
             // Cierra el diálogo de confirmación y restablece la variable

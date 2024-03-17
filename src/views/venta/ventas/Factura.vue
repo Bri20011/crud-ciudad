@@ -10,10 +10,9 @@
               cols="6"
               class="d-flex align-center"
             >
-              <img
-                src="/logo.png"
-                alt=""
-              >
+              
+              <img class="bg-white imagen-clase" width="400" height="150" src="../../../assets/logFac.PNG" />
+
             </v-col>
             <v-col
               cols="6"
@@ -30,7 +29,7 @@
                   Fin de vigencia: {{ data.end }}
                 </div>
                 <div class="text-caption">
-                  <b>RUC: {{ data.invoiceNumber }}</b>
+                  <b>RUC: 80115240-2</b>
                 </div>
                 <div class="text-caption">
                   <b>FACTURA</b>
@@ -123,7 +122,11 @@
                     <td colspan="6">
                       <v-row dense>
                         <v-col cols="4">
-                          <span class="font-weight-bold mr-2">Liquidación del iva: (5%) </span><span>{{ data.iva.iva5 }}</span>
+                        
+
+                          <span class="font-weight-bold mr-2">(5%)</span> <span>{{ data.iva.iva5 }}</span>
+                          
+
                         </v-col>
                         <v-col
                           cols="4"
@@ -148,12 +151,7 @@
       </v-card>
     </v-container>
   </template>
-  
-  <script setup>
-  definePageMeta({
-    layout: 'report'
-  })
-  </script>
+
   <script>
   export default {
     data: () => ({
@@ -195,8 +193,16 @@
     }),
     created() {
       const query = this.$route.query
-      this.data = JSON.parse(query.data)
+      this.data = {
+        ...this.data,
+        ...JSON.parse(query.data)
+      }
     }
   }
   </script>
-  
+  <style scoped>
+  .imagen-clase {
+    object-fit: contain;
+
+  }
+</style>

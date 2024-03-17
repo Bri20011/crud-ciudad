@@ -151,7 +151,7 @@
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
                             @click="abrirDialogo">Registrar
                         </v-btn>
-
+                      
                     </v-toolbar>
                 </template>
                 <template v-slot:item.fecha="{ item }">
@@ -159,10 +159,21 @@
                 </template>
                 <template v-slot:item.action="{ item }">
 
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary"
+                    <v-icon color="red" size="small" class="me-2" @click="confirmarCambiarEstado(item.raw)">
+                        mdi-trash-can-outline
+          </v-icon>
+
+          <v-icon color="primary" size="small" class="me-2" @click="descargarFactura(item.raw)">
+            mdi mdi-download-circle-outline
+          </v-icon>
+
+                    <!-- <v-btn append-icon="mdi-trash-can-outline" color="primary"
                         @click="confirmarCambiarEstado(item.raw)">
                         Anular
                     </v-btn>
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="descargarFactura(item.raw.id)">
+                        Descargar
+                    </v-btn> -->
 
                 </template>
             </v-data-table>
@@ -361,9 +372,9 @@ export default {
             },
             buscador: '',
             headers: [
-                { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
+                { title: 'Codigos', align: 'start', sortable: false, key: 'id', },
                 { title: 'Numero de Factura', key: 'numero_factura' },
-                { title: 'Tipo Documento', key: 'documento' },
+                { title: 'Tipo de Venta', key: 'documento' },
                 { title: 'Fecha de Factura', key: 'fecha', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Cliente', key: 'cliente', align: 'star' },
@@ -536,7 +547,9 @@ export default {
           
 
             },
-            ).then(() => {
+            ).then((response) => {
+               console.log('response: ', response);
+               this.descargarFactura(response.data.idventa)
                 this.ObtenerVentas()
             })
 
@@ -557,6 +570,17 @@ export default {
             // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
             this.elementoACambiarEstado = elemento;
             this.dialogoCambiarEstado = true;
+        },
+        descargarFactura(id) {
+            console.log('elemento: ', id)
+            VentaAPI.descargarFactura(id).then(({ data }) => {
+                const linkSource = data
+                const downloadLink = document.createElement('a')
+                const fileName = `FACTURA.pdf`
+                downloadLink.href = linkSource
+                downloadLink.download = fileName
+                downloadLink.click()
+            })
         },
         cancelarCambiarEstado() {
             // Cierra el diálogo de confirmación y restablece la variable
@@ -590,14 +614,16 @@ export default {
             VentaAPI.getAll().then(({ data }) => {
                 this.items = data.map(item => {
                     return {
-                        id: item.idCompras,
-                        proveedor: item.idProveedor,
+                        id: item.idventa,
+                        descripcion: item.numero_contrato,
+                        fecha: item.fecha,
+                        idTimbrado: item.idTimbrado,
+                        timbrado: item.NumeroTimbrado,
                         numero_factura: item.Numero_fact,
-                        tipo_venta: item.idtipo_venta,
-                        caja: item.idCaja,
-                        proveedor: item.idProveedor,
-                        timbrado: item.Timbrado,
-                        fechaD: item.Fecha_doc,
+                        idtipo_venta: item.idtipo_venta,
+                        documento: item.descripcionVenta,
+                        idCliente: item.idCliente,
+                        cliente: item.Razon_social_Cliente,
                         detalleItems: item.detalle
 
                     }

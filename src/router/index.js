@@ -3,11 +3,27 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import FrmCiudad from '@/views/FrmCiudad.vue'
 import FrmBarrio from '@/views/FrmBarrio.vue'
+import FacturaLayout from '@/layouts/Factura.vue'
+import Factura from '@/views/venta/ventas/Factura.vue'
 
 
 const routes = [
   {
-    path: '/logint',
+    path: '/generarFactura',
+    component: FacturaLayout,
+    children: [
+      {
+        path: '',
+        name: 'GenerarFactura',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: Factura,
+      },
+    ]
+  },
+  {
+    path: '/',
     component: () => import('@/layouts/Login.vue'),
     children: [
       {
@@ -333,6 +349,7 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "orden_compra" */ '@/views/urbanizacion/Compra_Lote.vue'),
     },
+   
     {
       path: 'frmaperturacaja',
       name: 'FrmAperturaCaja',
@@ -529,7 +546,7 @@ const routes = [
       component: () => import(/* webpackChunkName: "informe" */ '@/views/tipo_producto.vue'),
     },
     ],
-  }
+  },
 ]
 
 
@@ -540,6 +557,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
+  if(to.name === 'GenerarFactura') return true
   const token = localStorage.getItem('token')
   if(token) {
     if(to.name === 'LoginT') {
