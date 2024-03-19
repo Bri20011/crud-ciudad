@@ -123,15 +123,15 @@ export default {
 
       ventas: [
         ['x-Apertura y Cierre de Caja', 'mdi-printer-pos', '/frmaperturacaja'],
-        // ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
         ['x-Arqueo de Caja', 'mdi-printer-pos', '/arqueo_caja'],
-        ['x-Venta y Cuentas a pagar', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
-        ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
+        ['.Venta y Cuentas a pagar', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
         ['x-Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza_forma_cobro'],
-        ['x-Registrar Nota de Remisión', 'mdi-printer-pos', '/nota_remision_venta'],
-        ['x-Registrar Nota de Credito', 'mdi-printer-pos', '/nota_credito_venta'],
-        ['x-Registrar Nota de Debito', 'mdi-printer-pos', '/nota_debito_venta'],
+        ['.Registrar Nota de Remisión', 'mdi-printer-pos', '/nota_remision_venta'],
+        ['Registrar Nota de Credito', 'mdi-printer-pos', '/nota_credito_venta'],
+        ['Registrar Nota de Debito', 'mdi-printer-pos', '/nota_debito_venta'],
         ['x-Obtener Libro Ventas', 'mdi-printer-pos', '/obtener_libro_venta'],
+        // ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
+         // ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
       ],
 
       mantenimiento: [
@@ -144,7 +144,6 @@ export default {
         ['Forma de Cobro', 'mdi-cog-outline', '/forma_cobro'],
         ['Funcionario', 'mdi-cog-outline', '/funcionario'],
         ['Iva', 'mdi-cog-outline', '/frmiva'],
-        // ['Login1', 'mdi-cog-outline', '/logint'],
         ['Manzana', 'mdi-cog-outline', '/manzana'],
         ['Marca', 'mdi-cog-outline', '/frmmarca'],
         ['Moneda', 'mdi-cog-outline', '/moneda'],

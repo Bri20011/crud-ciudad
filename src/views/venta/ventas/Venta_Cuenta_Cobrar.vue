@@ -27,7 +27,7 @@
 
 
                         <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Fecha V" v-model="fechaO" disabled
+                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" 
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">

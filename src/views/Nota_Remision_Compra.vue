@@ -575,12 +575,10 @@ export default {
             this.showDatepicker = false;
         },
         validarYRegistrar() {
-            if (this.itemsComputed.length === 0) {
-                alert("No se pueden registrar remisiones sin detalles. Agregue al menos un detalle.");
-            } else {
+          
                 // Continúa con la lógica de registro
                 this.abrirDialogo();
-            }
+            
         },
         abrirDialogo() {
             // Abrir el modal y cargar el código aquí

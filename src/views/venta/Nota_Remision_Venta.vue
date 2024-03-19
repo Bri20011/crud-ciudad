@@ -1,145 +1,159 @@
 <template>
-    <v-dialog max-width="1100" v-model="dialogoFormulario" persistent>
+    <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Registrar Remision </h1>
+                <h2 class="mb-3">Registrar Nota de Remision</h2>
                 <v-form>
-                    <v-row class="mt-4 d-flex justify-center">
-                       
-                        <v-col cols="12" sm="3" md="3">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                                placeholder="Fecha de Operacion" @input="formatDate" />
+                    <v-row>
+                        <v-col cols="12" sm="6" md="6" class="">
+                            <v-text-field variant="outlined" label="Nº de Documento" v-model="formulario.numerodoc"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Seleccione un Timbrado" :items="listaTimbrado"
+                                item-title="descripcionT" item-value="id" v-model="formulario.timbrado"></v-autocomplete>
                         </v-col>
 
-                        <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Nº Expedicion" v-model="formulario.numero_nc"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        <v-col cols="12" sm="6" md="6">
+                            <input class="custom-input" v-model="formulario.fechaD" type="date"
+                                placeholder="Fecha de Documento" @input="formatDate" />
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Nº Establecimiento" v-model="formulario.numero_nc"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaCliente"
+                                item-title="descripcionP" item-value="id" v-model="formulario.cliente"></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Nº Remision" v-model="formulario.numero_nc"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                       
-                        <v-col cols="12" sm="4" md="4" class="mt-4">
-                            <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
-                               disabled :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3" lass="mt-4">
-                            <h6>Fecha Inicio Traslado</h6>
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                                placeholder="Fecha Inicio de Traslado" @input="formatDate" />
-                        </v-col>
-                        
-                        <v-col cols="12" sm="3" md="3">
-                            <h6>Fecha Fin Traslado</h6>
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                                placeholder="Fecha Fin de Traslado" @input="formatDate" />
-                        </v-col>
-                     
-                        <v-divider></v-divider>
-                        <v-row class="mt-4 d-flex justify-center">
-                            <v-col cols="12" sm="3" md="3" class="mt-4 d-flex justify-center">
-                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Producto"
-                                item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="mt-4 d-flex justify-center">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.timbrado"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        </v-row>
+                    </v-row>
 
-                    
+
+
+                    <v-divider class="mt-0"></v-divider>
+                    <!-- INICIO DETALLE -->
+                    <v-row>
+                        <v-col cols="12" sm="4" md="4" class="mt-5">
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
+                                required></v-autocomplete>
+                        </v-col>
+
+                        <v-col cols="12" sm="4" md="4" class="mt-5">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
+                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4" class="mt-5">
+                            <v-text-field variant="outlined" label="Precio" v-model="detalle.precio"
+                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
+                        </v-col>
+
+
+
+                    </v-row>
+                    <v-row class="mt-0">
                         <v-col cols="12" class="d-flex justify-end">
-                           
-                            <v-btn color="primary" @click="guardarFormulario">Agregar</v-btn>
-
+                            <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
+                                @click="AgregarDetalle">Añadir</v-btn>
                         </v-col>
-                    
-                        
-                        <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
-                            :items="formulario.itemsDetalle">
-                            <template v-slot:tfoot>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
-                                    <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
-                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
-                                    <td></td>
-                                </tr>
-                            </template>
+                    </v-row>
+                    <!-- Fin DETALLE -->
+
+
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersCrear" :items="itemsDetalle">
                             <template v-slot:item.action="{ item }">
-                                <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
+                                <v-icon size="small" class="me-2" @click="editarPresupuesto(item.raw)">
                                     mdi-pencil
                                 </v-icon>
-                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
+                                <v-icon color="#C62828" size="small" @click="eliminarDetalle(item.raw.producto)">
                                     mdi-trash-can-outline
-                                </v-icon> -->
+                                </v-icon>
                             </template>
                         </v-data-table>
+                    </v-card>
 
-                    </v-row>
+                    <v-col cols="12" class="d-flex justify-end">
+                        <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
+                        <v-btn color="primary" @click="guardarFormulario"
+                            :disabled="excededLimit || !formulario.numerodoc">Guardar</v-btn>
+                    </v-col>
 
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
-
-                        </v-col>
-                    </v-row>
                 </v-form>
             </v-container>
         </v-card>
     </v-dialog>
-   
-    <!-- INICIO EDITAR DETALLE -->
-    <v-dialog max-width="1200" v-model="dialogoFormularioEditarDetalle" persistent>
+
+
+    <v-dialog v-model="showModal" persistent max-width="400">
+        <v-card>
+            <v-card-title>Producto Duplicado</v-card-title>
+            <v-card-text>
+                Añadiste mas de 1 vez un producto
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="primary" @click="showModal = false">Aceptar</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+
+    <v-dialog v-model="showModalVacio" persistent max-width="350">
+
+        <v-card>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Descripcion y fecha no pueden quedar vacio
+                </v-card-text>
+
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="showModalVacio = false">Aceptar</v-btn>
+                </v-cols>
+            </v-container>
+        </v-card>
+
+    </v-dialog>
+
+
+
+    <v-dialog v-model="showModalDuplicado" persistent max-width="350">
+        <v-card>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Seleccionaste el mismo producto
+                </v-card-text>
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="showModalDuplicado = false">Aceptar</v-btn>
+                </v-cols>
+
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+
+
+    <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Ingresar Precio</h1>
+                <h1 class="mb-3">Editar detalle antes de guardar</h1>
                 <v-form>
                     <v-row class="justify-center">
 
 
                         <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
+                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
                                 item-title="descripcionPr" item-value="id" v-model="formulario.producto"
                                 :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
                         </v-col>
 
-                        <v-col ols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Cantidad" @input="recalcularTotal"
-                                v-model="formulario.cantidad"></v-text-field>
+                        <v-col ols="12" sm="5" md="5">
+                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
                         </v-col>
-                        <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Precio Unitario" @input="recalcularTotal"
-                                v-model="formulario.precio"></v-text-field>
-                        </v-col>
-                        <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.total"
-                                readonly></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI"
-                                item-value="id" v-model="formulario.iva" :error="excededLimit"
-                                :error-messages="errorMessage" required>
-                            </v-autocomplete>
-                        </v-col>
+
+
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2"
-                                @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditar">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -147,7 +161,57 @@
         </v-card>
     </v-dialog>
 
-    <!-- FIN EDITAR DETALLE -->
+    <!-- FIN DETALLE -->
+
+    <!-- INICIO VISTA -->
+    <v-dialog max-width="700" v-model="dialogoFormularioVistaVista" persistent>
+        <v-card class="rounded-xl">
+            <v-container>
+                <h1 class="mb-3">Remision Registrado</h1>
+                <v-form>
+
+                    <v-row>
+                        <v-col cols="12" sm="2" md="2" class="">
+                            <v-text-field variant="outlined" label="Codigo" v-model="formulario.codigo" disabled
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Nº de Documento" v-model="formulario.numerodoc" disabled
+                                required></v-text-field>
+                        </v-col>
+
+
+                        <v-col cols="12" sm="5" md="5" class="">
+                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD" disabled
+                                required></v-text-field>
+                        </v-col>
+
+
+                    </v-row>
+                    <v-divider></v-divider>
+
+                    <v-card class="mt-5 rounded-x2">
+                        <v-data-table items-per-page-text="" :headers="headersPresupuesto" :items="formulario.itemsDetalle">
+
+                        </v-data-table>
+                    </v-card>
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end mt-2">
+                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
+
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-dialog>
+
+    <!-- FIN VISTA -->
+
+
+
 
     <v-container>
         <v-row>
@@ -157,60 +221,63 @@
             </v-col>
 
             <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de NR: {{ items.length }}
+                Cantidad de Remisiones: {{ items.length }}
             </v-col>
 
         </v-row>
 
-        <v-card class="mt-5 rounded-xl">
-            <v-data-table items-per-page-text="Item por pagina" :headers="headers" :items="itemsComputed">
+        <v-card class="mt-5 rounded-x2">
+            <v-data-table items-per-page-text="Articulo por pagina" :headers="headers" :items="itemsComputed">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>
-                            <p class="font-weight-bold">Registro de Notas de Remision </p>
+                            <p class="font-weight-bold">Notas de Remisiones Registrados</p>
                         </v-toolbar-title>
 
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
-                            @click="abrirDialogo">Registrar
+                            @click="validarYRegistrar">Registrar
                         </v-btn>
 
                     </v-toolbar>
                 </template>
-                <template v-slot:item.fecha="{ item }">
+
+                <template v-slot:item.fechaD="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
                 <template v-slot:item.action="{ item }">
-                    <!-- <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
-                        mdi-pencil
-                    </v-icon> -->
 
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
-                        Anular
-                    </v-btn>
+                    <v-icon color="primary" size="small" @click="MostrarPresupuesto(item.raw)">
+                        mdi-file-eye-outline
+                    </v-icon>
+                    <v-icon color="black" size="small" @click="editarPresupuestog(item.raw)">
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon color="#C62828" size="small" @click="confirmarEliminarPresupuesto(item.raw)">
+                        mdi-trash-can-outline
+                    </v-icon>
+
 
                 </template>
             </v-data-table>
         </v-card>
 
         <v-row>
-            <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
-                <v-btn>Cancelar </v-btn>
-            </v-col>
+          
         </v-row>
         <!-- Diálogo de confirmación -->
-        <v-dialog v-model="dialogoCambiarEstado" max-width="400">
+        <v-dialog v-model="dialogoEliminar" max-width="400">
             <v-card>
                 <v-container>
                     <v-card-title class="headline">Confirmar Eliminación</v-card-title>
                     <v-card-text>
-                        ¿Está seguro de que desea Anular este elemento?
+                        ¿Está seguro de que desea eliminar este elemento?
                     </v-card-text>
 
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" text @click="cambiarEstadoCompra">Anular</v-btn>
-                            <v-btn color="primary" text @click="cancelarCambiarEstado">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2" text @click="eliminarPresupuesto">Eliminar</v-btn>
+                            <v-btn color="#E0E0E0" text @click="cancelarEliminarPresupuesto">Cancelar</v-btn>
                         </v-col>
                     </v-row>
 
@@ -220,17 +287,114 @@
 
         </v-dialog>
         <!-- FIN DIALOGO -->
+
+
+        <!-- iNICIO EDITAR GUARDADO  -->
+        <v-dialog max-width="700" v-model="dialogoFormularioEditarGuardado" persistent>
+            <v-card class="rounded-xl">
+                <v-container>
+                    <h1 class="mb-3">Editar Remision</h1>
+                    <v-form>
+                        <v-row>
+                            <v-col cols="12" sm="2" md="2">
+                                <v-text-field variant="outlined" label="Codigo" disabled
+                                    v-model="formulario.codigo"></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="5" md="5">
+                                <v-text-field variant="outlined" label="Numero documento" v-model="formulario.numerodoc"
+                                    required>
+                                </v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="5" md="5">
+                                <v-autocomplete variant="outlined" label="Seleccione un Timbrado" :items="listaTimbrado"
+                                item-title="descripcionT" item-value="id" v-model="formulario.timbrado"></v-autocomplete>
+                            </v-col>
+
+                            <v-col cols="12" sm="7" md="7">
+                                <v-autocomplete variant="outlined" label="Seleccione un Proveedor" :items="listaCliente"
+                                item-title="descripcionP" item-value="id" v-model="formulario.cliente"></v-autocomplete>
+                            </v-col>
+                        
+
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Fecha" v-model="formulario.fechaD"> </v-text-field>
+
+                        </v-col>
+                        </v-row>
+
+                        <v-divider></v-divider>
+
+                        <v-card class="mt-5 rounded-x2">
+                            <v-data-table items-per-page-text="" :headers="headersPresupuestoG" :items="formulario.itemsDetalle">
+                                <template v-slot:item.action="{ item }">
+                                    <v-icon size="small" class="me-2" @click="editarPresupuestoDetalle(item.raw)">
+                                        mdi-pencil
+                                    </v-icon>
+                                    <v-icon color="#C62828" size="small" @click="confirmarEliminarPresupuesto(item.raw)">
+                                        mdi-trash-can-outline
+                                    </v-icon>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                        <v-row>
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="#E0E0E0" class="mx-4 mt-2"
+                                    @click="dialogoFormularioEditarGuardado = false">Cancelar</v-btn>
+                                <v-btn color="primary" class="mt-2" @click="guardarFormularioEditarG">Guardar</v-btn>
+                            </v-col>
+                        </v-row>
+
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
+
+        <!-- Fin Editar Guarddo  -->
+
+        <v-dialog max-width="700" v-model="dialogoFormularioEditarDe" persistent>
+            <v-card class="rounded-xl">
+                <v-container>
+                    <h1 class="mb-3">Editar Detalle</h1>
+                    <v-form>
+                        <v-row class="justify-center">
+
+
+                            <v-col cols="12" sm="6" md="6">
+                                <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                    item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                    required></v-autocomplete>
+                            </v-col>
+                            <v-col ols="12" sm="2" md="2">
+                                <v-text-field variant="outlined" label="Cantidad"
+                                    v-model="formulario.cantidad"></v-text-field>
+                            </v-col>
+                            <v-col ols="12" sm="4" md="4">
+                                <v-text-field variant="outlined" label="Precio" v-model="formulario.precio"></v-text-field>
+                            </v-col>
+
+
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="#E0E0E0" class="mx-2"
+                                    @click="dialogoFormularioEditarDe = false">Cancelar</v-btn>
+                                <v-btn color="primary" @click="guardarFormularioEditarC">Guardar</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
-  
+
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-import { NCCompraApi } from '@/services/nota_credito_compra.api'
-import { ProveedorAPI } from '@/services/proveedor.api'
+import { NRVentaApi } from '@/services/nota_remision_venta.api'
 import { ProductoAPI } from '@/services/producto.api'
-import { IvaAPI } from '@/services/iva.api'
-import { ComprasAPI } from '@/services/compras.api'
-
+import { ClienteAPI } from '@/services/cliente.api'
+import {TimbradoAPI} from '@/services/timbrado.api'
 
 import dayjs from 'dayjs'
 
@@ -242,83 +406,93 @@ export default {
     },
     data() {
         return {
-            VARIABLE_PARA_GUARDAR_ID_COMPRA: '',
             dialogoFormulario: false,
-            dialogoCambiarEstado: false,
-
-        
-            
-            dialogoFormularioEditarDetalle: false,
-            ordenCompraSeleccionada: null,
-
-
+            dialogoFormularioEditar: false,
+            dialogoFormularioVistaVista: false,
+            showModal: false,
+            showModalVacio: false,
+            showModalDuplicado: false,
+            dialogoFormularioEditarGuardado: false,
+            dialogoFormularioEditarDe: false,
+            detalle: {
+                producto: '',
+                descripcion: '',
+                cantidad: '',
+                precio: '',
+            },
+            limit: 45,
 
             formulario: {
-                proveedor: '',
-                documento: '',
-                fechaO: null,
-                fechaD: null,
+                numerodoc: '',
                 timbrado: '',
-                numero_nc: '',
+                cliente: '',
+                fechaD: null,
+
+                // itemsDetalle debe ser un Array 
+                itemsDetalle: [],
+
 
 
             },
-
+            listaProveedor: [],
             contador: 1,
             limit: 45,
             defaultFormulario: {
                 codigo: '',
                 descripcion: '',
-                fecha: '',
-                timbrado: '',
+                fechaD: '',
                 producto: null,
-                cantidad: '',
-                precio: '',
-                nomnbreProducto: '',
-                descripcionI: ''
-
+                cantidad: null,
             },
             buscador: '',
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Numero de Remision', key: 'numero_nc' },
-                { title: 'Fecha de Remision', key: 'fecha', align: 'star' },
-                { title: 'Timbrado', key: 'timbrado', align: 'star' },
-                { title: 'Cliente', key: 'proveedor', align: 'star' },
+                { title: 'Nº de Documento', key: 'numerodoc', align: 'star' },
+                { title: 'Nº de Timbrado', key: 'timbrado', align: 'star' },
+                { title: 'Fecha de Remision', key: 'fechaD', align: 'star' },
+                { title: 'Cliente', key: 'cliente', align: 'star' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
-            headersCompra: [
-                { title: 'Producto', key: 'idProducto', align: 'center' },
-                { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'center' },
-                // { title: 'Precio Unitario', key: 'Precio', align: 'center' },
-                // { title: 'Iva', key: 'iva', align: 'center' },
-                // { title: 'Exenta', key: 'exenta', align: 'center' },
-                // { title: 'Iva 5%', key: 'iva5', align: 'center' },
-                // { title: 'Iva 10%', key: 'iva10', align: 'center' },
-                // { title: 'Total', key: 'total', align: 'center' },
-                // { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+            headersPresupuesto: [
+
+                { title: 'Producto', key: 'idProducto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Precio', key: 'Precio', align: 'star' },
+
+            ],
+
+            headersPresupuestoG: [
+                { title: 'Codigo', key: 'idProducto' },
+                { title: 'Descripcion', key: 'nombre_producto' },
+                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+                { title: 'Cantidad', key: 'Precio', align: 'star' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
+            ],
 
+            headersCrear: [
+
+                { title: 'Producto', key: 'producto' },
+                { title: 'Producto', key: 'descripcionPr' },
+                { title: 'Cantidad', key: 'cantidad', align: 'star' },
+                { title: 'Precio', key: 'precio', align: 'star' },
+                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
                 {
-                    id: '',
-                    descripcion: '',
-                    fecha: '',
-                    action: '',
-                    timbrado: '',
-                    numero_nc: '',
-                    proveedor: ''
+                    id: '1',
+                    descripcion: 'Central',
+                    fechaD: '',
+                    action: ''
                 }
             ],
-            itemsDetalle: [],
+            itemsDetalle: [
+
+            ],
             dialogoEliminar: false,
             elementoAEliminar: null,
 
-            listaProveedor: [],
-            listaDocumento: [],
             listaProducto: [],
 
         }
@@ -329,86 +503,78 @@ export default {
             if (!this.buscador) return this.items
             return this.items.filter((element) => element.descripcion.toLocaleLowerCase().includes(this.buscador.toLocaleLowerCase()))
         },
-        // excededLimit() {
-        //     return this.formulario.descripcion.length > this.limit;
-        // },
-        // errorMessage() {
-        //     if (this.excededLimit) {
-        //         return 'Superaste el límite de 45 letras';
-        //     }
-        //     return '';
-        // }
+        excededLimit() {
+            return this.formulario.descripcion.length > this.limit;
+        },
+
+
+
+
+
+        errorMessage() {
+            if (this.excededLimit) {
+                return 'Superaste el límite de 45 letras';
+            }
+            return '';
+        },
+
+
     },
     methods:
     {
-        ObtenerProveedor() {
-            ProveedorAPI.getAll().then(({ data }) => {
-                this.listaProveedor = data.map(item => {
+        ObtenerCliente() {
+            ClienteAPI.getAll().then(({ data }) => {
+                this.listaCliente= data.map(item => {
                     return {
-                        id: item.idProveedor,
+                        id: item.idCliente,
                         descripcionP: item.Razon_social
                     }
                 })
             })
         },
-
-       
+        ObtenerTimbrado() {
+            TimbradoAPI.getAll().then(({ data }) => {
+                this.listaTimbrado= data.map(item => {
+                    return {
+                        id: item.idTimbrado,
+                        descripcionT: item.NumerTimbrado
+                    }
+                })
+            })
+        },
 
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
                 this.listaProducto = data.map(item => {
                     return {
                         id: item.idProducto,
-                        descripcionPr: item.Descripcion,
-
-                    }
-                })
-            })
-        },
-
-        ObtenerIva() {
-            IvaAPI.getAll().then(({ data }) => {
-                this.listaIva = data.map(item => {
-                    return {
-                        id: item.idIva,
-                        descripcion: item.Descripcion,
-                        descripcionI: item.Porcentaje
+                        descripcionPr: item.Descripcion
                     }
                 })
             })
         },
 
 
-     
+        AgregarDetalle() {
+            const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
+            if (productoSeleccionado) {
+                this.itemsDetalle.push({
+                    producto: productoSeleccionado.id, // Agrega la descripción del producto
+                    descripcionPr: productoSeleccionado.descripcionPr,
+                    cantidad: this.detalle.cantidad,
+                    precio: this.detalle.precio,
+                    action: '',
+                });
 
-        ObtenerCodigoCompra() {
-            // Verifica que se haya ingresado un número de orden
-            if (!this.formulario.numero_orden) {
-                // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
-                return;
+                this.detalle.producto = '';
+                this.detalle.cantidad = '';
+                this.detalle.precio = '';
             }
-
-            // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
-            ComprasAPI.getById(this.formulario.numero_orden).then(({ data }) => {
-                this.VARIABLE_PARA_GUARDAR_ID_COMPRA = data.idCompras
-                this.formulario = {
-                    ...this.formulario,
-                    proveedor: data.idProveedor,
-                    fechaD: data.Fecha_doc,
-                    itemsDetalle: data.detalle,
-
-
-
-                };
-            });
-
-            this.dialogoFormulario = true;
         },
 
 
-
-        formatearFecha(fecha) {
-            return dayjs(fecha).format('DD/MM/YYYY')
+        formatearFecha(fechaD) {
+            return dayjs(fechaD).format('DD/MM/YYYY')
         },
         showDatePicker() {
             this.showDatepicker = true;
@@ -416,215 +582,293 @@ export default {
         hideDatePicker() {
             this.showDatepicker = false;
         },
-
+        validarYRegistrar() {
+           
+                // Continúa con la lógica de registro
+                this.abrirDialogo();
+            
+        },
         abrirDialogo() {
             // Abrir el modal y cargar el código aquí
             this.dialogoFormulario = true;
             this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
             this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
-
         },
         generarCodigo() {
             const nuevoCodigo = this.contador++;
             return nuevoCodigo;
         },
 
-        guardarFormulario() {
-            if (!this.formulario.numero_nc) {
 
+
+
+
+        guardarFormulario() {
+            // Verificar que todos los campos requeridos estén completos
+            if (!this.formulario.numerodoc || !this.formulario.timbrado) {
+                this.showModalVacio = true;
+            } else {
+                // Validar duplicados en los detalles
+                const productosSeleccionados = this.itemsDetalle.map((detalle) => detalle.producto);
+
+                if (new Set(productosSeleccionados).size !== productosSeleccionados.length) {
+                    // Si hay elementos duplicados en la lista de productos seleccionados, muestra un mensaje de error
+                    this.showModalDuplicado = true;
+
+                } else {
+                    // Todos los campos requeridos están completos y no hay duplicados, puedes proceder a guardar
+                    NRVentaApi.create({
+                        idnota_remision_venta: this.formulario.codigo,
+                        Fecha_doc: this.formulario.fechaD,
+                        idTimbrado: this.formulario.timbrado,
+                        Numero_doc: this.formulario.numerodoc,
+                        idCliente: this.formulario.cliente,
+                        Detalle: this.itemsDetalle,
+                    }).then(() => {
+                        this.ObtenerNotaRemision();
+                    });
+
+                    // Limpia los campos del formulario después de guardar
+                    this.formulario.codigo = "";
+                    this.formulario.producto = "";
+                    this.formulario.descripcion = "";
+                    this.formulario.fechaD = "";
+                    this.detalle.producto = null;
+                    this.detalle.cantidad = null;
+                    this.itemsDetalle = []
+
+
+
+                    // Cierra el diálogo del formulario
+                    this.dialogoFormulario = false;
+                }
+            }
+        },
+        MostrarPresupuesto(item) {
+            console.log(item);
+
+            this.dialogoFormularioVistaVista = true;
+            this.formulario.codigo = item.id
+            this.formulario.numerodoc = item.numerodoc
+            this.formulario.fechaD = this.formatearFecha(item.fechaD)
+
+            this.formulario.itemsDetalle = [];
+
+            item.detalleItems.forEach((detalle) => {
+                this.formulario.itemsDetalle.push({
+                    idProducto: detalle.nomnbreProducto,
+                    Cantidad: detalle.Cantidad,
+                    Precio: detalle.Precio,
+                });
+            })
+
+
+
+        },
+
+
+
+
+        guardarFormularioEditar() {
+            if (!this.formulario.producto || !this.formulario.cantidad) {
                 this.emptyFieldError = true;
                 return;
             }
 
+            // Busca el índice del elemento que se va a editar
+            const index = this.itemsDetalle.findIndex(item => item.producto === this.formulario.producto);
 
-            NCCompraApi.create({
+            if (index !== -1) {
+                // Si se encontró el elemento, actualiza sus datos
+                this.itemsDetalle[index].cantidad = this.formulario.cantidad;
+            } else {
+                // Si no se encontró el elemento, agrega uno nuevo
+                this.itemsDetalle.push({
+                    producto: this.formulario.producto,
+                    cantidad: this.formulario.cantidad,
+                    precio: this.formulario.precio,
+                    action: '',
+                });
+            }
 
-                idNota_CreditoCompra: this.formulario.codigo,
-                Fecha_doc: this.formulario.fechaD,
-                Timbrado: this.formulario.timbrado,
-                Numero_doc: this.formulario.numero_nc,
-                idProveedor: this.formulario.proveedor,
-                idCompras: this.VARIABLE_PARA_GUARDAR_ID_COMPRA,
-                Detalle: this.formulario.itemsDetalle
-
-
-            },
-            ).then(() => {
-                this.ObtenerNota_Credito_C()
-            })
-
-            this.formulario.codigo = '';
-            this.formulario.fechaD = '';
-            this.formulario.timbrado = '';
-            this.formulario.numero_nc = '';
-            this.formulario.documento = '';
-            this.formulario.proveedor = '';
-            this.dialogoFormulario = false;
+            this.dialogoFormularioEditar = false;
+        },
+        eliminarDetalle(id) {
+            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
         },
 
 
 
+        editarPresupuesto(parametro) {
+            this.dialogoFormularioEditar = true
+            this.formulario.producto = parametro.producto
+            this.formulario.cantidad = parametro.cantidad
+            this.formulario.precio = parametro.precio
 
-
-        confirmarCambiarEstado(elemento) {
-            // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
-            this.elementoACambiarEstado = elemento;
-            this.dialogoCambiarEstado = true;
         },
-        cancelarCambiarEstado() {
+        confirmarEliminarPresupuesto(elemento) {
+            // Abre el diálogo de confirmación y guarda el elemento a eliminar
+            this.elementoAEliminar = elemento;
+            this.dialogoEliminar = true;
+        },
+        cancelarEliminarPresupuesto() {
             // Cierra el diálogo de confirmación y restablece la variable
-            this.dialogoCambiarEstado = false;
-            this.elementoACambiarEstado = null;
+            this.dialogoEliminar = false;
+            this.elementoAEliminar = null;
         },
-        cambiarEstadoCompra() {
-            if (this.elementoACambiarEstado) {
-                // Realiza la actualización aquí para cambiar el estado
-                NCCompraApi.update(this.elementoACambiarEstado.id, { estado_nc: true }
-                ).then(()=> {
-                        // Actualiza la tabla después de que la actualización se haya completado
-                        this.items = [];
-                        this.ObtenerNota_Credito_C();
-                        
-                    })
-                   
-                   
-                        // Cierra el diálogo de confirmación
-                        this.dialogoCambiarEstado = false;
-                        this.elementoACambiarEstado = null;
-                      
-                    
-
-
+        eliminarPresupuesto() {
+            if (this.elementoAEliminar) {
+                // Realiza la eliminación aquí
+                NRVentaApi.delete(this.elementoAEliminar.id).then(() => {
+                    this.ObtenerNotaRemision();
+                });
+                // Cierra el diálogo de confirmación
+                this.dialogoEliminar = false;
+                this.elementoAEliminar = null;
             }
-
         },
 
-        ObtenerNota_Credito_C() {
-            NCCompraApi.getAll().then(({ data }) => {
-                this.items = data.map(item => {
-                    return {
-                        id: item.idNota_CreditoCompra,
-                        proveedor: item.idProveedor,
-                        numero_nc: item.Numero_doc,
-                        idProveedor: item.idProveedor,
-                        razonsocial:item.razonsocial,
-                        timbrado: item.Timbrado,
-                        fechaD: item.Fecha_doc,
-                        itemsDetalle: data.detalle,
+        dialogoVista() {
+            this.dialogoFormularioVistaVista = true
+            this.formulario.codigo = parametro.id
+            this.formulario.numerodoc = parametro.numerodoc
+            this.formulario.fechaD = parametro.fechaD
+            this.detalle.producto = parametro.producto
+            this.detalle.cantidad = parametro.cantidad
+            this.detalle.precio = parametro.precio
+        },
 
-                    }
-                })
+
+        //Inicio editar guardado //
+        editarPresupuestog(item) {
+            this.dialogoFormularioEditarGuardado = true
+            this.formulario.codigo = item.id
+            this.formulario.fechaD = this.formatearFecha(item.fechaD)
+            this.formulario.timbrado = item.timbrado
+            this.formulario.numerodoc = item.numerodoc
+            this.formulario.cliente = item.cliente
+            this.formulario.itemsDetalle = [];
+
+            item.detalleItems.forEach((detalle) => {
+                this.formulario.itemsDetalle.push({
+                    idnota_remision_venta: detalle.idnota_remision_venta,
+                    idProducto: detalle.idProducto,
+                    nombre_producto: detalle.nomnbreProducto,
+                    Cantidad: detalle.Cantidad,
+                    Precio: detalle.Precio,
+                });
             })
-        },
-        recalcularTotal() {
-            // Verifica que haya valores en cantidad y precio
-            if (this.formulario.cantidad && this.formulario.precio) {
-                // Calcula el total dinámicamente
-                this.formulario.total = this.formulario.cantidad * this.formulario.precio;
-
-            }
-
-        },
-
-        editarDetalle(parametro) {
-            this.dialogoFormularioEditarDetalle = true
-            this.formulario.producto = parametro.idProducto
-            this.formulario.cantidad = parametro.Cantidad
-            this.formulario.precio = parametro.Precio
-            // Calcula el total al abrir el diálogo
-            this.formulario.total = this.formulario.cantidad * this.formulario.precio;
-            this.formulario.iva = parametro.idIva
 
 
 
         },
-        guardarFormularioEditarDetalle() {
+
+        guardarFormularioEditarG() {
+            console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
+
+            NRVentaApi.update(
+
+                this.formulario.codigo,
+                {
+                    idnota_remision_venta: this.formulario.codigo,
+                    Fecha_doc: this.formulario.fechaD,
+                    idTimbrado: this.formulario.timbrado,
+                    Numero_doc: this.formulario.numerodoc,
+                    idCliente: this.formulario.cliente,
+                    Detalle: this.formulario.itemsDetalle,
+
+                }
+            ).then(() => {
+                this.ObtenerNotaRemision()
+            })
+            this.formulario.codigo = "";
+            this.formulario.numerodoc = "";
+            this.formulario.timbrado = "";
+            this.formulario.fechaD = "";
+            this.formulario.proveedor = "";
+            this.detalle.producto = null;
+            this.detalle.cantidad = null;
+            this.itemsDetalle = []
+            this.dialogoFormularioEditarGuardado = false
+        },
+
+        //Fin editar guardado //
+
+
+        //EDITAR DETALLE Guardado //
+
+
+        guardarFormularioEditarC() {
+            console.log('Antes de guardar:', this.formulario.itemsDetalle);
+            console.log('Ver producto', this.formulario.producto);
+
             if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.precio) {
                 this.emptyFieldError = true;
                 return;
             }
 
             // Busca el índice del elemento que se va a editar
-            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
-            console.log(index)
-            console.log(this.formulario.itemsDetalle)
+            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto == this.formulario.producto);
+
             if (index !== -1) {
                 // Si se encontró el elemento, actualiza sus datos
                 this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
                 this.formulario.itemsDetalle[index].Precio = this.formulario.precio;
-
-                this.formulario.itemsDetalle[index].total = this.formulario.cantidad * this.formulario.precio;
-                this.formulario.itemsDetalle[index].iva = this.formulario.iva;
-
-                switch (this.formulario.iva) {
-                    case 1:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = 0;
-                        this.formulario.itemsDetalle[index].iva10 = 0;
-                        break;
-                    case 2:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = Math.round(this.formulario.itemsDetalle[index].total / 21);
-                        this.formulario.itemsDetalle[index].iva10 = 0;
-                        break;
-                    case 3:
-                        this.formulario.itemsDetalle[index].exenta = 0;
-                        this.formulario.itemsDetalle[index].iva5 = 0;
-                        this.formulario.itemsDetalle[index].iva10 = Math.round(this.formulario.itemsDetalle[index].total / 11);
-                        break;
-                    default:
-                        // Manejar otro caso si es necesario
-                        break;
-                }
-            } else {
-                // Si no se encontró el elemento, agrega uno nuevo
-                const nuevoItem = {
-                    producto: this.formulario.producto,
-                    cantidad: this.formulario.cantidad,
-                    precio: this.formulario.precio,
-                    total: this.formulario.cantidad * this.formulario.precio, // Calcula el total
-                    iva: this.formulario.iva,
-                    exenta: 0,
-                    iva5: 0,
-                    iva10: 0,
-                    action: '',
-                };
-                this.formulario.itemsDetalle.push(nuevoItem);
             }
+            console.log('Después de guardar:', this.formulario.itemsDetalle);
 
-            this.dialogoFormularioEditarDetalle = false;
+            this.dialogoFormularioEditarDe = false;
+        },
+        eliminarDetalle(id) {
+            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
         },
 
+        editarPresupuestoDetalle(item) {
+            this.dialogoFormularioEditarDe = true;
 
-        sumarIva(columna) {
-            // Verifica que this.formulario.itemsDetalle tenga un valor
-            if (this.formulario.itemsDetalle) {
-                // Redondea cada valor de IVA antes de sumarlos
-                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
-            } else {
-                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
-            }
+            // this.formulario.codigo = item.producto
+            this.formulario.producto = item.idProducto;
+            this.formulario.cantidad = item.Cantidad;
+            this.formulario.precio = item.Precio;
+
+
         },
 
-        sumarTotal(columna) {
-            // Verifica que this.formulario.itemsDetalle tenga un valor y sea un array
-            if (this.formulario.itemsDetalle && Array.isArray(this.formulario.itemsDetalle)) {
-                // Redondea cada valor de la columna antes de sumarlos
-                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
-            } else {
-                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
-            }
+        ObtenerNotaRemision() {
+
+            NRVentaApi.getAll().then(({ data }) => {
+                console.log(data)
+                this.items = data.map(item => {
+                    return {
+                        id: item.idnota_remision_venta,
+                        fechaD: item.Fecha_doc,
+                        idTimbrado: item.idTimbrado,
+                        timbrado: item.numeroTimbrado,
+                        numerodoc: item.Numero_doc,
+                        idCliente: item.idCliente,
+                        cliente: item.nombreCliente,
+                        detalleItems: item.detalle
+
+                    }
+                })
+            })
         },
+
     },
+
 
 
     created() {
         // Generar automáticamente el código al cargar el componente
         this.formulario.codigo = this.generarCodigo();
-        this.ObtenerProveedor()
-       // this.ObtenerProducto()
-        this.ObtenerIva()
-        this.ObtenerNota_Credito_C()
+        this.ObtenerNotaRemision()
+        this.ObtenerProducto()
+        this.ObtenerCliente()
+        this.ObtenerTimbrado()
+
+
+
+
 
     },
 
