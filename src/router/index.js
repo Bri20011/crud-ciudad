@@ -153,14 +153,6 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/LoginUsuario.vue'),
     },
-    {
-      path: 'frmcaja',
-      name: 'Caja',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "barrio" */ '@/views/FrmCaja.vue'),
-    },
 
     {
       path: 'compras',
@@ -283,6 +275,14 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/manzana.vue'),
+    },
+    {
+      path: 'frmcaja',
+      name: 'FrmCaja',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/FrmCaja.vue'),
     },
     {
       path: 'timbrado',
@@ -544,6 +544,22 @@ const routes = [
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "informe" */ '@/views/tipo_producto.vue'),
+    },
+    {
+      path: 'aperturacaja',
+      name: 'AperturaCaja',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "informe" */ '@/views/venta/ventas/AperturaCaja.vue'),
+    },
+    {
+      path: 'cierrecaja',
+      name: 'CierreCaja',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "informe" */ '@/views/venta/ventas/CierreCaja.vue'),
     },
     ],
   },

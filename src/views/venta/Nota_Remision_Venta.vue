@@ -744,9 +744,9 @@ export default {
             this.dialogoFormularioEditarGuardado = true
             this.formulario.codigo = item.id
             this.formulario.fechaD = this.formatearFecha(item.fechaD)
-            this.formulario.timbrado = item.timbrado
+            this.formulario.timbrado = item.idTimbrado
             this.formulario.numerodoc = item.numerodoc
-            this.formulario.cliente = item.cliente
+            this.formulario.cliente = item.idCliente
             this.formulario.itemsDetalle = [];
 
             item.detalleItems.forEach((detalle) => {

@@ -127,10 +127,10 @@
                     <v-window-item value="option-3">
                         <v-card flat>
                             <v-tabs v-model="tabVenta" color="blue-grey">
-                                <v-tab value="option-venta-1">Apertura de Caja</v-tab>
-                                <v-tab value="option-venta-2">Cierre de Caja </v-tab>
-                                <v-tab value="option-venta-3">Arqueo de Cajas</v-tab>
-                                <v-tab value="option-venta-4">Recaudaciones a depositar</v-tab>
+                                <v-tab value="option-venta-1">Venta</v-tab>
+                                <v-tab value="option-venta-2">Notas de Credito Ventas</v-tab>
+                                <v-tab value="option-venta-3">Notas de Debitos Ventas</v-tab>
+                                <v-tab value="option-venta-4">Notas de Remisiones Ventas</v-tab>
                                 <v-tab value="option-venta-5">Registro de Ventas</v-tab>
                                 <v-tab value="option-venta-6">Cobranza por forma de Cobro</v-tab>
                                 <v-tab value="option-venta-7">Registro de Notas de Creditos</v-tab>
@@ -142,19 +142,19 @@
                             <v-card-text>
                                 <v-window v-model="tabVenta">
                                     <v-window-item value="option-venta-1">
-                                        Apertura de Caja
+                                        <ComponenteVenta/>
                                     </v-window-item>
 
                                     <v-window-item value="option-venta-2">
-                                        Cierre de Caja 
+                                        <ComponenteNotaCreditoVenta/>
                                     </v-window-item>
 
                                     <v-window-item value="option-venta-3">
-                                        Orden de compra
+                                        <ComponenteNotaDebitoVenta/>
                                     </v-window-item>
 
                                     <v-window-item value="option-venta-4">
-                                        Compras
+                                        <ComponenteNotaRemisionVenta/>
                                     </v-window-item>
 
                                     <v-window-item value="option-venta-5">
@@ -344,6 +344,10 @@ import ComponenteOrdenCompraLote from './informe_produccion/informe_orden_compra
 import ComponenteCompraLote from './informe_produccion/informe_compra_lote.vue';
 import ComponenteUrbanizacion from './informe_produccion/informe_urbanizacion.vue';
 import ComponenteContrato from './informe_produccion/informe_contrato.vue';
+import ComponenteVenta from './informe_ventas/informe_venta.vue';
+import ComponenteNotaCreditoVenta from './informe_ventas/informe_nota_credito_venta.vue';
+import ComponenteNotaDebitoVenta from './informe_ventas/informe_nota_debito_venta.vue';
+import ComponenteNotaRemisionVenta from './informe_ventas/informe_nota_remision_venta.vue';
 export default {
     components: {
         ComponenteInformePedido,
@@ -383,6 +387,10 @@ export default {
         ComponenteCompraLote,
         ComponenteUrbanizacion,
         ComponenteContrato,
+        ComponenteVenta,
+        ComponenteNotaCreditoVenta,
+        ComponenteNotaDebitoVenta,
+        ComponenteNotaRemisionVenta
        
 
     },

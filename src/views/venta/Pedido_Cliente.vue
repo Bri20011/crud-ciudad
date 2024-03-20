@@ -215,10 +215,6 @@
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
                 <template v-slot:item.action="{ item }">
-                    <!-- <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
-                        mdi-pencil
-                    </v-icon> -->
-
                     <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
                         Anular
                     </v-btn>

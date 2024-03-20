@@ -122,14 +122,15 @@ export default {
       ],
 
       ventas: [
-        ['x-Apertura y Cierre de Caja', 'mdi-printer-pos', '/frmaperturacaja'],
+        ['Apertura de Caja', 'mdi-printer-pos', '/AperturaCaja'],
+        ['x-Cierre de Caja', 'mdi-printer-pos', '/CierreCaja'],
         ['x-Arqueo de Caja', 'mdi-printer-pos', '/arqueo_caja'],
         ['.Venta y Cuentas a pagar', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
         ['x-Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza_forma_cobro'],
-        ['.Registrar Nota de Remisión', 'mdi-printer-pos', '/nota_remision_venta'],
+        ['Registrar Nota de Remisión', 'mdi-printer-pos', '/nota_remision_venta'],
         ['Registrar Nota de Credito', 'mdi-printer-pos', '/nota_credito_venta'],
         ['Registrar Nota de Debito', 'mdi-printer-pos', '/nota_debito_venta'],
-        ['x-Obtener Libro Ventas', 'mdi-printer-pos', '/obtener_libro_venta'],
+        ['Obtener Libro Ventas', 'mdi-printer-pos', '/obtener_libro_venta'],
         // ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
          // ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
       ],

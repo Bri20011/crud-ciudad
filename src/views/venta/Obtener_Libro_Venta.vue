@@ -23,9 +23,9 @@
                     </v-col>
 
                     <v-col cols="12" sm="6" md="6">
-                                <v-text-field type="date" variant="outlined" label="Filtrar por Fecha" v-model="formulario.fechaD"
-                                required></v-text-field>
-                            </v-col>
+                        <v-text-field type="date" variant="outlined" label="Filtrar por Fecha"
+                            v-model="formulario.fechaD" required></v-text-field>
+                    </v-col>
 
                     <v-col cols="12" class="d-flex justify-end">
                         <v-btn color="primary" @click="filtrarItems">Obtener</v-btn>
@@ -33,25 +33,25 @@
 
                     <v-data-table items-per-page-text="Articulos" :headers="headersVenta" :items="listaVentasFiltradas">
                         <template v-slot:item.fechaD="{ item }">
-                                    {{ formatearFecha(item.raw.fechaD) }}
-                                </template>
-                        
-                         
+                            {{ formatearFecha(item.raw.fechaD) }}
+                        </template>
+
+
 
                     </v-data-table>
 
                 </v-row>
-                   <v-col cols="12" class="d-flex justify-end">
-                        <v-btn color="primary" @click="descargarReporte">Exportar informe</v-btn>
-                    </v-col>
+                <v-col cols="12" class="d-flex justify-end">
+                    <v-btn color="primary" @click="descargarReporte">Exportar informe</v-btn>
+                </v-col>
             </v-form>
         </v-container>
-        
-        
+
+
     </v-card>
-    
+
 </template>
-  
+
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ClienteAPI } from '@/services/cliente.api'
@@ -59,6 +59,8 @@ import { TipoVentaAPI } from '@/services/tipoventa.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
 import { VentaAPI } from '@/services/venta.api'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 
 import dayjs from 'dayjs'
@@ -83,7 +85,7 @@ export default {
                 ventas: ''
 
             },
-            
+
 
             listaVentas: [],
             listaVentasFiltradas: [],
@@ -98,14 +100,14 @@ export default {
                 { title: 'Exenta', key: 'exenta', align: 'center' },
                 { title: 'Total Iva 5%', key: 'iva5', align: 'center' },
                 { title: 'Total Iva 10%', key: 'iva10', align: 'center' },
-                { title: 'Total', key: 'total', align: 'center' },
+                { title: 'Total', key: 'monto_total', align: 'center' },
                 // { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
 
             ],
 
-    
+
 
             listaCliente: [],
             listaDocumento: [],
@@ -186,12 +188,13 @@ export default {
                         exenta: item.exenta,
                         iva5: item.iva5,
                         iva10: item.iva10,
+                        monto_total: item.monto_total,
 
                     }
                 })
             })
         },
-       
+
 
 
 
@@ -202,45 +205,59 @@ export default {
         filtrarItems() {
             let items = this.listaVentas
 
-            if(this.formulario.ventas){
+            if (this.formulario.ventas) {
                 items = items.filter(item => item.id === this.formulario.ventas)
             }
-            if(this.formulario.proveedor){
-                items = items.filter(item => item.proveedor === this.formulario.proveedor)
+            if (this.formulario.cliente) {
+                items = items.filter(item => item.idCliente === this.formulario.cliente)
             }
-            if(this.formulario.documento){
+            if (this.formulario.documento) {
                 items = items.filter(item => item.idtipo_venta === this.formulario.documento)
             }
-               
-            if(this.formulario.fechaD){
+
+            if (this.formulario.fechaD) {
                 items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.formulario.fechaD).format('YYYY-MM-DD'))
             }
             this.listaVentasFiltradas = items
         },
-        async descargarReporte() {
-            await this.ObtenerCodigoVentas()
-            const itemsFiltrados = this.filtrarItems()
-            this.generarReporte(itemsFiltrados)
-        },
 
-       
 
- 
+
+
         formatearFecha(fecha) {
             return dayjs(fecha).format('DD/MM/YYYY')
         },
+        //Aqui descargo en pdf lo obtenido en la tabla usando filtarItems() 
+        descargarReporte() {
+            const doc = new jsPDF();
+
+            doc.text('Reporte de Libro de Ventas', 105, 10, { align: 'center' });
 
 
- 
 
-        sumarIva(columna) {
-            // Verifica que this.formulario.itemsDetalle tenga un valor
-            if (this.formulario.itemsDetalle) {
-                // Redondea cada valor de IVA antes de sumarlos
-                return Math.round(this.formulario.itemsDetalle.reduce((total, item) => total + item[columna], 0));
-            } else {
-                return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
-            }
+            autoTable(doc, {
+                head: [['Nº', 'Nº de Factura', 'Tipo Documento', 'Fecha', 'Timbrado', 'Cliente', 'Exenta', 'Iva 5%', 'Iva 10%', 'Total']],
+                body: this.listaVentasFiltradas.map(item => [
+                    item.id,
+                    item.numero_factura,
+                    item.documento,
+                    dayjs(item.fechaD).format('DD/MM/YYYY'),
+                    item.timbrado,
+                    item.cliente,
+                    item.exenta,
+                    item.iva5,
+                    item.iva10,
+                    item.monto_total
+                ]),
+                theme: 'grid',
+                styles: styles,
+                //columnStyles: { 0: { cellWidth: 20 }, 1: { cellWidth: 25 }, 2: { cellWidth: 25 }, 3: { cellWidth: 20 }, 4: { cellWidth: 25 }, 5: { cellWidth: 40 } },
+                alternateRowStyles: styles.alternateRow, // Aplica estilo de fila alternativa
+                margin: { top: 20 }, // Ajusta el margen superior
+                tableWidth: 'auto' // Ancho de tabla automático
+            });
+
+            doc.output('dataurlnewwindow');
         },
 
         sumarTotal(columna) {
