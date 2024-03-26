@@ -379,7 +379,7 @@ export default {
       this.dialogoFormularioEditar = true
       console.log(parametro)
       this.formulario.codigo = parametro.id
-      this.formulario.fechaApertura = parametro.fechaApertura
+      this.formulario.fechaApertura = dayjs(parametro.fechaApertura).format('DD-MM-YYYY')
       this.formulario.montoincial = parametro.montoincial
       this.formulario.caja = parametro.idCaja
       this.formulario.usuario = parametro.idUsuario

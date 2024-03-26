@@ -23,37 +23,35 @@
                     </v-col>
 
                     <v-col cols="12" sm="6" md="6">
-                                <v-text-field type="date" variant="outlined" label="Filtrar por Fecha" v-model="formulario.fechaD"
-                                required></v-text-field>
-                            </v-col>
+                        <v-text-field type="date" variant="outlined" label="Filtrar por Fecha"
+                            v-model="formulario.fechaD" required></v-text-field>
+                    </v-col>
 
                     <v-col cols="12" class="d-flex justify-end">
                         <v-btn color="primary" @click="filtrarItems">Obtener</v-btn>
                     </v-col>
 
-                    <v-data-table items-per-page-text="Articulos" :headers="headersCompra" :items="listaComprasFiltradas">
+                    <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
+                        :items="listaComprasFiltradas">
                         <template v-slot:item.fechaD="{ item }">
-                                    {{ formatearFecha(item.raw.fechaD) }}
-                                </template>
-                        <template v-slot:item.total="{ item }">
-                             {{ calcularTotal(item) }}
-                         </template>
-                         
+                            {{ formatearFecha(item.raw.fechaD) }}
+                        </template>
+
 
                     </v-data-table>
 
                 </v-row>
-                   <v-col cols="12" class="d-flex justify-end">
-                        <v-btn color="primary" @click="descargarReporte">Exportar informe</v-btn>
-                    </v-col>
+                <v-col cols="12" class="d-flex justify-end">
+                    <v-btn color="primary" @click="descargarReporte">Exportar informe</v-btn>
+                </v-col>
             </v-form>
         </v-container>
-        
-        
+
+
     </v-card>
-    
+
 </template>
-  
+
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ProveedorAPI } from '@/services/proveedor.api'
@@ -61,8 +59,8 @@ import { TipoDocumentoAPI } from '@/services/tipo_documento.api'
 import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
 import { ComprasAPI } from '@/services/compras.api'
-
-
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import dayjs from 'dayjs'
 
 
@@ -85,7 +83,7 @@ export default {
                 compras: ''
 
             },
-            
+
 
             listaCompras: [],
             listaComprasFiltradas: [],
@@ -96,25 +94,17 @@ export default {
                 { title: 'Fecha de Factura', key: 'fechaD', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Proveedor', key: 'proveedor', align: 'star' },
-                // { title: 'Proveedor', key: 'Razon_social_proveedor', align: 'star' },
-                // { title: 'Caja', key: 'caja', align: 'star' },
-
-                // { title: 'Producto', key: 'idProducto', align: 'center' },
-                // { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
-                // { title: 'Cantidad', key: 'Cantidad', align: 'center' },
-                // { title: 'Total', key: 'Precio', align: 'center' },
-                // { title: 'Iva', key: 'iva', align: 'center' },
-                // { title: 'Exenta', key: 'exenta', align: 'center' },
-                // { title: 'Total Iva 5%', key: 'iva5', align: 'center' },
-                // { title: 'Total Iva 10%', key: 'iva10', align: 'center' },
+                { title: 'Exenta', key: 'exenta', align: 'center' },
+                { title: 'Total Iva 5%', key: 'iva5', align: 'center' },
+                { title: 'Total Iva 10%', key: 'iva10', align: 'center' },
                 { title: 'Total', key: 'total', align: 'center' },
-                // { title: 'Accion', key: 'action', sortable: false, align: 'end' },
+
 
 
 
             ],
 
-    
+
 
             listaProveedor: [],
             listaDocumento: [],
@@ -172,17 +162,22 @@ export default {
         },
 
         ObtenerCompras() {
-            ComprasAPI.getAll().then(({ data }) => {
+            ComprasAPI.librocompra().then(({ data }) => {
                 this.listaCompras = data.map(item => {
                     return {
                         id: item.idCompras,
-                        proveedor: item.idProveedor,
+                        idProveedor: item.idProveedor,
+                        proveedor: item.Nombre_Proveedor,
                         numero_factura: item.Numero_fact,
-                        documento: item.idTipo_Documento,
+                        idTipo_Documento: item.idTipo_Documento,
+                        documento: item.Tipo_Documento,
                         caja: item.idCaja,
                         timbrado: item.Timbrado,
                         fechaD: item.Fecha_doc,
-                        detalleItems: item.detalle
+                        exenta: item.exenta,
+                        iva5: item.iva5,
+                        iva10: item.iva10,
+                        total: item.monto_total,
 
                     }
                 })
@@ -198,38 +193,31 @@ export default {
         filtrarItems() {
             let items = this.listaCompras
 
-            if(this.formulario.compras){
+            if (this.formulario.compras) {
                 items = items.filter(item => item.id === this.formulario.compras)
             }
-            if(this.formulario.proveedor){
-                items = items.filter(item => item.proveedor === this.formulario.proveedor)
+            if (this.formulario.proveedor) {
+                items = items.filter(item => item.idProveedor === this.formulario.proveedor)
             }
-            if(this.formulario.documento){
-                items = items.filter(item => item.documento === this.formulario.documento)
+            if (this.formulario.documento) {
+                items = items.filter(item => item.idTipo_Documento === this.formulario.documento)
             }
-               
-            if(this.formulario.fechaD){
+
+            if (this.formulario.fechaD) {
                 items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.formulario.fechaD).format('YYYY-MM-DD'))
             }
             this.listaComprasFiltradas = items
         },
-        async descargarReporte() {
-            await this.ObtenerCodigoCompra()
-            const itemsFiltrados = this.filtrarItems()
-            this.generarReporte(itemsFiltrados)
-        },
 
-        calcularTotal(item) {
-            return item.raw.detalleItems.reduce((total, detalle) => total + (detalle.Precio * detalle.Cantidad), 0)
-        },
 
- 
+
+
         formatearFecha(fecha) {
             return dayjs(fecha).format('DD/MM/YYYY')
         },
 
 
- 
+
 
         sumarIva(columna) {
             // Verifica que this.formulario.itemsDetalle tenga un valor
@@ -250,6 +238,48 @@ export default {
                 return 0; // O cualquier valor predeterminado que desees en caso de que no haya itemsDetalle
             }
         },
+        descargarReporte() {
+            const doc = new jsPDF()
+            autoTable(doc, {
+                head: [
+                    ['Codigo', 'Nº Factura', 'Tipo Documento', 'Fecha ', 'Timbrado', 'Proveedor', 'Exenta', ' Iva 5%', ' Iva 10%', 'Total']
+                ],
+                body: this.listaComprasFiltradas.map(item => [
+                    item.id,
+                    item.numero_factura,
+                    item.documento,
+                    this.formatearFecha(item.fechaD),
+                    item.timbrado,
+                    item.proveedor,
+                    item.exenta,
+                    item.iva5,
+                    item.iva10,
+                    item.total
+                ]),
+                startY: 20,
+                styles: {
+                    halign: 'center',
+                    valign: 'middle',
+                    fontSize: 10,
+                    cellPadding: 1,
+                    overflow: 'linebreak',
+                    columnWidth: 'wrap'
+                },
+                columnStyles: {
+                    0: { columnWidth: 10 },
+                    1: { columnWidth: 20 },
+                    2: { columnWidth: 20 },
+                    3: { columnWidth: 20 },
+                    4: { columnWidth: 20 },
+                    5: { columnWidth: 20 },
+                    6: { columnWidth: 20 },
+                    7: { columnWidth: 20 },
+                    8: { columnWidth: 20 },
+                    9: { columnWidth: 20 },
+                }
+            })
+            doc.save('libro_compras.pdf')
+        }
     },
 
 

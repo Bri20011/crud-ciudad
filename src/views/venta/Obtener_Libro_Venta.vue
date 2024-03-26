@@ -96,12 +96,10 @@ export default {
                 { title: 'Fecha de Factura', key: 'fechaD', align: 'star' },
                 { title: 'Timbrado', key: 'timbrado', align: 'star' },
                 { title: 'Cliente', key: 'cliente', align: 'star' },
-                // { title: 'Iva', key: 'iva', align: 'center' },
                 { title: 'Exenta', key: 'exenta', align: 'center' },
                 { title: 'Total Iva 5%', key: 'iva5', align: 'center' },
                 { title: 'Total Iva 10%', key: 'iva10', align: 'center' },
                 { title: 'Total', key: 'monto_total', align: 'center' },
-                // { title: 'Accion', key: 'action', sortable: false, align: 'end' },
 
 
 

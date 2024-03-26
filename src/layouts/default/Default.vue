@@ -116,14 +116,14 @@ export default {
         ['.Registro Urbanizacion', 'mdi-image-filter-hdr', '/urbanizacion'],
         ['.Registro Precio de Lotes', 'mdi-image-filter-hdr', '/precio'],
         ['.Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],
-        ['x-Registro Rescision de Contrato', 'mdi-image-filter-hdr', '/rescision_contrato'],
+        ['x-Registro Rescision de Contrato', 'mdi-image-filter-hdr', '/resccontrato'],
         ['x-Registro Cesión de Derechos y Deudas', 'mdi-image-filter-hdr', '/cesion_derecho_deuda'],
 
       ],
 
       ventas: [
         ['Apertura de Caja', 'mdi-printer-pos', '/AperturaCaja'],
-        ['x-Cierre de Caja', 'mdi-printer-pos', '/CierreCaja'],
+        ['Cierre de Caja', 'mdi-printer-pos', '/CierreCaja'],
         ['x-Arqueo de Caja', 'mdi-printer-pos', '/arqueo_caja'],
         ['.Venta y Cuentas a pagar', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
         ['x-Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza_forma_cobro'],
