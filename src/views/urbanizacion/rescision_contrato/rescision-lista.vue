@@ -58,9 +58,6 @@
                 </v-icon>
                 <!-- AQUI hay un boton que valida para poder imprimir un contrato. En caso de que el registro haya sido TipoVenta == 1 Usar el ImprimirContratoContado, en caso de TipoVenta == 2  usa el ImprimirContratoCredito -->
 
-                <v-icon color="#1976D2" size="small" @click="imprimirContrato(item.raw)">
-                    mdi-printer
-                </v-icon>
             </template>
         </v-data-table>
     </v-card>
@@ -89,12 +86,9 @@ export default {
         return {
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Nombre de Urbanizacion', key: 'nombre_urbanizacion' },
-                { title: 'Fecha', key: 'fechaD', align: 'center' },
                 { title: 'Cliente', key: 'cliente', align: 'center' },
-                { title: 'Tipo de Venta', key: 'tipoventa', align: 'center' },
-                { title: 'Ubicacion', key: 'ubicacion', align: 'center' },
-                { title: 'Ciudad', key: 'ciudad', align: 'center' },
+                { title: 'Fecha', key: 'fechaD', align: 'center' },
+                { title: 'Motivos Rescision de Contrato', key: 'motivoRescision', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             buscador: '',

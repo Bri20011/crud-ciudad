@@ -37,12 +37,12 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Compras', 105, 10, { align: 'center' });
+            doc.text('Reporte de Ventas', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
             itemsFiltrados.forEach(item => {
                 autoTable(doc, {
-                    head: [['Codigo', 'Numero de Factura', 'Fecha Compra', ' Cliente']],
+                    head: [['Codigo', 'Numero de Factura', 'Fecha Venta', ' Cliente']],
                     body: [[item.id, item.Numero_fact, dayjs(item.fechaD).format('DD/MM/YYYY'), item.cliente]],
                     theme: 'grid', // Agrega bordes a la tabla
                     styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco

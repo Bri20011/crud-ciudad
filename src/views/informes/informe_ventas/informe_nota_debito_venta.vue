@@ -19,7 +19,7 @@
     </v-container>
 </template>
 <script>
-import { NCCompraApi } from '@/services/nota_credito_compra.api'
+import { NDVentaApi } from '@/services/nota_debito_venta.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import dayjs from 'dayjs'
@@ -37,20 +37,20 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Notas de Credito', 105, 10, { align: 'center' });
+            doc.text('Reporte de Notas de Debito', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
             itemsFiltrados.forEach(item => {
         autoTable(doc, {
-            head: [['Codigo', 'Numero de Nota Credito', 'Fecha Notas de Credito', ' Proveedor']],
-            body: [[item.id, item.numero_nc, dayjs(item.fechaD).format('DD/MM/YYYY'), item.proveedor]],
+            head: [['Codigo', 'Numero de Nota Debito', 'Fecha Notas de Debito', ' Cliente']],
+            body: [[item.id, item.numero_nc, dayjs(item.fecha).format('DD/MM/YYYY'), item.cliente]],
             theme: 'grid', // Agrega bordes a la tabla
             styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
             columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
         });
         autoTable(doc, {
             head: [['Producto', 'Cantidad', 'Precio']],
-            body: item.itemsDetalle.map(det => [det.nombreProducto, det.Cantidad, det.Precio]),
+            body: item.itemsDetalle.map(det => [det.idContrato, det.Cantidad, det.Precio]),
             theme: 'grid', // Agrega bordes a la tabla
             styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
             columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
@@ -60,17 +60,20 @@ export default {
             doc.output('dataurlnewwindow');
         },
         async ObtenerNota_Credito_C() {
-        await NCCompraApi.getAll().then(({ data }) => {
-
+        await NDVentaApi.getAll().then(({ data }) => {
         this.items = data.map(item => {
           return {
-                        id: item.idNota_CreditoCompra,
-                        proveedor: item.idProveedor,
+            id: item.idNota_Debito_Venta,
                         numero_nc: item.Numero_doc,
+                        fecha: item.Fecha_doc,
+                        idCliente: item.idCliente,
+                        cliente: item.nombreCliente,
+                        idTimbrado: item.idTimbrado,
+                        timbrado: item.numeroTimbrado,
+                        idVenta: item.idVenta,
+                        idTipo_Documento: item.idTipo_Documento,
+                        nombreTipoVenta: item.nombreTipoVenta,
                         idCaja: item.idCaja,
-                        razonsocial: item.razonsocial,
-                        timbrado: item.Timbrado,
-                        fechaD: item.Fecha_doc,
                         itemsDetalle: item.detalle,
 
                    
@@ -78,6 +81,7 @@ export default {
           }
         })
       })
+ 
     },
 
   
@@ -93,12 +97,16 @@ export default {
             return items
         },
         async descargarReporte() {
+           
             await this.ObtenerNota_Credito_C()
             const itemsFiltrados = this.filtrarItems()
             this.generarReporte(itemsFiltrados)
         },
+        
     }
+    
 }
+
 </script>
 <style scoped>
 .input-date {

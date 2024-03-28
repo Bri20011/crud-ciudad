@@ -27,8 +27,7 @@
 
 
                         <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" 
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente"
@@ -60,7 +59,8 @@
                                     <td></td>
                                     <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
                                     <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
-                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}
+                                    </td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -79,8 +79,6 @@
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn prepend-icon="mdi mdi-plus-thick" color="#90A4AE" class="mx-2"
-                                @click="abrirformulariogenerarcuentas">Generar Cuotas</v-btn>
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
 
@@ -151,7 +149,7 @@
                         <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
                             @click="abrirDialogo">Registrar
                         </v-btn>
-                      
+
                     </v-toolbar>
                 </template>
                 <template v-slot:item.fecha="{ item }">
@@ -161,11 +159,11 @@
 
                     <v-icon color="red" size="small" class="me-2" @click="confirmarCambiarEstado(item.raw)">
                         mdi-trash-can-outline
-          </v-icon>
+                    </v-icon>
 
-          <v-icon color="primary" size="small" class="me-2" @click="descargarFactura(item.raw)">
-            mdi mdi-download-circle-outline
-          </v-icon>
+                    <v-icon color="primary" size="small" class="me-2" @click="descargarFactura(item.raw)">
+                        mdi mdi-download-circle-outline
+                    </v-icon>
 
                     <!-- <v-btn append-icon="mdi-trash-can-outline" color="primary"
                         @click="confirmarCambiarEstado(item.raw)">
@@ -345,6 +343,7 @@ export default {
                 numero_contrato: '',
                 fechaD: '',
                 tipo_venta: '',
+                idtipo_venta: '',
 
 
 
@@ -390,11 +389,7 @@ export default {
                 { title: 'Total', key: 'total', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
-            headersCuentasPagar: [
-                { title: 'Fecha de Pago', key: 'fechaD', align: 'star' },
-                { title: 'Monto', key: 'monto', align: 'center' },
-                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-            ],
+
             items: [
                 {
                     id: '',
@@ -483,9 +478,9 @@ export default {
                 //aqui tengo un console.log de lo que me retorna la api
                 console.log('data:', data)
 
-                this.formulario.idtipo_venta = data[0].idtipo_venta
-                this.formulario.tipo_venta = data[0].nombreTipoVenta
-                this.formulario.itemsDetalle =  [{ monto_totalNuevo: data[0].monto_totalNuevo, idContrato: data[0].idContrato }]
+                this.formulario.idtipo_venta = data.idtipo_venta
+                this.formulario.tipo_venta = data.nombreTipoVenta
+                this.formulario.itemsDetalle = [{ monto_totalNuevo: data.monto_totalNuevo, idContrato: data.idContrato }]
 
             });
 
@@ -517,14 +512,14 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_contrato ) {
+            if (!this.formulario.numero_contrato) {
 
                 this.emptyFieldError = true;
                 return;
             }
 
             VentaAPI.create({
-                   //aqui envio al backend cabecera y detall
+                //aqui envio al backend cabecera y detall
                 idventa: this.formulario.codigo,
                 Fecha: this.fechaO,
                 Numero_fact: this.numerosVenta,
@@ -544,12 +539,12 @@ export default {
                         exenta: item.exenta,
                     }
                 })
-          
+
 
             },
             ).then((response) => {
-               console.log('response: ', response);
-               this.descargarFactura(response.data.idventa)
+                console.log('response: ', response);
+                this.descargarFactura(response.data.idventa)
                 this.ObtenerVentas()
             })
 
@@ -645,7 +640,7 @@ export default {
             this.detalle.numero_cuota = parametro.idContrato
             this.detalle.monto_total = parametro.monto_totalNuevo
             // this.detalle.total = this.detalle.monto_total
-           
+
 
 
         },
@@ -666,7 +661,7 @@ export default {
                 // this.formulario.itemsDetalle[index].total = this.formulario.cantidad * this.formulario.precio;
                 this.formulario.itemsDetalle[index].iva = this.formulario.iva;
                 this.formulario.itemsDetalle[index].total = this.detalle.monto_total;
-//Aqui hago el calculo de los iva  switch case
+                //Aqui hago el calculo de los iva  switch case
                 switch (this.formulario.iva) {
                     case 1:
                         this.formulario.itemsDetalle[index].exenta = this.formulario.itemsDetalle[index].monto_totalNuevo
@@ -686,7 +681,7 @@ export default {
                 }
             }
 
-             
+
 
             this.dialogoFormularioEditarDetalle = false;
         },
@@ -715,12 +710,7 @@ export default {
             }
         },
 
-        abrirformulariogenerarcuentas() {
-            // Abrir el modal y cargar el código aquí
-            this.dialogoFormularioGenerarCuota = true;
-            this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
-        },
+
 
         AgregarDetallePago() {
             this.itemsDetalle.push({

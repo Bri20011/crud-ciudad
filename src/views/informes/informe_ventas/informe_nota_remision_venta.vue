@@ -3,7 +3,7 @@
         <toolbar flat>
             <v-row>
                 <v-col cols="4">
-                    <v-text-field variant="outlined" v-model="filtros.numero_nc" density="compact"
+                    <v-text-field variant="outlined" v-model="filtros.numerodoc" density="compact"
                         label="Fitro por Nº NC" required></v-text-field>
                 </v-col>
                 <v-col cols="4">
@@ -19,7 +19,7 @@
     </v-container>
 </template>
 <script>
-import { NCCompraApi } from '@/services/nota_credito_compra.api'
+import { NRVentaApi } from '@/services/nota_remision_venta.api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import dayjs from 'dayjs'
@@ -29,7 +29,7 @@ export default {
             items: [],
             filtros: {
                 fecha: '',
-                numero_nc: ''
+                numerodoc: ''
             }
         }
     },
@@ -37,20 +37,20 @@ export default {
         generarReporte(itemsFiltrados) {
             const doc = new jsPDF();
             doc.setFontSize(16);
-            doc.text('Reporte de Notas de Credito', 105, 10, { align: 'center' });
+            doc.text('Reporte de Notas de Remision', 105, 10, { align: 'center' });
             doc.setFontSize(12);
 
             itemsFiltrados.forEach(item => {
         autoTable(doc, {
-            head: [['Codigo', 'Numero de Nota Credito', 'Fecha Notas de Credito', ' Proveedor']],
-            body: [[item.id, item.numero_nc, dayjs(item.fechaD).format('DD/MM/YYYY'), item.proveedor]],
+            head: [['Codigo', 'Numero de Nota Remision', 'Fecha Notas de Remision', ' Proveedor']],
+            body: [[item.id, item.numerodoc, dayjs(item.fechaD).format('DD/MM/YYYY'), item.cliente]],
             theme: 'grid', // Agrega bordes a la tabla
             styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
             columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
         });
         autoTable(doc, {
             head: [['Producto', 'Cantidad', 'Precio']],
-            body: item.itemsDetalle.map(det => [det.nombreProducto, det.Cantidad, det.Precio]),
+            body: item.itemsDetalle.map(det => [det.idProducto, det.Cantidad, det.Precio]),
             theme: 'grid', // Agrega bordes a la tabla
             styles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Color de letra negro y fondo de celda blanco
             columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 40 } }
@@ -60,17 +60,17 @@ export default {
             doc.output('dataurlnewwindow');
         },
         async ObtenerNota_Credito_C() {
-        await NCCompraApi.getAll().then(({ data }) => {
+        await NRVentaApi.getAll().then(({ data }) => {
 
         this.items = data.map(item => {
           return {
-                        id: item.idNota_CreditoCompra,
-                        proveedor: item.idProveedor,
-                        numero_nc: item.Numero_doc,
-                        idCaja: item.idCaja,
-                        razonsocial: item.razonsocial,
-                        timbrado: item.Timbrado,
+            id: item.idnota_remision_venta,
                         fechaD: item.Fecha_doc,
+                        idTimbrado: item.idTimbrado,
+                        timbrado: item.numeroTimbrado,
+                        numerodoc: item.Numero_doc,
+                        idCliente: item.idCliente,
+                        cliente: item.nombreCliente,
                         itemsDetalle: item.detalle,
 
                    
@@ -86,9 +86,9 @@ export default {
             if (this.filtros.fecha) {
                 items = items.filter(item => dayjs(item.fechaD).format('YYYY-MM-DD') === dayjs(this.filtros.fecha).format('YYYY-MM-DD'))
             }
-            if (this.filtros.numero_nc) {
-                const filtroRuc = parseFloat(this.filtros.numero_nc); // Convertir el valor del filtro a tipo double
-                items = items.filter(item => parseFloat(item.numero_nc) === filtroRuc);
+            if (this.filtros.numerodoc) {
+                const filtroRuc = parseFloat(this.filtros.numerodoc); // Convertir el valor del filtro a tipo double
+                items = items.filter(item => parseFloat(item.numerodoc) === filtroRuc);
             }
             return items
         },

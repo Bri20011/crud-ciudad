@@ -25,27 +25,23 @@ export default {
         ObtenerRescision() {
             RescisionAPI.getAll().then(({ data }) => {
                 this.listado_rescision = data.map(item => {
-                    return {                       
-                        id: item.idContrato,
-                        idListado_precio: item.idListado_precio,
-                        precioCredito:item.precioCredito,
-                        precioContado:item.precioContado,
-                        idCiudad: item.idCiudad,
-                        ciudad: item.nombreciudad, 
-                        idCliente: item.idCliente,
+                    return {       
+                //         idRescision_contrato: '',
+                // idContrato: this.formulario.numero_orden,
+                // idCliente: this.formulario.cliente,
+                // fecha_rescision: this.formulario.fechaD,
+                // idmotivo_rescision_contrato: this.formulario.motivoRescision,
+                // detalle: this.formulario.detalle
+                        
+
+                        id: item.idRescision_contrato,
+                        numero_orden: item.idContrato,
                         cliente: item.nombreCliente,
-                        rucC: item.rucCliente,
-                        direccionCliente: item.direccionCliente,
-                        ciudadCliente: item.ciudadCliente,
-                        idtipo_venta: item.idtipo_venta,
-                        tipoventa: item.nombretipoventa,
-                        fecha_contrato: item.fecha_contrato,
-                        plazo_venta: item.plazo_venta,
-                        numero_manzana: item.numero_manzana,
-                        numero_lote: item.numero_lote,
-                        nombre_urbanizacion: item.nombre_urbanizacion,
-                        ubicacion: item.ubicacion,
+                        idCliente: item.idCliente,
+                        fechaD: item.fecha_rescision,
+                        motivoRescision: item.DescripcionMotivo,
                         detalle: item.detalle
+
 
                     }
                 })

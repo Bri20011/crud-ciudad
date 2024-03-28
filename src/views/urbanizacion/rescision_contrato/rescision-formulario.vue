@@ -10,7 +10,7 @@
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" class="mt-4" sm="2" md="2">
-                            <v-btn @click="ObtenerCodigoOrden">Calcular</v-btn>
+                            <v-btn @click="ObtenerCodigoOrden">Obtener</v-btn>
                         </v-col>
                         <v-col cols="12" sm="6" md="6">
                             <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente" item-title="ruc"
@@ -76,7 +76,9 @@ export default {
                 cliente: '',
                 fechaD: '',
                 motivoRescision: '',
+                detalle: [
 
+                ],
 
 
 
@@ -157,24 +159,13 @@ export default {
                 // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
                 return;
             }
+           ContratoApi.getById(this.formulario.numero_orden).then(({ data }) => {
 
-            // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
-            ContratoApi.getById(this.formulario.numero_orden).then(({ data }) => {
-                console.log('date:', data);
-                console.log('detalle:', detalle);
-
-                this.formulario = {
+                       this.formulario = {
                     ...this.formulario,
                       cliente: data.idCliente,
-                 //Aqui quiero asignarle valor a las variables de detalleGuar, segun lo que obtengo de la consulta detalle
-                        detalleGuar: data.detalle.map(item => ({
-                            id: item.id,
-                            fechaVto: item.fechaVto,
-                            importeCuota: item.importeCuota,
-                            cantidadCuota: item.cantidadCuota,
-                            montoContado: item.montoContado,
-                            id_detalle: item.id_detalle,
-                        }))
+                      detalle: data.detalle
+              
 
 
                 };
@@ -189,23 +180,19 @@ export default {
 
 
         guardarFormulario() {
-            console.log(' this.detalleGuar: ',  this.detalleGuar);
             RescisionAPI.create({
                 idRescision_contrato: '',
+                idContrato: this.formulario.numero_orden,
                 idCliente: this.formulario.cliente,
                 fecha_rescision: this.formulario.fechaD,
                 idmotivo_rescision_contrato: this.formulario.motivoRescision,
-                detalle: this.detalleGuar.map(item => ({
-                    id: item.id,
-                    fechaVto: item.fechaVto,
-                    importeCuota: item.importeCuota,
-                    cantidadCuota: item.cantidadCuota,
-                    montoContado: item.montoContado,
-                    id_detalle: item.id_detalle,
+                detalle: this.formulario.detalle
+                //aqui  envio detalle: this.formulario.detalle, y tambien en detalle envio al backend el id de idRescision_contrato
 
 
+            
+                
 
-                }))
             }).then(() => {
                
                 this.cerrarDialogo()
