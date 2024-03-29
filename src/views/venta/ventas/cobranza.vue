@@ -7,29 +7,28 @@
                     <v-row>
 
                         <v-col cols="12" sm="3" md="3">
-                         
-                   <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente" item-title="ruc"
+
+                            <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente" item-title="ruc"
                                 item-value="id" v-model="formulario.numero_orden" required>
                             </v-autocomplete>
-                        </v-col> 
+                        </v-col>
 
                         <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoVentas">Calcular</v-btn>
                         </v-col>
-                    
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero de Recibo"
-                                v-model="formulario.numero_nc" :error="excededLimit" :error-messages="errorMessage"
-                                required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field type="date" variant="outlined" label="Fecha de Recibo" v-model="formulario.fechaContrato"
-                            required></v-text-field>
-                        </v-col>
-                      
 
-                     
-                        
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Numero de Recibo" v-model="formulario.numero_nc"
+                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field type="date" variant="outlined" label="Fecha de Recibo"
+                                v-model="formulario.fechaContrato" required></v-text-field>
+                        </v-col>
+
+
+
+
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersCompra"
                             :items="formulario.itemsDetalle">
@@ -40,20 +39,17 @@
                                     <td></td>
                                     <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
                                     <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
-                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('Total') }}</td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('Total') }}
+                                    </td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
                             </template>
+                          
                             <template v-slot:item.action="{ item }">
-                                <!-- <v-icon size="small" class="me-2" @click="editarDetalle(item.raw)">
-                                    mdi-pencil
-                                </v-icon> -->
-                                <!-- <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
-                                    mdi-trash-can-outline
-                                </v-icon> -->
+                                <v-checkbox v-model="item.raw.check"></v-checkbox>
                             </template>
                         </v-data-table>
 
@@ -134,6 +130,7 @@
 
                     </v-toolbar>
                 </template>
+
                 <template v-slot:item.fecha="{ item }">
                     {{ formatearFecha(item.raw.fechaD) }}
                 </template>
@@ -142,7 +139,8 @@
                         mdi-pencil
                     </v-icon> -->
 
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary"
+                        @click="confirmarCambiarEstado(item.raw)">
                         Anular
                     </v-btn>
 
@@ -180,7 +178,7 @@
         <!-- FIN DIALOGO -->
     </v-container>
 </template>
-  
+
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ContratoApi } from '@/services/contrato.api'
@@ -259,7 +257,7 @@ export default {
                 { title: 'N° Cuota', key: 'id_detalle', align: 'center' },
                 { title: 'Fecha de Vto', key: 'fecha_vto', align: 'center' },
                 { title: 'Importe Cuota', key: 'importe_cuota', align: 'center' },
-                { title: 'Importe Pago', key: 'importe_pago', align: 'center' },
+              
                 { title: 'Acion', key: 'action', sortable: false, align: 'end' },
             ],
             items: [
@@ -345,24 +343,24 @@ export default {
             })
         },
         ObtenerCaja() {
-    CajaAPI.getAll().then(({ data }) => {
-        if (data.length > 1) {
-            const primerElemento = data[1];
-            this.listaCaja = [{
-                id: primerElemento.idCaja,
-                descripcionCa: primerElemento.nombrecaja,
-                numerCaja: primerElemento.Cajahabilitada
-            }];
-        } else {
-            // Manejar el caso en el que no se encuentren datos
-            console.warn("No se encontraron cajas.");
-            this.listaCaja = [];
-        }
-    }).catch(error => {
-        console.error("Error al obtener las cajas: ", error);
-        // Manejar el error adecuadamente
-    });
-},
+            CajaAPI.getAll().then(({ data }) => {
+                if (data.length > 1) {
+                    const primerElemento = data[1];
+                    this.listaCaja = [{
+                        id: primerElemento.idCaja,
+                        descripcionCa: primerElemento.nombrecaja,
+                        numerCaja: primerElemento.Cajahabilitada
+                    }];
+                } else {
+                    // Manejar el caso en el que no se encuentren datos
+                    console.warn("No se encontraron cajas.");
+                    this.listaCaja = [];
+                }
+            }).catch(error => {
+                console.error("Error al obtener las cajas: ", error);
+                // Manejar el error adecuadamente
+            });
+        },
         ObtenerTipoD() {
             TipoVentaAPI.getAll().then(({ data }) => {
                 this.listaDocumento = data.map(item => {
@@ -388,14 +386,24 @@ export default {
                 this.idContrato = data.idContrato
                 this.formulario = {
                     ...this.formulario,
-                    itemsDetalle: data,
-              
+                    itemsDetalle: data.map(item => {
+                        return {
+                            check: false,
+                            id_detalle: item.id_detalle,
+                            fecha_vto: dayjs(item.fecha_vto).format('DD/MM/YYYY'),
+                            importe_cuota: item.importe_cuota,
+                            importe_pago: item.importe_pago,
+                        };
+                    }),
 
 
 
-                   
-     
- 
+
+
+
+
+
+
 
 
 
@@ -431,51 +439,8 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_nc) {
-
-                this.emptyFieldError = true;
-                return;
-            }
-
-
-            NCVentaApi.create({
-                idNota_Credito_Venta: this.formulario.codigo,
-                Numero_doc: this.formulario.numero_nc,  
-                Fecha_doc: this.formulario.fechaContrato,
-                idCliente: this.formulario.cliente,
-                idTimbrado: this.formulario.timbrado,
-                idVenta: this.idVentaG,
-                idTipo_Documento: this.formulario.tipo_venta,
-                idCaja: this.formulario.numerCaja,
-                fecha_vto: this.formulario.fechaVto,
-                idContrato: this.detalle.numero_cuota,
-                Detalle: this.formulario.itemsDetalle.map(item => {
-                    return {
-                        idNota_Credito_Venta: this.formulario.codigo,
-                        idContrato: item.idContrato,
-                        Precio: item.monto_total,
-                        Cantidad: 1
-                    }
-                }),
-
-
-               
-             
-               
-
-
-            },
-            ).then(() => {
-                this.ObtenerNota_Credito_V()
-            })
-
-            this.formulario.codigo = '';
-            this.formulario.fechaD = '';
-            this.formulario.timbrado = '';
-            this.formulario.numero_nc = '';
-            this.formulario.documento = '';
-            this.formulario.proveedor = '';
-            this.dialogoFormulario = false;
+            const cuotasMarcadas = this.formulario.itemsDetalle.filter(item => item.check);
+            
         },
 
 
@@ -532,7 +497,7 @@ export default {
                 })
             })
         },
-    
+
         recalcularTotal() {
             // Verifica que haya valores en cantidad y precio
             if (this.formulario.cantidad && this.formulario.precio) {
@@ -547,7 +512,7 @@ export default {
             this.dialogoFormularioEditarDetalle = true
             this.detalle.numero_cuota = parametro.idContrato
             this.detalle.monto_total = parametro.monto_total
-        
+
 
 
         },
@@ -630,17 +595,17 @@ export default {
         },
 
         tipoDocumentoChanged() {
-        if (this.formulario.tipo_venta === 1) {
-            // Si se seleccionó Contado, muestra el campo de número de caja y oculta el campo de fecha
-            this.formulario.fechaVto = null; // Reiniciar el valor de fechaO
-        } else if (this.formulario.tipo_venta === 2) {
-            // Si se seleccionó Crédito, muestra el campo de fecha y oculta el campo de número de caja
-            this.formulario.numerCaja = null; // Reiniciar el valor de numer_caja
-        }
-    },
-     
+            if (this.formulario.tipo_venta === 1) {
+                // Si se seleccionó Contado, muestra el campo de número de caja y oculta el campo de fecha
+                this.formulario.fechaVto = null; // Reiniciar el valor de fechaO
+            } else if (this.formulario.tipo_venta === 2) {
+                // Si se seleccionó Crédito, muestra el campo de fecha y oculta el campo de número de caja
+                this.formulario.numerCaja = null; // Reiniciar el valor de numer_caja
+            }
+        },
 
-    ObtenerVentas() {
+
+        ObtenerVentas() {
             VentaAPI.getAll().then(({ data }) => {
                 this.listaVentas = data.map(item => {
                     return {
@@ -674,7 +639,7 @@ export default {
                         idTipo_Documento: item.idTipo_Documento,
                         nombreTipoVenta: item.nombreTipoVenta,
                         idCaja: item.idCaja,
-            
+
                     }
                 })
             })
@@ -694,11 +659,11 @@ export default {
         this.ObtenerVentas()
 
     },
-watch:{
-'formulario.tipo_venta': function (){
-    this.formulario.numerCaja = 101
-},
-},
+    watch: {
+        'formulario.tipo_venta': function () {
+            this.formulario.numerCaja = 101
+        },
+    },
 
 }
 </script>
