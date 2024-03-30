@@ -1,260 +1,72 @@
 <template>
-     <v-container>
-                    <h2 class="mb-0 d-flex justify-center">Registrar Arqueo de Caja</h2>
-                    <v-row class="d-flex justify-center">
-                        <v-col cols="12" sm="4" md="4" class="mt-0">
-                            <v-autocomplete variant="outlined" label="Selecione Caja" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
-                                required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3" class="mt-0">
-                            <input class="custom-input" v-model="formulario.fechaD" type="date"
-                                placeholder="Fecha de Pedido" @input="formatDate" />
-                        </v-col>
-                    </v-row>
-                 </v-container>
-                 <v-container>
-                   <v-row>
-                    <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="50" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-divider vertical class="d-flex justify-center"></v-divider>
-
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="100" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-
-
-                        
-                   </v-row>
-                   <v-row>
-                    <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="500" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-divider vertical class="d-flex justify-center"></v-divider>
-
-                        <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="1.000" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                   </v-row>
-                   <v-row>
-                    <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="5.000" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-divider vertical class="d-flex justify-center"></v-divider>
-
-                        <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="10.000" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                   </v-row>
-                   <v-row>
-                    <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="20.000" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-divider vertical class="d-flex justify-center"></v-divider>
-
-                        <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="50.000" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        
-                        <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="100.000" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-divider vertical class="d-flex justify-center"></v-divider>
-
-                        <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="Varios" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="mt-0">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                       
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                   </v-row>
-                  <v-container class="d-flex justify-center">
-                    <h5>Arqueo:</h5>  
-                   <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total Caja" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Total Sistema" v-model="formulario.descripcion"
-                            disabled     :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="2" md="2" class="">
-                            <v-text-field variant="outlined" label="Diferencia" v-model="formulario.descripcion"
-                            disabled     :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>
-                  </v-container>
-
-                 </v-container>
+    <v-container>
+        <h2 class="mb-0 d-flex justify-center">Registrar Arqueo de Caja</h2>
+        <v-row class="d-flex justify-center">
+            <v-col cols="12" sm="4" md="4" class="mt-0">
+                <v-autocomplete variant="outlined" label="Seleccione Caja" :items="listaProducto"
+                    item-title="descripcionPr" item-value="id" v-model="detalle.producto" required></v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="3" md="3" class="mt-0">
+                <input class="custom-input" v-model="formulario.fechaD" type="date" placeholder="Fecha de Pedido"
+                    @input="formatDate" />
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col v-for="denominacion in denominaciones" :key="denominacion.valor" cols="12" sm="4" md="3">
+                <v-text-field variant="outlined" :label="denominacion.etiqueta" v-model="denominacion.cantidad"
+                    disabled></v-text-field>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" sm="4" md="3" class="mt-0">
+                <v-text-field variant="outlined" label="Varios" v-model="formulario.descripcion"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="3" class="mt-0">
+                <v-text-field variant="outlined" label="Descripción" v-model="formulario.descripcion"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="3" class="mt-0">
+                <v-text-field variant="outlined" label="Total" v-model="formulario.total" disabled></v-text-field>
+            </v-col>
+        </v-row>
+        <v-row class="d-flex justify-center">
+            <v-col cols="12" sm="4" md="3">
+                <v-text-field variant="outlined" label="Total Caja" v-model="totalCaja" disabled></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="3">
+                <v-text-field variant="outlined" label="Total Sistema" v-model="totalSistema" disabled></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4" md="3">
+                <v-text-field variant="outlined" label="Diferencia" v-model="diferencia" disabled></v-text-field>
+            </v-col>
+        </v-row>
+    </v-container>
 
 
 
     <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
         <v-card max-width="1500" class="rounded-xl d-flex justify-center">
             <v-container>
-               
+
                 <v-form>
-               
-                
-                
-                
-                 
-                        <!-- <v-col cols="12" sm="4" md="4" class="">
-                            <v-autocomplete variant="outlined" label="Selecione Caja" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
-                                required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="4" md="4" class="">
-                            <v-autocomplete variant="outlined" label="Selecione Caja" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
-                                required></v-autocomplete>
-                        </v-col>
-                        <v-col cols="12" sm="4" md="4" class="">
-                            <v-autocomplete variant="outlined" label="Selecione Caja" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
-                                required></v-autocomplete>
-                        </v-col> -->
-                       
-                   
-
-
-
                     <v-divider class="mt-0"></v-divider>
                     <!-- INICIO DETALLE -->
                     <v-row class="d-flex justify-center">
-                      
+
                         <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-text-field variant="outlined" label="Monto Apertura" v-model="formulario.descripcion"
-                            disabled    :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
-                        </v-col>  
+                                disabled :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                        </v-col>
                         <v-col cols="12" sm="4" md="4" class="mt-5">
                             <v-text-field variant="outlined" label="Monto Cierre" v-model="formulario.descripcion"
-                            disabled  :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                                disabled :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
                         </v-col>
-                        
-                      
-                        <!-- <v-col cols="12" sm="6" md="6" class="mt-5">
-                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="detalle.producto"
-                                required></v-autocomplete>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="6" class="mt-5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
-                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
-                        </v-col> -->
-
-
 
                     </v-row>
-                    <!-- <v-row class="mt-0">
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
-                                @click="AgregarDetalle">Añadir</v-btn>
-                        </v-col>
-                    </v-row> -->
-                    <!-- Fin DETALLE -->
+
 
 
                     <v-card class="mt-5 rounded-x2">
-                        <!-- <v-data-table items-per-page-text="" :headers="headersCrear" :items="itemsDetalle">
-                            <template v-slot:item.action="{ item }">
-                                <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
-                                    mdi-pencil
-                                </v-icon>
-                                <v-icon color="#C62828" size="small" @click="eliminarDetalle(item.raw.producto)">
-                                    mdi-trash-can-outline
-                                </v-icon>
-                            </template>
-                        </v-data-table> -->
+
                     </v-card>
 
                     <v-col cols="12" class="d-flex justify-end">
@@ -333,14 +145,16 @@
                         </v-col>
 
                         <v-col ols="12" sm="5" md="5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
+                            <v-text-field variant="outlined" label="Cantidad"
+                                v-model="formulario.cantidad"></v-text-field>
                         </v-col>
 
 
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditar = false">Cancelar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioEditar = false">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormularioEditar">Guardar</v-btn>
                         </v-col>
                     </v-row>
@@ -365,8 +179,8 @@
                         </v-col>
 
                         <v-col cols="12" sm="5" md="5" class="">
-                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion" disabled
-                                required></v-text-field>
+                            <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
+                                disabled required></v-text-field>
                         </v-col>
 
 
@@ -380,14 +194,13 @@
                     <v-divider></v-divider>
 
                     <v-card class="mt-5 rounded-x2">
-                        <v-data-table items-per-page-text="" :headers="headersPedido" :items="formulario.itemsDetalle">
 
-                        </v-data-table>
                     </v-card>
 
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end mt-2">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2"
+                                @click="dialogoFormularioVistaVista = false">Cerrar</v-btn>
 
                         </v-col>
                     </v-row>
@@ -403,55 +216,17 @@
 
     <v-container>
         <v-row>
-            <v-col cols="12" sm="5" md="5">
-                <v-text-field :loading="loading" density="compact" v-model="buscador" variant="solo" label="Buscar"
-                    append-inner-icon="mdi-magnify" single-line hide-details rounded click:prependInner></v-text-field>
-            </v-col>
-
-            <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-                Cantidad de Arqueos: {{ items.length }}
-            </v-col>
 
         </v-row>
 
         <v-card class="mt-5 rounded-x2">
-            <v-data-table items-per-page-text="Articulo por pagina" :headers="headers" :items="itemsComputed">
-                <template v-slot:top>
-                    <v-toolbar flat color="white">
-                        <v-toolbar-title>
-                            <p class="font-weight-bold">Arqueo de Caja</p>
-                        </v-toolbar-title>
 
-                        <!-- <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
-                            @click="validarYRegistrar">Registrar
-                        </v-btn> -->
-
-                    </v-toolbar>
-                </template>
-
-                <template v-slot:item.fechaD="{ item }">
-                    {{ formatearFecha(item.raw.fechaD) }}
-                </template>
-                <template v-slot:item.action="{ item }">
-
-                    <v-icon color="primary" size="small" @click="MostrarPedido(item.raw)">
-                        mdi-file-eye-outline
-                    </v-icon>
-                    <!-- <v-icon color="black" size="small" @click="editarPedidog(item.raw)">
-                        mdi-pencil
-                    </v-icon> -->
-                    <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
-                        mdi-trash-can-outline
-                    </v-icon>
-
-
-                </template>
-            </v-data-table>
         </v-card>
 
         <v-row>
             <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
                 <v-btn>Cancelar </v-btn>
+                <v-btn color="primary">Guardar </v-btn>
             </v-col>
         </v-row>
         <!-- Diálogo de confirmación -->
@@ -506,16 +281,7 @@
                         <v-divider></v-divider>
 
                         <v-card class="mt-5 rounded-x2">
-                            <v-data-table items-per-page-text="" :headers="headersPedidoG" :items="formulario.itemsDetalle">
-                                <template v-slot:item.action="{ item }">
-                                    <v-icon size="small" class="me-2" @click="editarPedidoDetalle(item.raw)">
-                                        mdi-pencil
-                                    </v-icon>
-                                    <v-icon color="#C62828" size="small" @click="confirmarEliminarCiudad(item.raw)">
-                                        mdi-trash-can-outline
-                                    </v-icon>
-                                </template>
-                            </v-data-table>
+
                         </v-card>
                         <v-row>
                             <v-col cols="12" class="d-flex justify-end">
@@ -533,35 +299,37 @@
         <!-- Fin Editar Guarddo  -->
 
         <v-dialog max-width="700" v-model="dialogoFormularioEditarDe" persistent>
-        <v-card class="rounded-xl">
-            <v-container>
-                <h1 class="mb-3">Editar Detalle</h1>
-                <v-form>
-                    <v-row class="justify-center">
+            <v-card class="rounded-xl">
+                <v-container>
+                    <h1 class="mb-3">Editar Detalle</h1>
+                    <v-form>
+                        <v-row class="justify-center">
 
 
-                        <v-col cols="12" sm="5" md="5">
-                            <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                        </v-col>
+                            <v-col cols="12" sm="5" md="5">
+                                <v-autocomplete variant="outlined" label="Producto" :items="listaProducto"
+                                    item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                                    :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                            </v-col>
 
-                        <v-col ols="12" sm="5" md="5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="formulario.cantidad"></v-text-field>
-                        </v-col>
+                            <v-col ols="12" sm="5" md="5">
+                                <v-text-field variant="outlined" label="Cantidad"
+                                    v-model="formulario.cantidad"></v-text-field>
+                            </v-col>
 
 
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12" class="d-flex justify-end">
-                            <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormularioEditarDe = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarC">Guardar</v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-        </v-card>
-    </v-dialog>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" class="d-flex justify-end">
+                                <v-btn color="#E0E0E0" class="mx-2"
+                                    @click="dialogoFormularioEditarDe = false">Cancelar</v-btn>
+                                <v-btn color="primary" @click="guardarFormularioEditarC">Guardar</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -579,89 +347,31 @@ export default {
     },
     data() {
         return {
-            dialogoFormulario: false,
-            dialogoFormularioEditar: false,
-            dialogoFormularioVistaVista: false,
-            showModal: false,
-            showModalVacio: false,
-            showModalDuplicado: false,
-            dialogoFormularioEditarGuardado: false,
-            dialogoFormularioEditarDe:false,
+            listaProducto: [], // Aquí debes definir tus opciones de productos
             detalle: {
-                producto: '',
-                descripcion: '',
+                producto: null
             },
-            limit: 45,
-
             formulario: {
-                descripcion: '',
-                fechaD: null,
-
-                // itemsDetalle debe ser un Array 
-                itemsDetalle: [],
-
-
-
-            },
-
-            contador: 1,
-            limit: 45,
-            defaultFormulario: {
-                codigo: '',
-                descripcion: '',
                 fechaD: '',
-                producto: null,
-                cantidad: null,
+                descripcion: '',
+                total: 0
             },
-            buscador: '',
-            headers: [
-                { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
-                { title: 'Nº Caja', key: 'caja', align: 'star' },
-                { title: 'Fecha de Arqueo', key: 'descripcion', align: 'star' },
-                { title: 'Monto Apertura', key: 'fechaD', align: 'star' },
-                { title: 'Monto Cierre', key: 'fechaDs', align: 'star' },
-                { title: 'Diferencia', key: 'd', align: 'star' },
-                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-            ],
-            headersPedido: [
-
-                { title: 'Producto', key: 'idProducto' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
+            denominaciones: [
+                { valor: 50000, etiqueta: '50.000', cantidad: 0 },
+                { valor: 10000, etiqueta: '10.000', cantidad: 0 },
+                { valor: 5000, etiqueta: '5.000', cantidad: 0 },
+                { valor: 2000, etiqueta: '2.000', cantidad: 0 },
+                { valor: 1000, etiqueta: '1.000', cantidad: 0 },
+                { valor: 500, etiqueta: '500', cantidad: 0 },
+                { valor: 200, etiqueta: '200', cantidad: 0 },
+                { valor: 100, etiqueta: '100', cantidad: 0 },
+                { valor: 50, etiqueta: '50', cantidad: 0 },
 
             ],
-
-            headersPedidoG: [
-                { title: 'Codigo', key: 'idProducto' },
-                { title: 'Descripcion', key: 'nombre_producto' },
-                { title: 'Cantidad', key: 'Cantidad', align: 'star' },
-                { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-
-
-            ],
-
-            // headersCrear: [
-
-            //     { title: 'Numero Caja', key: 'producto' },
-            //     { title: 'Monto Apertura', key: 'descripcionPr' },
-            //     { title: 'Accion', key: 'action', sortable: false, align: 'end' },
-            // ],
-            items: [
-                {
-                    id: '1',
-                    descripcion: 'Central',
-                    fechaD: '',
-                    action: ''
-                }
-            ],
-            itemsDetalle: [
-
-            ],
-            dialogoEliminar: false,
-            elementoAEliminar: null,
-
-            listaProducto: [],
-
-        }
+            totalCaja: 0,
+            totalSistema: 0,
+            diferencia: 0
+        };
     },
 
     computed: {
@@ -686,301 +396,25 @@ export default {
 
 
     },
-    methods:
-    {
-        ObtenerProducto() {
-            ProductoAPI.getAll().then(({ data }) => {
-                this.listaProducto = data.map(item => {
-                    return {
-                        id: item.idProducto,
-                        descripcionPr: item.Descripcion
-                    }
-                })
-            })
+
+    methods: {
+        // Método para calcular el total de la caja
+        calcularTotalCaja() {
+            this.totalCaja = this.denominaciones.reduce((acc, denom) => acc + (denom.valor * denom.cantidad), 0);
+        },
+        // Método para calcular el total del sistema
+        calcularTotalSistema() {
+            // Lógica para calcular el total del sistema
+        },
+        // Método para calcular la diferencia
+        calcularDiferencia() {
+            this.diferencia = this.totalCaja - this.totalSistema;
+        },
+        // Método para formatear la fecha
+        formatDate() {
+            // Lógica para formatear la fecha
         },
 
-
-        AgregarDetalle() {
-            const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
-            if (productoSeleccionado) {
-                this.itemsDetalle.push({
-                    producto: productoSeleccionado.id, // Agrega la descripción del producto
-                    descripcionPr: productoSeleccionado.descripcionPr,
-                    cantidad: this.detalle.cantidad,
-                    action: '',
-                });
-
-                this.detalle.producto = '';
-                this.detalle.cantidad = '';
-            }
-        },
-
-
-        formatearFecha(fechaD) {
-            return dayjs(fechaD).format('DD/MM/YYYY')
-        },
-        showDatePicker() {
-            this.showDatepicker = true;
-        },
-        hideDatePicker() {
-            this.showDatepicker = false;
-        },
-        validarYRegistrar() {
-            if (this.itemsComputed.length === 0) {
-                alert("No se pueden registrar pedidos sin detalles. Agregue al menos un detalle.");
-            } else {
-                // Continúa con la lógica de registro
-                this.abrirDialogo();
-            }
-        },
-        abrirDialogo() {
-            // Abrir el modal y cargar el código aquí
-            this.dialogoFormulario = true;
-            this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
-            this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
-        },
-        generarCodigo() {
-            const nuevoCodigo = this.contador++;
-            return nuevoCodigo;
-        },
-
-
-
-
-
-        guardarFormulario() {
-            // Verificar que todos los campos requeridos estén completos
-            if (!this.formulario.descripcion || !this.formulario.fechaD) {
-                this.showModalVacio = true;
-            } else {
-                // Validar duplicados en los detalles
-                const productosSeleccionados = this.itemsDetalle.map((detalle) => detalle.producto);
-
-                if (new Set(productosSeleccionados).size !== productosSeleccionados.length) {
-                    // Si hay elementos duplicados en la lista de productos seleccionados, muestra un mensaje de error
-                    this.showModalDuplicado = true;
-
-                } else {
-                    // Todos los campos requeridos están completos y no hay duplicados, puedes proceder a guardar
-                    PedidoAPI.create({
-                        idPedido: this.formulario.codigo,
-                        Descripcion: this.formulario.descripcion,
-                        Fecha_pedi: this.formulario.fechaD,
-                        Detalle: this.itemsDetalle,
-                    }).then(() => {
-                        this.ObtenerPedido();
-                    });
-
-                    // Limpia los campos del formulario después de guardar
-                    this.formulario.codigo = "";
-                    this.formulario.producto = "";
-                    this.formulario.descripcion = "";
-                    this.formulario.fechaD = "";
-                    this.detalle.producto = null;
-                    this.detalle.cantidad = null;
-                    this.itemsDetalle = []
-
-
-
-                    // Cierra el diálogo del formulario
-                    this.dialogoFormulario = false;
-                }
-            }
-        },
-        MostrarPedido(item) {
-            console.log(item);
-
-            this.dialogoFormularioVistaVista = true;
-            this.formulario.codigo = item.id
-            this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
-
-            this.formulario.itemsDetalle = [];
-
-            item.detalleItems.forEach((detalle) => {
-                this.formulario.itemsDetalle.push({
-                    idProducto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
-                });
-            })
-
-
-
-        },
-
-
-
-
-        guardarFormularioEditar() {
-            if (!this.formulario.producto || !this.formulario.cantidad) {
-                this.emptyFieldError = true;
-                return;
-            }
-
-            // Busca el índice del elemento que se va a editar
-            const index = this.itemsDetalle.findIndex(item => item.producto === this.formulario.producto);
-
-            if (index !== -1) {
-                // Si se encontró el elemento, actualiza sus datos
-                this.itemsDetalle[index].cantidad = this.formulario.cantidad;
-            } else {
-                // Si no se encontró el elemento, agrega uno nuevo
-                this.itemsDetalle.push({
-                    producto: this.formulario.producto,
-                    cantidad: this.formulario.cantidad,
-                    action: '',
-                });
-            }
-
-            this.dialogoFormularioEditar = false;
-        },
-        eliminarDetalle(id) {
-            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
-        },
-
-
-
-        editarCiudad(parametro) {
-            this.dialogoFormularioEditar = true
-            this.formulario.producto = parametro.producto
-            this.formulario.cantidad = parametro.cantidad
-
-        },
-        confirmarEliminarCiudad(elemento) {
-            // Abre el diálogo de confirmación y guarda el elemento a eliminar
-            this.elementoAEliminar = elemento;
-            this.dialogoEliminar = true;
-        },
-        cancelarEliminarCiudad() {
-            // Cierra el diálogo de confirmación y restablece la variable
-            this.dialogoEliminar = false;
-            this.elementoAEliminar = null;
-        },
-        eliminarCiudad() {
-            if (this.elementoAEliminar) {
-                // Realiza la eliminación aquí
-                PedidoAPI.delete(this.elementoAEliminar.id).then(() => {
-                    this.ObtenerPedido();
-                });
-                // Cierra el diálogo de confirmación
-                this.dialogoEliminar = false;
-                this.elementoAEliminar = null;
-            }
-        },
-
-        dialogoVista() {
-            this.dialogoFormularioVistaVista = true
-            this.formulario.codigo = parametro.id
-            this.formulario.descripcion = parametro.descripcion
-            this.formulario.fechaD = parametro.fechaD
-            this.detalle.producto = parametro.producto
-            this.detalle.cantidad = parametro.cantidad
-        },
-
-
-        //Inicio editar guardado //
-        editarPedidog(item) {
-            this.dialogoFormularioEditarGuardado = true
-            this.formulario.codigo = item.id
-            this.formulario.descripcion = item.descripcion
-            this.formulario.fechaD = this.formatearFecha(item.fechaD)
-
-            this.formulario.itemsDetalle = [];
-
-            item.detalleItems.forEach((detalle) => {
-                this.formulario.itemsDetalle.push({
-                    idPedido:detalle.idPedido,
-                    idProducto: detalle.idProducto,
-                    nombre_producto: detalle.nomnbreProducto,
-                    Cantidad: detalle.Cantidad,
-                });
-            })
-
-
-
-        },
-
-        guardarFormularioEditarG() {
-            console.log('ItemsDetalle.::', this.formulario.itemsDetalle);
-
-            PedidoAPI.update(
-             
-                this.formulario.codigo,
-                {
-                    idPedido: this.formulario.codigo,
-                    Descripcion: this.formulario.descripcion,
-                    Fecha_pedi: this.formulario.fechaD,
-                    Detalle: this.formulario.itemsDetalle,
-                  
-                }
-            ).then(() => {
-                this.ObtenerPedido()
-            })
-            this.formulario.codigo = "";
-                    this.formulario.producto = "";
-                    this.formulario.descripcion = "";
-                    this.formulario.fechaD = "";
-                    this.detalle.producto = null;
-                    this.detalle.cantidad = null;
-                    this.itemsDetalle = []
-            this.dialogoFormularioEditarGuardado = false
-        },
-
-        //Fin editar guardado //
-
-
-        //EDITAR DETALLE Guardado //
-
-
-        guardarFormularioEditarC() {
-            console.log('Antes de guardar:', this.formulario.itemsDetalle);
-            console.log ('Ver producto', this.formulario.producto);
-
-            if (!this.formulario.producto || !this.formulario.cantidad) {
-                this.emptyFieldError = true;
-                return;
-            }
-
-            // Busca el índice del elemento que se va a editar
-            const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto == this.formulario.producto);
-
-            if (index !== -1) {
-                // Si se encontró el elemento, actualiza sus datos
-                this.formulario.itemsDetalle[index].Cantidad = this.formulario.cantidad;
-            } 
-            console.log('Después de guardar:', this.formulario.itemsDetalle);
-
-            this.dialogoFormularioEditarDe = false;
-        },
-        eliminarDetalle(id) {
-            this.itemsDetalle = this.itemsDetalle.filter(item => item.producto !== id);
-        },
-
-        editarPedidoDetalle(item) {
-            this.dialogoFormularioEditarDe = true;
-
-            // this.formulario.codigo = item.producto
-            this.formulario.producto = item.idProducto;
-            this.formulario.cantidad = item.Cantidad;
-
-
-        },
-        
-        ObtenerPedido() {
-
-            PedidoAPI.getAll().then(({ data }) => {
-                console.log(data)
-                this.items = data.map(item => {
-                    return {
-                        id: item.idPedido,
-                        descripcion: item.Descripcion,
-                        fechaD: item.Fecha_pedi,
-                        detalleItems: item.detalle
-
-                    }
-                })
-            })
-        },
 
     },
 
@@ -988,9 +422,7 @@ export default {
 
     created() {
         // Generar automáticamente el código al cargar el componente
-        this.formulario.codigo = this.generarCodigo();
-        this.ObtenerPedido()
-        this.ObtenerProducto()
+
 
 
 

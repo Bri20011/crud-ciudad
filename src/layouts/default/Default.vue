@@ -125,7 +125,7 @@ export default {
         ['Apertura de Caja', 'mdi-printer-pos', '/AperturaCaja'],
         ['Cierre de Caja', 'mdi-printer-pos', '/CierreCaja'],
         ['.Ventas', 'mdi-printer-pos', '/venta_cuenta_cobrar'],
-        ['x-Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza'],
+        ['Cobranzas por forma de cobro', 'mdi-printer-pos', '/cobranza'],
         ['Registrar Nota de Remisión', 'mdi-printer-pos', '/nota_remision_venta'],
         ['Registrar Nota de Credito', 'mdi-printer-pos', '/nota_credito_venta'],
         ['Registrar Nota de Debito', 'mdi-printer-pos', '/nota_debito_venta'],

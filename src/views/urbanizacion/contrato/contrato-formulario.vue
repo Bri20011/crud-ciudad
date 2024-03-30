@@ -192,12 +192,12 @@ export default {
             ListadoManzana: [],
 
             headersDetalleVto: [
-                { title: 'N° Cuota', key: 'id', align: 'center' },
+                { title: 'N° Cuota', key: 'numero_cuota', align: 'center' },
                 { title: 'Fecha de Vto', key: 'fechaVto', align: 'center' },
                 { title: 'Importe Cuota', key: 'importeCuota', align: 'center' },
             ],
             headersDetalleContado: [
-                { title: 'N° ', key: 'id', align: 'center' },
+                { title: 'N° ', key: 'numero_cuota', align: 'center' },
                 { title: 'Fecha', key: 'fechaP', align: 'center' },
                 { title: 'Importe', key: 'montoContado', align: 'center' },
             ],
@@ -356,7 +356,7 @@ export default {
                 const fechaVto = i === 1 ? this.formulario.fechaVto : dayjs(this.formulario.fechaVto).add(i - 1, 'month').format('YYYY-MM-DD')
 
                 this.listadoDeLaTabla.push({
-                    id: i,
+                    numero_cuota: i,
                     cantidadCuota: this.formulario.cantidadCuota,
                     fechaVto: fechaVto,
                     importeCuota: this.formulario.importeCuota
@@ -366,7 +366,7 @@ export default {
 //Esto se hace cuando tipo de Venta es contado (1) y se vacia la tabla de headerDetalleVto
             if (this.formulario.tipoventa === 1) {
                 this.listadoDeLaTabla.push({
-                    id: 1,
+                    numero_cuota: 1,
                     // cantidadCuota: 1,
                     fechaP: this.formulario.fechaP,
                     montoContado: this.formulario.montoContado
@@ -421,6 +421,7 @@ export default {
                     importe_cuota: item.importeCuota,
                     cantidad_cuota: item.cantidadCuota,
                     monto_contado: item.montoContado,
+                    numero_cuota: item.numero_cuota,
                     id_detalle: item.id_detalle,
 
 

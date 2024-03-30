@@ -7,12 +7,16 @@
                     <v-row>
                         <v-col cols="12" sm="6" md="6" class="">
                             <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                            @input="verificarFormulario" required></v-text-field>
                         </v-col>
 
-                        <v-col cols="12" sm="6" md="6">
+                        <!-- <v-col cols="12" sm="6" md="6">
                             <input class="custom-input" v-model="formulario.fechaD" type="date"
-                                placeholder="Fecha de Pedido" @input="formatDate" />
+                            @input="verificarFormulario"required placeholder="Fecha de Pedido"/>
+                        </v-col> -->
+                        <v-col cols="12" sm="6" md="6" class="">
+                            <v-text-field type="date" variant="outlined" label="Fecha de Orden Compra" v-model="formulario.fechaD"
+                            @input="verificarFormulario" required></v-text-field>
                         </v-col>
                     </v-row>
 
@@ -29,7 +33,7 @@
 
                         <v-col cols="12" sm="6" md="6" class="mt-5">
                             <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
-                                :error="contieneSoloNumeros" :error-messages="errorMessageE" required></v-text-field>
+                                required></v-text-field>
                         </v-col>
 
 
@@ -45,7 +49,7 @@
 
 
                     <v-card class="mt-5 rounded-x2">
-                        <v-data-table items-per-page-text="" :headers="headersCrear" :items="itemsDetalle">
+                        <v-data-table  @input="verificarFormulario" items-per-page-text="" :headers="headersCrear" :items="itemsDetalle">
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarCiudad(item.raw)">
                                     mdi-pencil
@@ -462,7 +466,7 @@
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2"
                                 @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle" :disabled="!formularioValido">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -504,6 +508,7 @@ export default {
             dialogoFormularioEditarDe: false,
             dialogoFormularioVistaAprobar: false,
             dialogoFormularioEditarDetalle:false,
+            formularioValido: false,
             
             detalle: {
                 producto: '',
@@ -614,6 +619,12 @@ export default {
     },
     methods:
     {
+        verificarFormulario() {
+        // Verificar si todos los campos obligatorios están llenos y tambien si fue tildado el check
+        this.formularioValido = this.formulario.descripcion && this.formulario.fechaD && this.formulario.itemsDetalle.length > 0;
+      
+    },
+
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
                 this.listaProducto = data.map(item => {

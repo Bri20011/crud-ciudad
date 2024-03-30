@@ -91,12 +91,12 @@ export default {
             ListadoManzana: [],
 
             headersDetalleVto: [
-                { title: 'N° Cuota', key: 'id', align: 'center' },
+                { title: 'N° Cuota', key: 'numero_cuota', align: 'center' },
                 { title: 'Fecha de Vto', key: 'fechaVto', align: 'center' },
                 { title: 'Importe Cuota', key: 'importeCuota', align: 'center' },
             ],
             headersDetalleContado: [
-                { title: 'N° ', key: 'id', align: 'center' },
+                { title: 'N° ', key: 'numero_cuota', align: 'center' },
                 { title: 'Fecha', key: 'fechaP', align: 'center' },
                 { title: 'Importe', key: 'montoContado', align: 'center' },
             ],
