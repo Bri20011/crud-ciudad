@@ -5,11 +5,11 @@
           <h1 class="mb-3">Crear Manzana</h1>
           <v-form>
             <v-row>
-                <v-col cols="12" sm="12" md="12">
-                <v-text-field variant="outlined" label="Numero de Manzana" v-model="formulario.numero_manzana"
+                <v-col cols="12" sm="3" md="3">
+                <v-text-field variant="outlined" label="Nº de Manzana" v-model="formulario.numero_manzana"
                   required></v-text-field>
               </v-col>
-              <v-col cols="12" sm="12" md="12">
+              <v-col cols="12" sm="9" md="9">
                 <v-text-field variant="outlined" label="Descripcion de manzana" v-model="formulario.descripcion"
                   :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
               </v-col>

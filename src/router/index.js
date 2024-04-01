@@ -326,12 +326,12 @@ const routes = [
       component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/rescision_contrato/indexRescContrato.vue'),
     },
     {
-      path: 'cesion_derecho_deuda',
-      name: 'Cesion_derecho_deuda',
+      path: 'cesion_derecho',
+      name: 'cesion_derecho',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/indexCesion_derecho_deuda.vue'),
+      component: () => import(/* webpackChunkName: "barrio" */ '@/views/urbanizacion/cesion_derecho/indexCesion.vue'),
     },
     {
       path: 'orden_compra_lote',
@@ -569,6 +569,7 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "informe" */ '@/views/venta/ventas/RescisionContrato.vue'),
     },
+   
     {
       path: 'cobranza',
       name: 'Cobranza',

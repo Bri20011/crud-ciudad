@@ -2,7 +2,7 @@
   <v-dialog max-width="700" v-model="dialogoFormulario" persistent>
     <v-card class="rounded-xl">
       <v-container>
-        <h1 class="mb-3">Crear Apertura</h1>
+        <h1 class="mb-3">Crear Cierre de Caja</h1>
         <v-form>
           <v-row class="d-flex justify-center">
             <v-col cols="12" sm="2" md="2">

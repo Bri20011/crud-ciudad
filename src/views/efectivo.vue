@@ -4,7 +4,7 @@
         <v-container>
           <h1 class="mb-3">Crear Efectivo</h1>
           <v-form>
-            <v-row>
+            <v-row class="d-flex justify-center">
             
 
               <v-col cols="12" sm="4" md="4">

@@ -91,4 +91,4 @@ export default {
     outline: none;
     /* Quitar el contorno al hacer clic */
 }
-</style>
+</style>@/services/motivo_cesion.api

@@ -286,4 +286,4 @@ export default {
 
 }
 </script>
-<style></style>
+<style></style>@/services/motivo_cesion.api
