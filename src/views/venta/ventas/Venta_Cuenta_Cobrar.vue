@@ -27,7 +27,7 @@
 
 
                         <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" required></v-text-field>
+                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" disabled required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente"
@@ -41,10 +41,9 @@
                                 required></v-autocomplete>
                         </v-col>
 
-                        <v-col cols="12" sm="4" md="4">
+                        <v-col v-if="formulario.tipo_venta == 'Contado'" cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Caja" :items="listaCaja" item-title="descripcion"
-                                :disabled="formulario.tipo_venta !== 'Contado'" item-value="id"
-                                v-model="formulario.caja" required></v-autocomplete>
+                                item-value="id" disabled v-model="formulario.caja" required></v-autocomplete>
                         </v-col>
 
 
@@ -208,89 +207,7 @@
         <!-- FIN DIALOGO -->
 
 
-        <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
-
-        <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
-            <v-card class="rounded-xl">
-                <v-container>
-                    <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
-                    <v-form>
-                        <v-row class="d-flex justify-center">
-                            <v-col cols="12" sm="5" md="5">
-                                <v-autocomplete variant="outlined" label="N° Contrato" :items="listaProducto"
-                                    item-title="descripcionPr" item-value="id" v-model="formulario.producto"
-                                    :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
-                            </v-col>
-
-                            <v-col cols="12" sm="3" md="3">
-                                <input class="custom-input" v-model="formulario.fechaD" type="date" disabled
-                                    placeholder="Fecha de Operacion" @input="formatDate" />
-                            </v-col>
-
-                            <v-col cols="12" sm="4" md="4">
-                                <v-text-field variant="outlined" label="Monto" v-model="formulario.monto" disabled
-                                    required></v-text-field>
-                            </v-col>
-                            <v-divider class="mt-0"></v-divider>
-
-                            <!-- FIN DETALLE -->
-                            <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar"
-                                :items="itemsDetalle">
-
-                                <template v-slot:item.fechaD="{ item }">
-                                    {{ formatearFecha(item.raw.fechaD) }}
-                                </template>
-                                <template v-slot:item.action="{ item }">
-                                    <v-icon size="small" class="me-2" @click="editarDetallePagos(item.raw)">
-                                        mdi-pencil
-                                    </v-icon>
-                                </template>
-                            </v-data-table>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="12" class="d-flex justify-end">
-                                <v-btn color="#E0E0E0" class="mx-2"
-                                    @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
-                                <v-btn color="primary" @click="guardarFormulario">Guardar</v-btn>
-
-                            </v-col>
-                        </v-row>
-                    </v-form>
-                </v-container>
-            </v-card>
-
-            <!-- INICIO EDITAR DETALLE PAGOS -->
-            <v-dialog max-width="600" v-model="dialogoFormularioEditarDetallePagos" persistent>
-                <v-card class="rounded-xl">
-                    <v-container>
-                        <h1 class="mb-3">Editar Detalle Pagos</h1>
-                        <v-form>
-                            <v-row class="justify-center">
-
-                                <v-col cols="12" sm="4" md="4">
-                                    <input class="custom-input" v-model="formulario.fechaD" type="date"
-                                        placeholder="Fecha de Operacion" @input="formatDate" />
-                                </v-col>
-
-                                <v-col ols="12" sm="4" md="4">
-                                    <v-text-field variant="outlined" label="Monto" v-model="formulario.monto"
-                                        required></v-text-field>
-                                </v-col>
-
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12" class="d-flex justify-end">
-                                    <v-btn color="#E0E0E0" class="mx-2"
-                                        @click="dialogoFormularioEditarDetallePagos = false">Cancelar</v-btn>
-                                    <v-btn color="primary" @click="guardarFormularioEditarDetallePago">Guardar</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-form>
-                    </v-container>
-                </v-card>
-            </v-dialog>
-            <!-- INICIO EDITAR DETALLE PAGOS -->
-        </v-dialog>
+       
 
 
         <!-- FIN DIALOGO REGISTRAR CUENTAS A PAGAR -->
@@ -475,22 +392,41 @@ export default {
 
             // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
             ContratoApi.getById(this.formulario.numero_contrato).then(({ data }) => {
-                //aqui tengo un console.log de lo que me retorna la api
-                console.log('data:', data)
+                // Aquí tengo un console.log de lo que me retorna la API
+                console.log('data:', data);
 
-                this.formulario.idtipo_venta = data.idtipo_venta
-                this.formulario.tipo_venta = data.nombreTipoVenta
-                this.formulario.itemsDetalle = [{ monto_totalNuevo: data.monto_totalNuevo, idContrato: data.idContrato }]
+                // Calcula el monto del IVA al 5% y redondea a dos decimales
+                const iva5 = (data.monto_totalNuevo * 0.05).toFixed(0);
 
+                // Asigna el resultado al formulario
+                this.formulario.idtipo_venta = data.idtipo_venta;
+                this.formulario.tipo_venta = data.nombreTipoVenta;
+                //aca se completa caja (this.formulario.caja = 101;) solo si tipo_venta es contado, caso contrario se envia 100
+                this.formulario.caja = data.idtipo_venta == 1 ? 101 : 100;
+                
+                this.formulario.itemsDetalle = [{
+                    monto_totalNuevo: data.monto_totalNuevo,
+                    idContrato: data.idContrato,
+                    //aca declaro que idIva es 1 por defecto
+              
+                    iva: 2,
+                    exenta: 0,
+                    iva10: 0,
+                    iva5: iva5,
+                    total: data.monto_totalNuevo
+                }];
+
+                // Muestra el diálogo del formulario
+                this.dialogoFormulario = true;
             });
 
-            this.dialogoFormulario = true;
         },
-
-
 
         formatearFecha(fecha) {
             return dayjs(fecha).format('DD/MM/YYYY')
+        },
+        formatearFecha(fechaO) {
+            return dayjs(fechaO).format('DD/MM/YYYY')
         },
         showDatePicker() {
             this.showDatepicker = true;
@@ -504,6 +440,7 @@ export default {
             this.dialogoFormulario = true;
             this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
             this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+           
 
         },
         generarCodigo() {
@@ -521,7 +458,7 @@ export default {
             VentaAPI.create({
                 //aqui envio al backend cabecera y detall
                 idventa: this.formulario.codigo,
-                Fecha: this.fechaO,
+                Fecha: dayjs(this.fechaO).format('YYYY-MM-DD'),
                 Numero_fact: this.numerosVenta,
                 idtipo_venta: this.formulario.idtipo_venta,
                 idCliente: this.formulario.cliente,
@@ -568,7 +505,7 @@ export default {
         },
         descargarFactura(id) {
             console.log('elemento: ', id)
-            VentaAPI.descargarFactura(id).then(({ data }) => {
+            VentaAPI.descargarFactura(id.id).then(({ data }) => {
                 const linkSource = data
                 const downloadLink = document.createElement('a')
                 const fileName = `FACTURA.pdf`
@@ -793,7 +730,8 @@ export default {
         async ObtenerNumeroFactura(id) {
 
             await VentaAPI.ObtenerNumeroFactura(id).then(({ data }) => {
-                console.log('data: ', data[0].Siguiente_numero_factura)
+                console.log('data: ', data)
+                // console.log('data nU: ', data[0].Siguiente_numero_factura)
                 this.ConteoFactura = data[0].Siguiente_numero_factura
 
 

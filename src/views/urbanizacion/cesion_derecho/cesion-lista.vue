@@ -6,7 +6,7 @@
         </v-col>
 
         <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-            Cantidad de Contratos: {{ prop_listado_cesion.length }}
+            Cantidad de Cesiones: {{ prop_listado_cesion.length }}
         </v-col>
 
     </v-row>
@@ -15,7 +15,7 @@
             <template v-slot:top>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>
-                        <p class="font-weight-bold">Registro de Contratos</p>
+                        <p class="font-weight-bold">Registro de Cesiones</p>
                     </v-toolbar-title>
 
                     <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -88,7 +88,7 @@ export default {
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Cliente', key: 'cliente', align: 'center' },
                 { title: 'Fecha', key: 'fechaD', align: 'center' },
-                { title: 'Motivos Rescision de Contrato', key: 'motivoRescision', align: 'center' },
+                { title: 'Motivos Cesion de Derechos', key: 'motivoCesion', align: 'center' },
                 { title: 'Accion', key: 'action', sortable: false, align: 'end' },
             ],
             buscador: '',

@@ -26,12 +26,12 @@ export default {
             CesionAPI.getAll().then(({ data }) => {
                 this.listado_cesion = data.map(item => {
                     return {       
-                        id: item.idRescision_contrato,
+                        id: item.idCesion_derecho_deuda,
                         numero_orden: item.idContrato,
                         cliente: item.nombreCliente,
                         idCliente: item.idCliente,
                         fechaD: item.fecha_rescision,
-                        motivoRescision: item.DescripcionMotivo,
+                        motivoCesion: item.nonmbremotivo,
                         detalle: item.detalle
 
 

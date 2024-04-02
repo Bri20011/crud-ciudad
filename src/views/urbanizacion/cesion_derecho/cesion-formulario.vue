@@ -2,33 +2,53 @@
     <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Rescision de Contrato</h1>
+                <h1 class="mb-3">Cesion de Derechos y deudas</h1>
                 <v-form>
                     <v-row>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Nº OC" v-model="formulario.numero_orden"
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field variant="outlined" label="Nº Contrato" v-model="formulario.numero_orden"
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoOrden">Obtener</v-btn>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="Manzana" :items="ListadoManzana"
-                                item-title="nombremanzana" item-value="idManzana" v-model="formulario.manzana"
-                                required></v-autocomplete>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente" item-title="ruc"
+                                item-value="id" v-model="formulario.cliente" required>
+                            </v-autocomplete>
+                        </v-col>
+
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field type="date" variant="outlined" label="Fecha de Cesion"
+                                v-model="formulario.fechaD" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="6">
+                            <v-autocomplete variant="outlined" label="Motivo de Cesion" :items="listaMotivoCesion"
+                                item-title="descripcionM" item-value="id" v-model="formulario.motivocesion" required>
+                            </v-autocomplete>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
+                            <v-autocomplete variant="outlined" label="Tipo de Venta" :items="listaTipoVenta"
+                                item-title="descripcionTV" item-value="id" v-model="formulario.tipoventa" disabled
+                                required></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="2" md="2">
+                            <v-autocomplete variant="outlined" label="N° Manzana" :items="ListadoManzana"
+                                item-title="nombremanzana" item-value="idManzana" v-model="formulario.manzana" disabled
+                                required></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" label="Numero de Lote" :items="ListadoLote"
                                 item-title="Numero_lote" item-value="Numero_lote" v-model="formulario.numero_lote"
-                                required></v-autocomplete>
+                                disabled required></v-autocomplete>
                         </v-col>
 
-                        <v-col cols="12" sm="4" md="4">
-                            <v-autocomplete variant="outlined" label="Tipo Venta" :items="listaTipoVenta"
-                                item-title="descripcionTV" item-value="id" v-model="formulario.tipoventa"
-                                required></v-autocomplete>
-                        </v-col>
 
+                        <v-col cols="12" sm="3" md="3" class="mx-0">
+                            <v-text-field variant="outlined" label="Monto Total Credito" disabled
+                                v-model="formulario.montoCredito" required></v-text-field>
+                        </v-col>
+                        <!-- 
                         <v-col cols="12" sm="3" md="3" class="mx-0">
                             <v-text-field variant="outlined" label="Ancho Frente" v-model="formulario.ancho_frente"
                                 disabled required></v-text-field>
@@ -47,29 +67,24 @@
                         <v-col cols="12" sm="3" md="3" class="mx-0">
                             <v-text-field variant="outlined" label="Longitud Lado Izquierdo" disabled
                                 v-model="formulario.long_izquierdo" required></v-text-field>
-                        </v-col>
+                        </v-col> -->
 
-                        <v-col cols="12" sm="6" md="6">
-                            <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente" item-title="ruc"
-                                item-value="id" v-model="formulario.cliente" required>
-                            </v-autocomplete>
-                        </v-col>
 
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field type="date" variant="outlined" label="Fecha de Contrato"
-                                v-model="formulario.fechaD" required></v-text-field>
-
-                        </v-col>
-                        <v-col cols="12" sm="3" md="3" class="mx-0">
-                            <v-text-field variant="outlined" label="Monto Total Credito" disabled
-                                v-model="formulario.montoCredito" required></v-text-field>
-                        </v-col>
 
 
 
                         <v-data-table items-per-page-text="Articulos" :headers="headersDetalleVto"
                             :items="listadoDeLaTabla">
+                            <template v-slot:tfoot>
 
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{
+        sumarTotalPagos('importeCuota') }}
+                                    </td>
+                                </tr>
+                            </template>
                             <template v-slot:item.fechaVto="{ item }">
 
                                 {{ formatearFecha(item.raw.fechaVto) }}
@@ -101,8 +116,8 @@
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ClienteAPI } from '@/services/cliente.api'
 import { ContratoApi } from '@/services/contrato.api'
-import { MotivoRescisionAPI } from '@/services/motivo_rescision_contrato.api'
-import { RescisionAPI } from '@/services/rescision.api'
+import { MotivoCesionAPI } from '@/services/motivo_cesion_derecho_deuda.api'
+import { CesionAPI } from '@/services/cesion.api'
 
 
 import dayjs from 'dayjs'
@@ -123,6 +138,7 @@ export default {
             listaCliente: [],
             listado_cesion: [],
             listadoDeLaTabla: [],
+            listaMotivoCesion: [],
             indiceGlobal: 0,
 
             formulario: {
@@ -158,12 +174,24 @@ export default {
 
 
         this.ObtenerCliente();
-        this.ObtenerMotivoRescision();
+        this.ObtenerMotivoCesion();
 
     },
 
     methods: {
-    
+
+        sumarTotalPagos(columna) {
+            // Verifica que this.formulario.itemsDetalle tenga un valor y sea un array
+            if (this.listadoDeLaTabla && Array.isArray(this.listadoDeLaTabla)) {
+                // Suma el valor de la columna 'importeCuota' de cada item
+                return this.listadoDeLaTabla.reduce((importeCuota, item) => importeCuota + item[columna], 0)
+            }
+
+
+
+
+        },
+
 
 
         ObtenerCliente() {
@@ -184,16 +212,17 @@ export default {
                 })
             })
         },
-        ObtenerMotivoRescision() {
-            MotivoRescisionAPI.getAll().then(({ data }) => {
-                this.listado_cesion = data.map(item => {
+        ObtenerMotivoCesion() {
+            MotivoCesionAPI.getAll().then(({ data }) => {
+                this.listaMotivoCesion = data.map(item => {
                     return {
-                        id: item.idmotivo_rescision_contrato,
-                        descripcionR: item.Descripcion
+                        id: item.idmotivo_cesion_derecho_deuda,
+                        descripcionM: item.Descripcion
                     }
                 })
             })
         },
+
 
 
 
@@ -212,7 +241,7 @@ export default {
             ContratoApi.getById(this.formulario.numero_orden).then(({ data }) => {
                 console.log('data:', data)
 
-             
+
                 this.formulario.cliente = data.idCliente,
                     this.formulario.fechaD = data.fecha_contrato,
                     this.formulario.manzana = data.numero_manzana,
@@ -222,15 +251,17 @@ export default {
                     this.formulario.ancho_atras = data.ancho_atras,
                     this.formulario.long_derecho = data.long_derecho,
                     this.formulario.long_izquierdo = data.long_izquierdo,
-                    this.formulario.montoCredito = data.monto_credito,
+                    this.formulario.montoCredito = data.monto_totalNuevo,
                     this.listadoDeLaTabla = data.detalle.map(item => {
                         return {
                             fechaVto: item.fecha_vto,
                             importeCuota: item.importe_cuota,
-                            numero_cuota: item.numero_cuota
+                            numero_cuota: item.numero_cuota,
+                            id_detalle: item.id_detalle
+
                         }
                     })
-              
+
             });
 
             this.dialogoFormulario = true;
@@ -239,26 +270,44 @@ export default {
 
 
         guardarFormulario() {
-            RescisionAPI.create({
-                idRescision_contrato: '',
+
+            //             SELECT `cesion_derecho_deuda`.`idCesion_derecho_deuda`,
+            //     `cesion_derecho_deuda`.`idContrato`,
+            //     `cesion_derecho_deuda`.`idmotivo_cesion_derecho_deuda`,
+            //     `cesion_derecho_deuda`.`fecha_cesion`,
+            //     `cesion_derecho_deuda`.`idCliente`,
+            //     `cesion_derecho_deuda`.`numero_lote`,
+            //     `cesion_derecho_deuda`.`numero_manzana`
+            // FROM `mydb`.`cesion_derecho_deuda`;
+
+
+            // SELECT `detalle_cesion_derecho_deuda`.`idCesion_derecho_deuda`,
+            //     `detalle_cesion_derecho_deuda`.`fecha_vto`,
+            //     `detalle_cesion_derecho_deuda`.`importe_cuota`,
+            //     `detalle_cesion_derecho_deuda`.`numero_cuota`
+            // FROM `mydb`.`detalle_cesion_derecho_deuda`;
+            CesionAPI.create({
+                idCesion_derecho_deuda: '',
                 idContrato: this.formulario.numero_orden,
+                idmotivo_cesion_derecho_deuda: this.formulario.motivocesion,
+                fecha_cesion: this.formulario.fechaD,
                 idCliente: this.formulario.cliente,
-                fecha_rescision: this.formulario.fechaD,
-                idmotivo_rescision_contrato: this.formulario.motivoRescision,
-                detalle: this.formulario.detalle
-                //aqui  envio detalle: this.formulario.detalle, y tambien en detalle envio al backend el id de idRescision_contrato
-
-
-
-
-
+                numero_lote: this.formulario.numero_lote,
+                numero_manzana: this.formulario.manzana,
+                detalle: this.listadoDeLaTabla.map(item => {
+                    return {
+                        idCesion_derecho_deuda: '',
+                        fecha_vto: item.fechaVto,
+                        importe_cuota: item.importeCuota,
+                        numero_cuota: item.numero_cuota,
+                        id_detalle: item.id_detalle
+                    }
+                })
             }).then(() => {
-
-                this.cerrarDialogo()
+                this.$emit('cerrar-dialogo')
             });
-        },
-
-
-    },
+        }
+    }
 }
+
 </script>

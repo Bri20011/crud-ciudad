@@ -117,7 +117,7 @@ export default {
         ['.Registro Precio de Lotes', 'mdi-image-filter-hdr', '/precio'],
         ['.Registro Contrato', 'mdi-image-filter-hdr', '/contrato'],
         ['.Registro Rescision de Contrato', 'mdi-image-filter-hdr', '/resccontrato'],
-        ['x-Registro Cesión de Derechos y Deudas', 'mdi-image-filter-hdr', '/cesion_derecho'],
+        ['.Registro Cesión de Derechos y Deudas', 'mdi-image-filter-hdr', '/cesion_derecho'],
 
       ],
 
@@ -132,7 +132,6 @@ export default {
         ['x-Arqueo de Caja', 'mdi-printer-pos', '/arqueo_caja'],
         ['Obtener Libro Ventas', 'mdi-printer-pos', '/obtener_libro_venta'],
         // ['x-Recaudaciones a depositar', 'mdi-printer-pos', '/recaudacion_depositar'],
-         // ['x-Cierre de Caja', 'mdi-printer-pos', '/cierrecaja'],
       ],
 
       mantenimiento: [
