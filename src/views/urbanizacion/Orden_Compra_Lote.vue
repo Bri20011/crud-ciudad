@@ -7,7 +7,7 @@
                     <v-row>
                         <v-col cols="12" sm="6" md="6" class="">
                             <v-text-field variant="outlined" label="Descripcion" v-model="formulario.descripcion"
-                                @input="verificarFormulario" required></v-text-field>
+                            :error="excededLimit" :error-messages="errorMessage"  @input="verificarFormulario" required></v-text-field>
                         </v-col>
 
                         <v-col cols="12" sm="6" md="6">
@@ -27,11 +27,11 @@
                         </v-col>
 
                         <v-col cols="12" sm="4" md="4" class="mt-5">
-                            <v-text-field variant="outlined" label="Cantidad" v-model="detalle.cantidad"
+                            <v-text-field type="number" variant="outlined" label="Cantidad" v-model="detalle.cantidad"
                                 required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4" class="mt-5">
-                            <v-text-field variant="outlined" label="Costo" v-model="detalle.costo"
+                            <v-text-field type="number" variant="outlined" label="Costo" v-model="detalle.costo"
                                 required></v-text-field>
                         </v-col>
                     </v-row>
@@ -60,7 +60,10 @@
 
                     <v-col cols="12" class="d-flex justify-end">
                         <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                        <v-btn color="primary" @click="guardarFormulario" :disabled="!formularioValido">Guardar</v-btn>
+                        <!-- <v-btn color="primary" @click="guardarFormulario" :disabled="!formularioValido">Guardar</v-btn> -->
+
+                        <v-btn color="primary" @click="guardarFormulario" :disabled="excededLimit || !formulario.descripcion || !formularioValido">Guardar</v-btn>
+
                     </v-col>
 
                 </v-form>
@@ -98,15 +101,30 @@
         </v-card>
 
     </v-dialog>
+    
+    <v-dialog v-model="dialogCamposVacios" persistent max-width="350">
 
+        <v-card>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Por favor, complete todos los campos para añadir el detalle.
+                </v-card-text>
 
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="dialogCamposVacios = false">Aceptar</v-btn>
+                </v-cols>
+            </v-container>
+        </v-card>
+
+    </v-dialog>
 
     <v-dialog v-model="showModalDuplicado" persistent max-width="350">
         <v-card>
             <v-container>
                 <v-card-title>Campo Vacio</v-card-title>
                 <v-card-text class="mt-0">
-                    Seleccionaste el mismo producto
+                    Este producto ya ha sido añadido. 
                 </v-card-text>
                 <v-cols cols="12" class="mt-0 d-flex justify-end">
                     <v-btn color="primary" @click="showModalDuplicado = false">Aceptar</v-btn>
@@ -115,7 +133,20 @@
             </v-container>
         </v-card>
     </v-dialog>
+    <v-dialog v-model="showModalNumerNegativos" persistent max-width="350">
+        <v-card>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Por favor, ingrese valores válidos para cantidad y costo
+                </v-card-text>
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="showModalNumerNegativos = false">Aceptar</v-btn>
+                </v-cols>
 
+            </v-container>
+        </v-card>
+    </v-dialog>
 
 
     <v-dialog max-width="700" v-model="dialogoFormularioEditar" persistent>
@@ -397,7 +428,9 @@ export default {
             dialogoFormularioVistaVista: false,
             showModal: false,
             showModalVacio: false,
+            dialogCamposVacios: false,
             showModalDuplicado: false,
+            showModalNumerNegativos: false,
             dialogoFormularioEditarGuardado: false,
             dialogoFormularioEditarDe: false,
             formularioValido: false,
@@ -420,7 +453,7 @@ export default {
             },
 
             contador: 1,
-            limit: 45,
+            limit: 50,
             defaultFormulario: {
                 codigo: '',
                 descripcion: '',
@@ -496,7 +529,7 @@ export default {
 
         errorMessage() {
             if (this.excededLimit) {
-                return 'Superaste el límite de 45 letras';
+                return 'Superaste el límite de 50 letras';
             }
             return '';
         },
@@ -522,23 +555,46 @@ export default {
             })
         },
 
-
         AgregarDetalle() {
-            const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
-            if (productoSeleccionado) {
-                this.itemsDetalle.push({
-                    producto: productoSeleccionado.id, // Agrega la descripción del producto
-                    descripcionPr: productoSeleccionado.descripcionPr,
-                    cantidad: this.detalle.cantidad,
-                    costo: this.detalle.costo,
-                    action: '',
-                });
-                this.verificarFormulario();
-                this.detalle.producto = '';
-                this.detalle.cantidad = '';
-                this.detalle.costo = '';
-            }
-        },
+    const productoSeleccionado = this.listaProducto.find(item => item.id === this.detalle.producto);
+    if (productoSeleccionado) {
+        // Verificar si el producto ya existe en la tabla
+        const existeProducto = this.itemsDetalle.some(item => item.producto === productoSeleccionado.id);
+        if (existeProducto) {
+            // Mostrar mensaje indicando que el producto ya está en la tabla
+           this.showModalDuplicado = true;
+            return; // Salir de la función para evitar añadir duplicados
+        }
+
+        // Verificar si los campos están vacíos
+        if (!this.detalle.cantidad || !this.detalle.costo || !this.detalle.producto) {
+            // Mostrar mensaje indicando que los campos están vacíos
+            this.dialogCamposVacios = true;
+            return; // Salir de la función si los campos están vacíos
+        }
+
+        // Verificar si el costo y la cantidad son números válidos
+        if (this.detalle.cantidad < 0 || this.detalle.costo < 0) {
+            // Mostrar mensaje indicando que los números son negativos
+           this.showModalNumerNegativos = true;
+            return; // Salir de la función si los números son negativos
+        }
+
+        // Agregar el producto a la tabla si pasa todas las validaciones
+        this.itemsDetalle.push({
+            producto: productoSeleccionado.id,
+            descripcionPr: productoSeleccionado.descripcionPr,
+            cantidad: this.detalle.cantidad,
+            costo: this.detalle.costo,
+            action: '',
+        });
+
+        this.verificarFormulario();
+        this.detalle.producto = '';
+        this.detalle.cantidad = '';
+        this.detalle.costo = '';
+    }
+},
 
 
         formatearFecha(fechaD) {

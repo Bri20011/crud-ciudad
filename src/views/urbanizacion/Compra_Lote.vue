@@ -7,7 +7,7 @@
                     <v-row>
                         <v-col cols="12" sm="2" md="2">
                             <v-text-field variant="outlined" label="Nº OC" v-model="formulario.numero_orden"
-                                required></v-text-field>
+                               required></v-text-field>
                         </v-col>
 
                         <v-col cols="12" class="mt-4" sm="2" md="2">
@@ -15,43 +15,43 @@
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Numero de Factura" v-model="formulario.numero_factura"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                            <v-text-field type="number"  variant="outlined" label="Numero de Factura"
+                                v-model="formulario.numero_factura" required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
+
+
                             <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
-                                :error="excededLimit" :error-messages="errorMessage" required
-                                @change="tipoDocumentoChanged">
-                            </v-autocomplete>
+                                required></v-autocomplete>
                         </v-col>
-                        <v-col cols="12" sm="2" md="2">
-                            <v-autocomplete ref="numeroCajaInput" variant="outlined" label="Caja" :items="listaCaja"
+                        <v-col v-if="formulario.documento == 1" cols="12" sm="2" md="2">
+                            <v-autocomplete variant="outlined" label="Caja" :items="listaCaja"
                                 item-title="descripcionCa" item-value="id" v-model="formulario.caja"
-                                :disabled="formulario.documento !== 1" required></v-autocomplete>
+                                required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="4" md="4">
-                            <input class="custom-input" v-model="formulario.fechaO" type="date"
-                                placeholder="Fecha de Operacion" @input="formatDate" />
+                            <v-text-field type="date" variant="outlined" label="Fecha" 
+                                v-model="formulario.fechaO" required></v-text-field>
                         </v-col>
 
 
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Timbrado" v-model="formulario.timbrado"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-text-field>
+                            <v-text-field type="number" variant="outlined" label="Timbrado" v-model="formulario.timbrado"
+                                 :error="excededLimit" required></v-text-field>
                         </v-col>
 
                         <v-col cols="12" sm="4" md="4">
-                            <v-autocomplete variant="outlined" :items="listaProveedor" label="Proveedor"
+                            <v-autocomplete variant="outlined" label="Proveedor" :items="listaProveedor"
                                 item-title="descripcionP" item-value="id" v-model="formulario.proveedor"
-                                :error="excededLimit" :error-messages="errorMessage" required></v-autocomplete>
+                                required></v-autocomplete>
                         </v-col>
 
 
 
-                        <v-data-table max-width="1600" items-per-page-text="Articulos" :headers="headersCompra"
-                            :items="formulario.itemsDetalle">
+                        <v-data-table max-width="1600" items-per-page-text="Articulos"
+                            :headers="headersCompra" :items="formulario.itemsDetalle">
 
 
                             <template v-slot:tfoot>
@@ -70,7 +70,8 @@
                                     <td></td>
                                     <td align="center"><v-divider class="mb-2"></v-divider> {{ sumarIva('iva5') }}</td>
                                     <td align="center"> <v-divider class="mb-2"></v-divider>{{ sumarIva('iva10') }}</td>
-                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}</td>
+                                    <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotal('total') }}
+                                    </td>
                                     <td></td>
                                 </tr>
                             </template>
@@ -98,7 +99,7 @@
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
 
                             <v-btn color="primary" @click="guardarFormulario"
-                                :disabled="formulario.documento === 2 && !seRealizoAgregarPagos">GuardarPricn</v-btn>
+                                :disabled="!formulario.numero_orden || !formulario.numero_factura || !formulario.documento || !formulario.fechaO || !formulario.timbrado || !formulario.proveedor||(formulario.documento === 1 && !formulario.caja) || !formulario.ubicacion">GuardarPricn</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -119,12 +120,13 @@
 
                         <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Descripcion" :items="listaProducto"
-                                item-title="descripcionPr" item-value="id" v-model="formulario.producto"
+                              disabled  item-title="descripcionPr" item-value="id" v-model="formulario.producto"
                                 required></v-autocomplete>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
-                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio" item-title="descripcionB"
-                                item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
+                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio"
+                                item-title="descripcionB" item-value="id" v-model="formulario.ciudad"
+                                required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3">
@@ -133,7 +135,7 @@
                                 required></v-autocomplete>
                         </v-col>
                         <v-col ols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Cantidad" @input="recalcularTotal"
+                            <v-text-field type="number" variant="outlined" label="Cantidad" @input="recalcularTotal"
                                 v-model="formulario.cantidad"></v-text-field>
                         </v-col>
 
@@ -147,22 +149,22 @@
                                 v-model="formulario.nombreLoteado"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Precio Unitario" @input="recalcularTotal"
+                            <v-text-field type="number" variant="outlined" label="Precio Unitario" @input="recalcularTotal"
                                 v-model="formulario.costo"></v-text-field>
                         </v-col>
                         <v-col ols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Total" v-model="formulario.total"
-                                readonly></v-text-field>
+                            <v-text-field type="number" variant="outlined" label="Total" v-model="formulario.total"
+                             disabled   readonly></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
                             <v-autocomplete variant="outlined" label="Iva" :items="listaIva" item-title="descripcionI"
-                                item-value="id" v-model="formulario.iva" :error="excededLimit"
-                                :error-messages="errorMessage" required>
+                               disabled item-value="id" v-model="formulario.iva" :error="excededLimit"
+                              required>
                             </v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Dimension Total" v-model="formulario.dimensionTotal"
+                            <v-text-field type="number" variant="outlined" label="Dimension Total" v-model="formulario.dimensionTotal"
                                 required></v-text-field>
                         </v-col>
 
@@ -171,7 +173,8 @@
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2"
                                 @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle"
+                            :disabled="!formulario.producto||!formulario.ciudad||!formulario.barrio||!formulario.ubicacion ||!formulario.barrio ||!formulario.nombreLoteado ||!formulario.costo ||!formulario.total ||!formulario.iva ||!formulario.dimensionTotal">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -216,7 +219,8 @@
                         mdi-pencil
                     </v-icon> -->
 
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="confirmarCambiarEstado(item.raw)">
+                    <v-btn append-icon="mdi-trash-can-outline" color="primary"
+                        @click="confirmarCambiarEstado(item.raw)">
                         Anular
                     </v-btn>
 
@@ -251,7 +255,7 @@
 
         <!-- INICIO DIALOGO REGISTRAR CUENTAS A PAGAR -->
 
-        <v-dialog max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
+        <v-dialog v-if="formulario.documento == 2" max-width="700" v-model="dialogoFormularioGenerarCuota" persistent>
             <v-card class="rounded-xl">
                 <v-container>
                     <h1 class="mb-3">Registrar Cuentas a Pagar</h1>
@@ -276,14 +280,14 @@
                             </v-col>
 
                             <v-col cols="12" sm="5" md="5">
-                                <v-text-field variant="outlined" label="Monto" v-model="CuentaPagar.monto"
+                            <v-text-field type="number" variant="outlined" label="Monto" v-model="CuentaPagar.monto"
                                     required></v-text-field>
                             </v-col>
 
 
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="primary" size="small" prepend-icon="mdi mdi-plus-thick"
-                                    @click="AgregarDetallePago">Agregar Pagos</v-btn>
+                                    @click="AgregarDetallePago" :disabled="!CuentaPagar.monto|| !CuentaPagar.fechaD">Agregar Pagos</v-btn>
                             </v-col>
 
 
@@ -294,7 +298,7 @@
 
 
 
-                            <v-data-table items-per-page-text="Articulos" :headers="headersCuentasPagar"
+                            <v-data-table  items-per-page-text="Articulos" :headers="headersCuentasPagar"
                                 :items="itemsDetallePagos">
 
                                 <template v-slot:item.fechaD="{ item }">
@@ -307,7 +311,8 @@
 
                                     <tr>
                                         <td></td>
-                                        <td align="center"><v-divider class="mb-2"></v-divider>{{ sumarTotalPagos('total') }}
+                                        <td align="center"><v-divider class="mb-2"></v-divider>{{
+                                            sumarTotalPagos('total') }}
                                         </td>
                                         <td></td>
                                     </tr>
@@ -331,7 +336,7 @@
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="#E0E0E0" class="mx-2"
                                     @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
-                                <v-btn color="primary" @click="guardarFormularioPagos">GuardarPa</v-btn>
+                                <v-btn color="primary" @click="guardarFormularioPagos" :disabled="!CuentaPagar.observacion || !CuentaPagar.proveedor || !headersCuentasPagar"  >GuardarPa</v-btn>
 
                             </v-col>
                         </v-row>
@@ -370,12 +375,43 @@
             </v-dialog>
             <!-- INICIO EDITAR DETALLE PAGOS -->
         </v-dialog>
+        <!-- VALIDACIONES -->
+        <v-dialog v-model="showModalVacio" persistent max-width="350">
+
+            <v-card>
+                <v-container>
+                    <v-card-title>Campo Vacio</v-card-title>
+                    <v-card-text class="mt-0">
+                        Descripcion y fecha no pueden quedar vacio
+                    </v-card-text>
+
+                    <v-cols cols="12" class="mt-0 d-flex justify-end">
+                        <v-btn color="primary" @click="showModalVacio = false">Aceptar</v-btn>
+                    </v-cols>
+                </v-container>
+            </v-card>
+        </v-dialog>
+        
+        <v-dialog v-model="showModalNumerNegativos" persistent max-width="350">
+        <v-card>
+            <v-container>
+                <v-card-title>Campo Vacio</v-card-title>
+                <v-card-text class="mt-0">
+                    Por favor, ingrese valores válidos para cantidad y costo
+                </v-card-text>
+                <v-cols cols="12" class="mt-0 d-flex justify-end">
+                    <v-btn color="primary" @click="showModalNumerNegativos = false">Aceptar</v-btn>
+                </v-cols>
+
+            </v-container>
+        </v-card>
+    </v-dialog>
+        <!-- FIN VALIDACIONES -->
 
 
-        <!-- FIN DIALOGO REGISTRAR CUENTAS A PAGAR -->
     </v-container>
 </template>
-  
+
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { ComprasLoteAPI } from '@/services/compras_lote.api'
@@ -403,6 +439,10 @@ export default {
         return {
             dialogoFormulario: false,
             dialogoCambiarEstado: false,
+            formularioValido: false,
+            showModalNumerNegativos: false,
+            formularioValidoPagos: false,
+            formularioCompleto: false,
             seRealizoAgregarPagos: false,
             dialogoFormularioEditar: false,
             dialogoFormularioEditarDetalle: false,
@@ -528,8 +568,15 @@ export default {
         //     return '';
         // }
     },
+            // Validar si dentro de formulario.itemsDetalle. esta completado la ubicacion (formularioValido)
+           
+
+
+      
     methods:
     {
+      
+
         ObtenerProveedor() {
             ProveedorAPI.getAll().then(({ data }) => {
                 this.listaProveedor = data.map(item => {
@@ -551,6 +598,21 @@ export default {
                 })
             })
         },
+
+        ObtenerCaja() {
+            CajaAPI.getAll().then(({ data }) => {
+                this.listaCaja = data.map(item => {
+                    return {
+                        id: item.idCaja,
+                        descripcionCa: item.nombrecaja,
+                        numero_caja: item.Cajahabilitada,
+                        idSucursal: item.idSucursal,
+                        nombreSucursal: item.nombreSucursal
+                    }
+                })
+            })
+        },
+
 
         ObtenerProducto() {
             ProductoAPI.getAll().then(({ data }) => {
@@ -575,19 +637,7 @@ export default {
                 })
             })
         },
-        ObtenerCaja() {
-            CajaAPI.getAll().then(({ data }) => {
-                this.listaCaja = data.map(item => {
-                    return {
-                        id: item.idCaja,
-                        descripcionC: item.nombrecaja,
-                        numerCaja: item.Cajahabilitada,
-                        idSucursal: item.idSucursal,
-                        nombreSucursal: item.nombreSucursal
-                    }
-                })
-            })
-        },
+
         ObtenerBarrio() {
             BarrioAPI.getAll().then(({ data }) => {
                 this.listaBarrio = data.map(item => {
@@ -608,19 +658,8 @@ export default {
                 })
             })
         },
-        ObtenerCaja() {
-            CajaAPI.getAll().then(({ data }) => {
-                this.listaCaja = data.map(item => {
-                    return {
-                        id: item.idCaja,
-                        descripcionCa: item.nombrecaja,
-                        numero_caja: item.Cajahabilitada,
-                        idSucursal: item.idSucursal,
-                        nombreSucursal: item.nombreSucursal
-                    }
-                })
-            })
-        },
+
+
 
 
         // INICIO NUEVO 
@@ -676,12 +715,11 @@ export default {
         },
 
         guardarFormulario() {
-            if (!this.formulario.numero_factura || !this.formulario.documento || !this.formulario.caja || !this.formulario.proveedor || !this.formulario.fechaD || !this.formulario.timbrado || !this.formulario.numero_orden || !this.formulario.itemsDetalle.length) {
-
+            //Aqui valida algun campo tabla esta vacio no activa el boton
+            if (!this.formulario.numero_factura || !this.formulario.documento || !this.formulario.caja || !this.formulario.proveedor || !this.formulario.fechaD || !this.formulario.timbrado) {
                 this.emptyFieldError = true;
                 return;
             }
-
 
             ComprasLoteAPI.create({
 
@@ -784,23 +822,21 @@ export default {
             this.formulario.cantidad = parametro.cantidad_lote
             this.formulario.costo = parametro.costo_lote
             this.formulario.idCiudad = parametro.idCiudad
-            this.formulario.barrio = parametro.idBarrio
-
-
+            this.formulario.barrio = parametro.barrio
 
             // Calcula el total al abrir el diálogo
             this.formulario.total = this.formulario.cantidad * this.formulario.costo;
             this.formulario.iva = parametro.idIva
-            o
-
-
+            this.formulario.dimensionTotal = parametro.dimension_total
+            this.formulario.nombreLoteado = parametro.Descripcion_lote
 
         },
         guardarFormularioEditarDetalle() {
-            if (!this.formulario.producto || !this.formulario.cantidad || !this.formulario.costo) {
-                this.emptyFieldError = true;
-                return;
-            }
+            if (this.formulario.cantidad < 0 || this.formulario.costo < 0 || this.formulario.dimensionTotal < 0) {
+            // Mostrar mensaje indicando que los números son negativos
+           this.showModalNumerNegativos = true;
+            return; // Salir de la función si los números son negativos
+        }
 
             // Busca el índice del elemento que se va a editar
             const index = this.formulario.itemsDetalle.findIndex(item => item.idProducto === this.formulario.producto);
@@ -889,6 +925,7 @@ export default {
             // Abrir el modal y cargar el código aquí
             this.dialogoFormularioGenerarCuota = true;
             this.CuentaPagar.proveedor = this.formulario.proveedor
+            this.CuentaPagar.fechaD = this.fecha
             this.CuentaPagar.monto = this.formulario.total
 
             // this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
@@ -927,6 +964,15 @@ export default {
 
         },
 
+        abrirformulariogenerarcuentas() {
+            // Abrir el modal y cargar el código aquí
+            this.dialogoFormularioGenerarCuota = true;
+            this.CuentaPagar.proveedor = this.formulario.proveedor
+            this.CuentaPagar.fechaD = this.fecha
+            this.CuentaPagar.monto = this.formulario.total
+            // this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+            // this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
+        },
         guardarFormularioEditarDetallePago() {
             if (!this.CuentaPagar.fechaD || !this.CuentaPagar.monto) {
                 this.emptyFieldError = true;
@@ -947,15 +993,7 @@ export default {
 
         },
 
-        tipoDocumentoChanged() {
-            if (this.formulario.documento === 1) {
-                // Habilitar el campo de número de caja si el tipo de documento es "Contado"
-                this.$refs.numeroCajaInput.disabled = false;
-            } else if (this.formulario.documento === 2) {
-                // Habilitar el botón si el tipo de documento es "Crédito"
-                this.$refs.generarCuotasButton.disabled = false;
-            }
-        },
+
     },
 
 
