@@ -50,10 +50,10 @@
                         <v-divider class="mt-0"></v-divider>
 
                         <v-col cols="12" sm="2" md="2" class="mt-5">
-      <v-autocomplete variant="outlined" label="Lote a Urbanizar" :items="listaUrbanizar"
-                      item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
-                      :disabled="detalleAgregado" required></v-autocomplete>
-    </v-col>
+                            <v-autocomplete variant="outlined" label="Lote a Urbanizar" :items="listaUrbanizar"
+                                item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
+                                :disabled="detalleAgregado" required></v-autocomplete>
+                        </v-col>
 
                         <v-col cols="12" sm="3" md="3" class="mt-5">
                             <v-autocomplete variant="outlined" label="Manzana" :items="listaManzana"
@@ -323,14 +323,46 @@ export default {
             const descripcionManzana = manzanaSeleccionada ? manzanaSeleccionada.descripcionM : '';
             const productoDeStock = this.listaUrbanizar.find(item => item.id === this.formulario.urbanizacion);
 
+
+
+            if (parseInt(this.formulario.cantidad) > parseInt(this.formulario.total_lote_generar)) {
+                // La cantidad ingresada es mayor que el total de lotes a generar
+                alert("La cantidad de lotes no puede ser mayor que el total de lotes a generar1.");
+                return;
+            }
+
+            const totalLotesAGenerar = parseInt(this.formulario.total_lote_generar);
+            const cantidadDetallesAgregados = this.listadoDeLaTabla.length;
+
+            // Validar si agregar un nuevo detalle excederá la cantidad máxima de lotes
+            if (totalLotesAGenerar <= cantidadDetallesAgregados) {
+                // Se ha alcanzado o superado la cantidad máxima de lotes a generar
+                alert("La cantidad de lotes a generar ya se ha alcanzado o superado2.");
+                return;
+            }
+            const manzanaExistente = this.listadoDeLaTabla.some(detalle => detalle.manzana === descripcionManzana);
+            if (manzanaExistente) {
+                // La manzana ya existe en la tabla
+                alert("La manzana ya ha sido agregada. No se puede agregar más de una vez.");
+                return;
+            }
+
+
+            // Validación: Total lotes a generar y costo total de lote no pueden ser valores negativos
+            if (totalLotesAGenerar < 0 || this.formulario.costo < 0 || this.formulario.cantidad < 0) {
+                // Se ha ingresado un valor negativo
+                alert("No se pueden ingresar valores negativos.");
+                return;
+            }
+
             const cantidad = this.formulario.cantidad;
 
 
+            // total_lote_generar
             // Agregar  detalle segun la cantidad ingresada
             for (let indice = 0; indice < cantidad; indice++) {
                 this.indiceGlobal = this.indiceGlobal + 1
                 const numero_lote = indice + 1;
-
                 this.listadoDeLaTabla.push({
                     producto: productoDeStock.idProducto,
                     descripcionPr: productoDeStock.descripcionU,

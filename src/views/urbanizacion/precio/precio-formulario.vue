@@ -1,5 +1,3 @@
-
-
 <template>
     <!-- INICIO CABECERA -->
     <v-dialog max-width="1500" v-model="dialogoFormulario" persistent>
@@ -13,7 +11,7 @@
                             <v-autocomplete variant="outlined" label="Selecione Urbanizacion" :items="listaUrbanizar"
                                 item-title="descripcionU" item-value="id" v-model="formulario.urbanizacion"
                                 required></v-autocomplete>
-                        </v-col> 
+                        </v-col>
 
                         <v-col cols="12" class="mt-4" sm="2" md="2">
                             <v-btn @click="ObtenerCodigoOrden">Obtener</v-btn>
@@ -25,22 +23,24 @@
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3" class="mt-0">
-                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio" item-title="descripcionB"
-                            disabled  item-value="id" v-model="formulario.barrio" required></v-autocomplete>
+                            <v-autocomplete variant="outlined" label="Barrio" :items="listaBarrio"
+                                item-title="descripcionB" disabled item-value="id" v-model="formulario.barrio"
+                                required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3" class="mt-0">
-                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad" item-title="descripcionC"
-                            disabled  item-value="id" v-model="formulario.ciudad" required></v-autocomplete>
+                            <v-autocomplete variant="outlined" label="Ciudad" :items="listaCiudad"
+                                item-title="descripcionC" disabled item-value="id" v-model="formulario.ciudad"
+                                required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="3" md="3" class="mt-0">
-                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion"
-                            disabled   required></v-text-field>
+                            <v-text-field variant="outlined" label="Ubicacion" v-model="formulario.ubicacion" disabled
+                                required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3" class="mt-0">
                             <v-text-field variant="outlined" label="Costo Total Lote" v-model="formulario.costo"
-                            disabled   required></v-text-field>
+                                disabled required></v-text-field>
                         </v-col>
 
                         <!-- FIN CABECERA -->
@@ -48,23 +48,23 @@
                         <!-- INICIO DETALLE -->
                         <v-divider class="mt-0 mb-1"></v-divider>
 
-                     
+
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Precio Contado" v-model="detalle_cabecera.precioContado"
-                                 required></v-text-field>
+                            <v-text-field type="number" variant="outlined" label="Precio Contado"
+                                v-model="detalle_cabecera.precioContado" required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Cantidad de Cuota" v-model="detalle_cabecera.cantidadCuota"
-                                 required></v-text-field>
-                        </v-col>  
-                        <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Monto Total Credito" v-model="detalle_cabecera.precioCredito"
-                                 required></v-text-field>
+                            <v-text-field type="number" variant="outlined" label="Cantidad de Cuota"
+                                v-model="detalle_cabecera.cantidadCuota" required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3" md="3">
-                            <v-text-field variant="outlined" label="Monto Cuota Credito" v-model="detalle_cabecera.montoCredito"
-                                 required></v-text-field>
-                        </v-col>      
+                            <v-text-field type="number" variant="outlined" label="Monto Total Credito"
+                                v-model="detalle_cabecera.precioCredito" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3" md="3">
+                            <v-text-field type="number" variant="outlined" label="Monto Cuota Credito"
+                                v-model="detalle_cabecera.montoCredito" required></v-text-field>
+                        </v-col>
 
                         <v-row class="d-flex align-end  mt-5">
                             <v-col cols="12" sm="8" md="8">
@@ -86,7 +86,8 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="cerrarDialogo">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario">Guardarr</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario"
+                                :disabled="!formulario.urbanizacion || !formulario.fechaD">Guardarr</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -106,76 +107,77 @@
 
                     <v-row class="justify-center">
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Nombre de Urbanizacion" v-model="detalle_editar.nombre_urb"
-                                disabled required></v-text-field>
-                        </v-col>  
+                            <v-text-field variant="outlined" label="Nombre de Urbanizacion"
+                                v-model="detalle_editar.nombre_urb" disabled required></v-text-field>
+                        </v-col>
                         <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Numero de manzana" :items="listaManzana"
-                                item-title="descripcionM" item-value="id" v-model="detalle_editar.manzana" disabled required>
+                                item-title="descripcionM" item-value="id" v-model="detalle_editar.manzana" disabled
+                                required>
                             </v-text-field>
-                        </v-col>        
+                        </v-col>
                     </v-row>
 
                     <v-row class="justify-center">
                         <v-col cols="12" sm="4" md="4">
                             <v-text-field variant="outlined" label="Numero Lote:" v-model="detalle_editar.Numero_lote"
-                            disabled  required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Costo por Lote:" v-model="detalle_editar.costo_urbanizacion"
                                 disabled required></v-text-field>
                         </v-col>
-                       
-                    </v-row>
-
-                    <v-row class="justify-center">
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Ancho del Frente:" v-model="detalle_editar.ancho_frente"
-                            disabled  required></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Ancho de Atrás:" v-model="detalle_editar.ancho_atras"
-                            disabled  required></v-text-field>
+                            <v-text-field variant="outlined" label="Costo por Lote:"
+                                v-model="detalle_editar.costo_urbanizacion" disabled required></v-text-field>
                         </v-col>
 
                     </v-row>
 
                     <v-row class="justify-center">
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Longitud del Lado Izquierdo:"
-                            disabled v-model="detalle_editar.long_izquierdo" required></v-text-field>
+                            <v-text-field variant="outlined" label="Ancho del Frente:"
+                                v-model="detalle_editar.ancho_frente" disabled required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Longitud del Lado Derecho:"
-                            disabled  v-model="detalle_editar.long_izquierdo" required></v-text-field>
+                            <v-text-field variant="outlined" label="Ancho de Atrás:"
+                                v-model="detalle_editar.ancho_atras" disabled required></v-text-field>
                         </v-col>
-                     
+
                     </v-row>
-                   <v-row class="justify-center">
-                    <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Codigo:"
-                            disabled  v-model="detalle_editar.id_detalle" required></v-text-field>
-                        </v-col>
-                    <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Precio Contado" v-model="detalle_editar.precioContado"
-                                 required></v-text-field>
-                        </v-col>
-                      
-                   </v-row> 
-                   <v-row class="justify-center">
-                    <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Monto Total Credito" v-model="detalle_editar.precioCredito"
-                                 required></v-text-field>
+
+                    <v-row class="justify-center">
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field variant="outlined" label="Longitud del Lado Izquierdo:" disabled
+                                v-model="detalle_editar.long_izquierdo" required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Cantidad de Cuotas" v-model="detalle_editar.cantidadCuota"
-                                 required></v-text-field>
-                        </v-col>  
+                            <v-text-field variant="outlined" label="Longitud del Lado Derecho:" disabled
+                                v-model="detalle_editar.long_izquierdo" required></v-text-field>
+                        </v-col>
+
+                    </v-row>
+                    <v-row class="justify-center">
                         <v-col cols="12" sm="4" md="4">
-                            <v-text-field variant="outlined" label="Monto Cuota Credito" v-model="detalle_editar.montoCredito"
-                                 required></v-text-field>
-                        </v-col>  
-                       
+                            <v-text-field variant="outlined" label="Codigo:" disabled
+                                v-model="detalle_editar.id_detalle" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field type="number" variant="outlined" label="Precio Contado"
+                                v-model="detalle_editar.precioContado" required></v-text-field>
+                        </v-col>
+
+                    </v-row>
+                    <v-row class="justify-center">
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field type="number" variant="outlined" label="Monto Total Credito"
+                                v-model="detalle_editar.precioCredito" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field type="number" variant="outlined" label="Cantidad de Cuotas"
+                                v-model="detalle_editar.cantidadCuota" required></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4" md="4">
+                            <v-text-field type="number" variant="outlined" label="Monto Cuota Credito"
+                                v-model="detalle_editar.montoCredito" required></v-text-field>
+                        </v-col>
+
                     </v-row>
 
 
@@ -218,6 +220,7 @@ export default {
         return {
             dialogoFormulario: true,
             dialogoFormularioEditarDetalle: false,
+            todosLosCamposCompletos: false,
             listaCiudad: [],
             listaBarrio: [],
             listaProducto: [],
@@ -225,7 +228,7 @@ export default {
             listaManzana: [],
             indiceGlobal: 0,
 
-       
+
             formulario: {
                 nombre_urb: '',
                 fechaD: '',
@@ -248,7 +251,7 @@ export default {
             formularioEditar: {
                 manzana: '',
                 nombre_urb: '',
-               
+
             },
             detalle_editar: {
                 id: '',
@@ -273,9 +276,7 @@ export default {
                 { title: 'Manzanas', key: 'data-table-group', order: 'asc' },
                 { title: 'Producto', key: 'idProducto', align: 'center' },
                 { title: 'Descripcion', key: 'nomnbreProducto', align: 'center' },
-                { title: 'Codigo', key: 'id_detalle', align: 'center' }, 
-
-                // { title: 'Nombre de Urbanizacion', key: 'nombre_urb', align: 'center' },
+                { title: 'Codigo', key: 'id_detalle', align: 'center' },
                 { title: 'Numero de Lote', key: 'Numero_lote', align: 'center' },
                 { title: 'Numero Manzana', key: 'nombreManzana', align: 'center' },
                 { title: 'Ancho del Frente:', key: 'ancho_frente', align: 'center' },
@@ -361,7 +362,7 @@ export default {
                     return {
                         id: item.idUrbanizacion,
                         fechaD: item.fecha_urb,
-                        nombre_urb: item.Nombre_Urbanizacion, 
+                        nombre_urb: item.Nombre_Urbanizacion,
                         area: item.Area,
                         ladoA: item.LadoA,
                         ladoB: item.LadoB,
@@ -383,21 +384,21 @@ export default {
 
 
         agregarDetalleAntesGuardar() {
-    // Itera sobre los detalles existentes
-    for (let detalle of this.datosUrbanizacion.itemsDetalle) {
-        // Actualiza los precios en cada detalle existente
-        detalle.precioContado = this.detalle_cabecera.precioContado;
-        detalle.precioCredito = this.detalle_cabecera.precioCredito;
-        detalle.montoCredito = this.detalle_cabecera.montoCredito; 
-        detalle.cantidadCuota = this.detalle_cabecera.cantidadCuota;
-        // Otros campos de detalle que necesites actualizar
-    }
-    // Limpia los campos después de actualizar los detalles si es necesario
-    this.detalle_cabecera.precioContado = '';
-    this.detalle_cabecera.precioCredito = '';
-    this.detalle_cabecera.montoCredito = '';
-    this.detalle_cabecera.cantidadCuota = '';
-},
+            // Itera sobre los detalles existentes
+            for (let detalle of this.datosUrbanizacion.itemsDetalle) {
+                // Actualiza los precios en cada detalle existente
+                detalle.precioContado = this.detalle_cabecera.precioContado;
+                detalle.precioCredito = this.detalle_cabecera.precioCredito;
+                detalle.montoCredito = this.detalle_cabecera.montoCredito;
+                detalle.cantidadCuota = this.detalle_cabecera.cantidadCuota;
+                // Otros campos de detalle que necesites actualizar
+            }
+            // Limpia los campos después de actualizar los detalles si es necesario
+            this.detalle_cabecera.precioContado = '';
+            this.detalle_cabecera.precioCredito = '';
+            this.detalle_cabecera.montoCredito = '';
+            this.detalle_cabecera.cantidadCuota = '';
+        },
 
         editarDetalleAntesGuardar(parametro) {
             this.dialogoFormularioEditarDetalle = true
@@ -416,7 +417,7 @@ export default {
             this.detalle_editar.Numero_lote = parametro.Numero_lote
             this.detalle_editar.cantidadCuota = parametro.cantidadCuota
 
-         
+
 
 
         },
@@ -457,6 +458,22 @@ export default {
                 this.cerrarDialogo()
             });
         },
+        verificarCamposCompletos() {
+            // Verificar si todos los campos en la tabla están completos
+            this.todosLosCamposCompletos = this.datosUrbanizacion.itemsDetalle.every(item => {
+                // Verificar cada campo del item
+                return item.cantidadCuota && item.montoCredito;
+            });
+        },
+        watch: {
+            'datosUrbanizacion.itemsDetalle': {
+                handler() {
+                    // Verificar si todos los campos en la tabla están completos cuando cambian los datos
+                    this.verificarCamposCompletos();
+                },
+                deep: true
+            }
+        },
         guardarFormularioEditarDetalle() {
             // console.log('item.id: ',item.id);
             // console.log('item.id: ',this.detalle_editar.id);
@@ -491,7 +508,7 @@ export default {
             // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
             UrbanizacionApi.getById(this.formulario.urbanizacion).then(({ data }) => {
                 this.datosUrbanizacion.itemsDetalle = data.detalle_urbanizacionetalle
-     
+
                 this.formulario.costo = data.Costo_total
                 this.formulario.ubicacion = data.Ubicacion
                 this.formulario.barrio = data.idBarrio
@@ -509,7 +526,7 @@ export default {
                 const cuotaTotal = cuotaMensual * plazoCredito * (1 + interesMensual * plazoCredito / 2); // Fórmula de cuota total con interés compuesto
                 this.detalle_cabecera.precioCredito = cuotaTotal.toFixed(0); // Redondeado a 0 decimales
                 this.detalle_cabecera.precioCredito = Number(this.detalle_cabecera.precioCredito); // Convertir a número
-                this.detalle_cabecera.montoCredito = (cuotaTotal/120).toFixed(0); // Redondeado a 0 decimales
+                this.detalle_cabecera.montoCredito = (cuotaTotal / 120).toFixed(0); // Redondeado a 0 decimales
                 this.detalle_cabecera.montoCredito = Number(this.detalle_cabecera.montoCredito); // Convertir a número
 
             });
@@ -518,6 +535,7 @@ export default {
         },
     }
 }
+
 </script>
 <style scoped>
 .custom-input {

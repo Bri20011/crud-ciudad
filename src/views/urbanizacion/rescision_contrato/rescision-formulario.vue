@@ -33,7 +33,10 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="cerrarDialogo">Cancelar</v-btn>
-                            <v-btn color="primary" class="mx-2" @click="guardarFormulario">Guardar</v-btn>
+                            <v-btn color="#E0E0E0" class="mx-2" @click="guardarFormulario"
+                             :disabled="!formulario.numero_orden || !formulario.cliente || 
+                             !formulario.motivoRescision || !formulario.fechaD">Guardar</v-btn>
+
 
                         </v-col>
                     </v-row>
