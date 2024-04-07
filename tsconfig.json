@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+      "types": [
+        "vue3-toastify/global"
+      ]
+    }
+  }

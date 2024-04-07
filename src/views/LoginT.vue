@@ -19,15 +19,6 @@
 
         <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Contraseña"
           placeholder="Ingrese su contraseña" prepend-inner-icon="mdi-lock"></v-text-field>
-
-
-        <!-- <v-row>
-          <v-switch v-model="showMessages" label="Recuerdame"></v-switch>
-          <v-input hint="" persistent-hint :messages="messages">
-
-          </v-input>
-        </v-row> -->
-
         <br>
         <v-btn class="mt-0" v-model="showInicio" block rounded="x2" :disabled="!form" :loading="loading" color="#1877f2"
           size="large" type="submit" variant="elevated" :style="{ color: '#FFFFFF' }">
@@ -36,29 +27,6 @@
         <div class="mt-2 d-flex justify-center">
           <p v-if="showInicio" style="color: white;">Debe completar ambos campos.</p>
         </div>
-
-
-        <!-- <div> <v-card-text @click="openModal" class="text-center custom-text" :style="{ color: 'rgb(24, 119, 242)' }">
-            ¿Olvidaste tu contraseña? </v-card-text> </div> -->
-
-
-
-        <!-- <div id="app">
-          <v-app> -->
-        <!-- <v-main class="mt-5">
-              <v-container fluid>
-                <v-row justify="center"> 
-                  <v-btn @click="dialogo1 = true" color="rgb(66, 183, 42)" height="45" width="180">
-                    <div class="custom-text" style="color: white; display: flex; align-items: center; height: 100%;">
-                      <v-card-text :style="{ fontSize: '16px', margin: 'auto' }">
-                        Crear cuenta nueva
-                      </v-card-text>
-                    </div>
-                  </v-btn>
-                </v-row>
-              </v-container> -->
-
-
 
         <!-- Inicio Dialogo -->
         <v-dialog v-model="dialogo1" width="450">
@@ -86,8 +54,8 @@
                 <div class="mt-0" style="margin-bottom: -26px;">
                   <v-row class="mt-2">
                     <v-col cols="12" sm="6">
-                      <v-text-field label="Nombre" density="compact" bg-color="#f5f6f7" persistent-hint variant="outlined"
-                        class="custom-text-field custom-long-width"></v-text-field>
+                      <v-text-field label="Nombre" density="compact" bg-color="#f5f6f7" persistent-hint
+                        variant="outlined" class="custom-text-field custom-long-width"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6">
                       <v-text-field label="Apellido" density="compact" bg-color="#f5f6f7" persistent-hint
@@ -217,9 +185,6 @@
 
         <!-- Inicio Dialogo 2 -->
 
-
-
-
         <v-dialog v-model="dialogo2" max-width="600px" class="d-flex align-center justify-center">
 
           <v-card color="grey-lighten-4" flat height="500px" rounded="0" max-width="600px">
@@ -270,23 +235,35 @@
           </v-card>
 
         </v-dialog>
-
-
         <!-- Fin Dialogo2 -->
 
+        <!-- DIALOGO DE VALIDACION  AQUI HAY UN DIALOGO DE AVISO CONTRASEÑA INCORRECTA-->
+        <v-dialog v-model="showMessages" max-width="400">
+          <v-card>
+            <v-container>
+
+              <v-card-text>
+                La contraseña es incorrecta
+              </v-card-text>
+              <v-row>
+                <v-col cols="12" class="d-flex justify-end">
+                  <v-btn color="#E0E0E0" class="mx-2" text @click="showMessages = false">Aceptar</v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card>
+
+        </v-dialog>
 
 
-
-
-
-
+        <!-- FIN DIALOGO DE VALIDACION -->
       </v-form>
     </v-card>
   </v-sheet>
 </template>
 
 
-<script >
+<script>
 import { LoginAPI } from '@/services/login.api'
 export default {
   data: () => ({
@@ -296,7 +273,7 @@ export default {
     user: '',
     password: '',
     loading: false,
-    required: [(v) => !!v || 'Este campo es requerido'],
+    required: (v) => !!v || 'Este campo es requerido',
     dialogo1: false,
     dialogo2: false,
     selection: [],
@@ -323,8 +300,13 @@ export default {
         }
         LoginAPI.login(data).then(response => {
           localStorage.setItem('token', response.data.token)
-          this.$router.push('/')
+          localStorage.setItem('nivel-usuario', response.data.data.idNivel)
+          this.$router.push('/frmciudad')
         })
+          .catch(error => {
+            this.showMessages = true;
+            this.messages = error.response.data.message;
+          })
       } else {
         this.showInicio = true;
       }

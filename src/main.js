@@ -5,7 +5,10 @@
  */
 
 // Components
+
 import App from './App.vue'
+import { PERMISO_POR_NIVEL } from './utils/permisos'
+
 
 // Composables
 import { createApp } from 'vue'
@@ -14,6 +17,16 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
 const app = createApp(App)
+
+
+const tienePermiso = (permission) => {
+    const nivelUsuario = localStorage.getItem('nivel-usuario')
+    const busqueda = PERMISO_POR_NIVEL[nivelUsuario].find(permiso => permiso === permission)
+    return !!busqueda
+}
+
+app.config.globalProperties.$tienePermiso = tienePermiso
+
 
 registerPlugins(app)
 

@@ -46,27 +46,11 @@
 
                             <v-card-text>
                                 <v-window v-model="tabCompras">
-                                    <v-window-item value="option-compras-1">
-                                        <ComponenteInformePedido/>
-                                    </v-window-item>
-
-                                    <v-window-item value="option-compras-2">
-                                        <ComponenteInformePresupuesto />
-                                    </v-window-item>
-
-                                    <v-window-item value="option-compras-3">
-                                        <ComponenteOrdenCompra/>
-                                    </v-window-item>
-
-                                    <v-window-item value="option-compras-4">
-                                        <ComponenteCompra/>
-                                    </v-window-item>
-
-                                    <v-window-item value="option-compras-5">
+                                    <v-window-item value="option-compras-1" v-if="$tienePermiso('/nota_credito_compras')">
                                         <ComponenteNotaCreditoCompra/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-compras-6">
+                                    <v-window-item value="option-compras-6"  v-if="$tienePermiso('/nota_debito_compra')">
                                        <ComponenteNotaDebitoCompra/>
                                     </v-window-item>
 

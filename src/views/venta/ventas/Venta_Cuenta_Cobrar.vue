@@ -27,7 +27,8 @@
 
 
                         <v-col cols="12" sm="2" md="2">
-                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" disabled required></v-text-field>
+                            <v-text-field variant="outlined" label="Fecha" v-model="fechaO" disabled
+                                required></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4" md="4">
                             <v-autocomplete variant="outlined" label="Cliente" :items="listaCliente"
@@ -79,9 +80,9 @@
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormulario" 
-                            :disabled="!formulario.numero_contrato|| !formulario.timbrado || !formulario.cliente 
-                            || !formulario.tipo_venta || !formulario.caja || formulario.itemsDetalle.length == 0">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormulario"
+                                :disabled="!formulario.numero_contrato || !formulario.timbrado || !formulario.cliente
+                                    || !formulario.tipo_venta || !formulario.caja || formulario.itemsDetalle.length == 0">Guardar</v-btn>
 
                         </v-col>
                     </v-row>
@@ -162,7 +163,7 @@
                         mdi-trash-can-outline
                     </v-icon>
 
-                    <v-icon color="primary" size="small" class="me-2" @click="descargarFactura(item.raw)">
+                    <v-icon color="primary" size="small" class="me-2" @click="descargarFactura(item.raw.id)">
                         mdi mdi-download-circle-outline
                     </v-icon>
 
@@ -209,7 +210,7 @@
         <!-- FIN DIALOGO -->
 
 
-       
+
 
 
         <!-- FIN DIALOGO REGISTRAR CUENTAS A PAGAR -->
@@ -232,6 +233,7 @@ import { OrdenCompraApi } from '@/services/orden_compra.api'
 
 
 import dayjs from 'dayjs'
+import { AperturaAPI } from '@/services/apertura.api'
 
 
 
@@ -264,8 +266,6 @@ export default {
                 tipo_venta: '',
                 idtipo_venta: '',
 
-
-
             },
             numerosVenta: '',
             fechaO: dayjs().format('DD/MM/YYYY'),
@@ -277,15 +277,14 @@ export default {
             contador: 1,
             limit: 45,
             defaultFormulario: {
-                codigo: '',
-                descripcion: '',
-                fecha: '',
+                cliente: '',
+                caja: '',
                 timbrado: '',
-                producto: null,
-                cantidad: '',
-                precio: '',
-                nomnbreProducto: '',
-                descripcionI: ''
+                numeros: '',
+                numero_contrato: '',
+                fechaD: '',
+                tipo_venta: '',
+                idtipo_venta: '',
 
             },
             buscador: '',
@@ -385,7 +384,16 @@ export default {
             })
         },
 
+        resetearCampos() {
+            this.formulario = {
+                ...JSON.parse(JSON.stringify(this.defaultFormulario)),
+                numero_contrato: this.formulario.numero_contrato,
+            }
+            this.itemsDetalle = []
+        },
+
         ObtenerCodigoContrato() {
+            this.resetearCampos()
             // Verifica que se haya ingresado un número de orden
             if (!this.formulario.numero_contrato) {
                 // Puedes mostrar un mensaje de error o realizar la lógica que prefieras
@@ -393,9 +401,30 @@ export default {
             }
 
             // Realiza una solicitud a tu API para obtener el detalle de la orden de compra
-            ContratoApi.getById(this.formulario.numero_contrato).then(({ data }) => {
+            ContratoApi.getById(this.formulario.numero_contrato).then(async ({ data }) => {
                 // Aquí tengo un console.log de lo que me retorna la API
                 console.log('data:', data);
+
+                this.formulario.caja = data.idtipo_venta == 1 ? 101 : 100;
+
+                if (data.idtipo_venta == 1) {
+
+                    const noHayApertura = await AperturaAPI.validaapertura(this.formulario.caja).then(async ({ data }) => {
+
+                        if (data.length == 0) {
+                            alert('No se ha realizado la apertura de caja')
+                            return true
+                        }
+                    }).catch((error) => {
+                        alert('No se ha realizado la apertura de caja')
+                        return true
+                    })
+
+                    if (noHayApertura) {
+                        return
+                    }
+
+                }
 
                 // Calcula el monto del IVA al 5% y redondea a dos decimales
                 const iva5 = (data.monto_totalNuevo * 0.05).toFixed(0);
@@ -404,13 +433,13 @@ export default {
                 this.formulario.idtipo_venta = data.idtipo_venta;
                 this.formulario.tipo_venta = data.nombreTipoVenta;
                 //aca se completa caja (this.formulario.caja = 101;) solo si tipo_venta es contado, caso contrario se envia 100
-                this.formulario.caja = data.idtipo_venta == 1 ? 101 : 100;
-                
+
+
                 this.formulario.itemsDetalle = [{
                     monto_totalNuevo: data.monto_totalNuevo,
                     idContrato: data.idContrato,
                     //aca declaro que idIva es 1 por defecto
-              
+
                     iva: 2,
                     exenta: 0,
                     iva10: 0,
@@ -442,7 +471,7 @@ export default {
             this.dialogoFormulario = true;
             this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
             this.detalle = JSON.parse(JSON.stringify(this.defaultFormulario))
-           
+
 
         },
         generarCodigo() {
@@ -462,6 +491,7 @@ export default {
                 idventa: this.formulario.codigo,
                 Fecha: dayjs(this.fechaO).format('YYYY-MM-DD'),
                 Numero_fact: this.numerosVenta,
+                numero_factura: this.ConteoFactura,
                 idtipo_venta: this.formulario.idtipo_venta,
                 idCliente: this.formulario.cliente,
                 idTimbrado: this.formulario.timbrado,
@@ -485,15 +515,13 @@ export default {
                 console.log('response: ', response);
                 this.descargarFactura(response.data.idventa)
                 this.ObtenerVentas()
+                this.formulario = JSON.parse(JSON.stringify(this.defaultFormulario))
+                this.ConteoFactura = '';
+                this.numerosVenta = '';
+                this.dialogoFormulario = false;
             })
 
-            this.formulario.codigo = '';
-            this.formulario.fechaD = '';
-            this.formulario.timbrado = '';
-            this.formulario.numero_factura = '';
-            this.formulario.documento = '';
-            this.formulario.proveedor = '';
-            this.dialogoFormulario = false;
+
         },
 
 
@@ -507,7 +535,7 @@ export default {
         },
         descargarFactura(id) {
             console.log('elemento: ', id)
-            VentaAPI.descargarFactura(id.id).then(({ data }) => {
+            VentaAPI.descargarFactura(id).then(({ data }) => {
                 const linkSource = data
                 const downloadLink = document.createElement('a')
                 const fileName = `FACTURA.pdf`
@@ -776,6 +804,7 @@ export default {
     watch: {
         async 'formulario.timbrado'(value) {
             console.log('value: ', value)
+            if (!value) return
 
             await this.ObtenerNumeroFactura(value.id)
             this.numerosVenta = `${value.numeros}-${String(this.ConteoFactura).padStart(7, '0')}`

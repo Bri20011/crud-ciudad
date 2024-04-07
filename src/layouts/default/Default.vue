@@ -36,32 +36,40 @@
             <template v-slot:activator="{ props }">
               <v-list-item v-bind="props" prepend-icon="mdi-folder-plus" title="Compras"></v-list-item>
             </template>
-            <v-list-item v-for="([title, icon, link], i) in compras" :key="i" :value="title" :title="title"
+            <div v-for="([title, icon, link], i) in compras" :key="i">
+              <v-list-item  :value="title" :title="title" v-if="$tienePermiso(link)"
               :prepend-icon="icon" :to="link"></v-list-item>
+            </div>
           </v-list-group>
 
           <v-list-group value="Produccion">
             <template v-slot:activator="{ props }">
               <v-list-item v-bind="props" prepend-icon="mdi-image-filter-hdr" title="Produccion"></v-list-item>
             </template>
-            <v-list-item v-for="([title, icon, link], i) in Produccion" :key="i" :value="title" :title="title"
-              :prepend-icon="icon" :to="link"></v-list-item>
+            <div v-for="([title, icon, link], i) in Produccion" :key="i">
+            <v-list-item  :value="title" :title="title"
+              :prepend-icon="icon" :to="link" v-if="$tienePermiso(link)"></v-list-item>
+            </div>
           </v-list-group>
 
           <v-list-group value="Ventas">
             <template v-slot:activator="{ props }">
               <v-list-item v-bind="props" prepend-icon="mdi-printer-pos" title="Ventas"></v-list-item>
             </template>
-            <v-list-item v-for="([title, icon, link], i) in ventas" :key="i" :value="title" :title="title"
-              :prepend-icon="icon" :to="link"></v-list-item>
+            <div v-for="([title, icon, link], i) in ventas" :key="i">
+            <v-list-item :value="title" :title="title"
+              :prepend-icon="icon" :to="link" v-if="$tienePermiso(link)"></v-list-item>
+            </div>
           </v-list-group>
 
           <v-list-group value="Mantemiento">
             <template v-slot:activator="{ props }">
               <v-list-item v-bind="props" prepend-icon="mdi-wrench-cog-outline" title="Mantenimiento"></v-list-item>
             </template>
-            <v-list-item v-for="([title, icon, link], i) in mantenimiento" :key="i" :title="title" :prepend-icon="icon"
-              :value="title" :to="link"></v-list-item>
+            <div v-for="([title, icon, link], i) in mantenimiento" :key="i">
+            <v-list-item  :title="title" :prepend-icon="icon"
+              :value="title" :to="link" v-if="$tienePermiso(link)"></v-list-item>
+            </div>
           </v-list-group>
 
 
