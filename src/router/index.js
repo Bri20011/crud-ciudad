@@ -99,7 +99,7 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "categoria" */ '@/views/FrmCategoria.vue'),
     },
-  
+ 
     
     {
       path: 'frmnumero_establecimiento',
@@ -578,6 +578,15 @@ const routes = [
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "informe" */ '@/views/venta/ventas/cobranza.vue'),
     },
+    {
+      path: 'copia_seguridad',
+      name: 'Copia_Seguridad',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "marca" */ '@/views/Copia_Seguridad.vue'),
+    },
+
     ],
   },
 ]

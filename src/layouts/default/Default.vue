@@ -168,7 +168,9 @@ export default {
         ['Tipo de Venta', 'mdi-cog-outline', '/tipoventa'],
         ['Tipo Producto', 'mdi-cog-outline', '/tipo_producto'],
         ['Timbrado', 'mdi-cog-outline', '/timbrado'],
-        ['Usuario', 'mdi-cog-outline', '/frmusuario']
+        ['Usuario', 'mdi-cog-outline', '/frmusuario'],
+        ['Copia de seguridad', 'mdi-cog-outline', '/copia_seguridad'],
+     
 
 
       ],
