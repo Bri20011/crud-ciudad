@@ -57,6 +57,57 @@ const MODULO_MANTENIMIENTO_COPIA_SEGURIDAD = '/copia_seguridad';
 
 
 
+
+const MODULO_INFORMES_PEDIDO = '/informe_compras/informe_pedido.vue';
+const MODULO_INFORMES_ORDEN_COMPRA = '/informe_compras/informe_orden_compra.vue';
+const MODULO_INFORMES_PRESUPUESTO = '/informe_compras/informe_presupuesto.vue';
+const MODULO_INFORMES_COMPRA = '/informe_compras/informe_compra.vue';
+const MODULO_INFORMES_NOTA_CREDITO_COMPRA = '/informe_compras/informe_nota_credito_compra.vue';
+const MODULO_INFORMES_NOTA_DEBITO_COMPRA = '/informe_compras/informe_nota_debito_compra.vue';
+const MODULO_INFORMES_NOTA_REMISION_COMPRA = '/informe_compras/informe_nota_remision_compra.vue';
+
+
+const MODULO_INFORMES_BARRIO = '/informe_mantenimiento/informe_barrio.vue';
+const MODULO_INFORMES_CAJA = '/informe_mantenimiento/informe_caja.vue';
+const MODULO_INFORMES_CIUDAD = '/informe_mantenimiento/informe_ciudad.vue';
+const MODULO_INFORMES_CATEGORIA = '/informe_mantenimiento/informe_categoria.vue';
+const MODULO_INFORMES_CLIENTE = '/informe_mantenimiento/informe_cliente.vue';
+const MODULO_INFORMES_EFECTIVO = '/informe_mantenimiento/informe_efectivo.vue';
+const MODULO_INFORMES_FORMA_COBRO = '/informe_mantenimiento/informe_forma_cobro.vue';
+const MODULO_INFORMES_FUNCIONARIO = '/informe_mantenimiento/informe_funcionario.vue';
+const MODULO_INFORMES_IVA = '/informe_mantenimiento/informe_iva.vue';
+const MODULO_INFORMES_MANZANA = '/informe_mantenimiento/informe_manzana.vue';
+const MODULO_INFORMES_MARCA = '/informe_mantenimiento/informe_marca.vue';
+const MODULO_INFORMES_MONEDA = '/informe_mantenimiento/informe_moneda.vue';
+const MODULO_INFORMES_MOTIVO_CESION = '/informe_mantenimiento/informe_motivo_cesion_contrato.vue';
+const MODULO_INFORMES_MOTIVO_RESCISION = '/informe_mantenimiento/informe_motivo_rescision_contrato.vue';
+const MODULO_INFORMES_MOTIVO_TRASLADO = '/informe_mantenimiento/informe_motivo_traslado.vue';
+const MODULO_INFORMES_NIVEL = '/informe_mantenimiento/informe_nivel.vue';
+const MODULO_INFORMES_NUMERO_ESTABLECIMIENTO = '/informe_mantenimiento/informe_numero_establecimiento.vue';
+const MODULO_INFORMES_NUMERO_EXPEDICION = '/informe_mantenimiento/informe_numero_expedicion.vue';
+const MODULO_INFORMES_PRODUCTO = '/informe_mantenimiento/informe_producto.vue';
+const MODULO_INFORMES_PROVEEDOR = '/informe_mantenimiento/informe_proveedor.vue';
+const MODULO_INFORMES_SUCURSAL = '/informe_mantenimiento/informe_sucursal.vue';
+const MODULO_INFORMES_TIPO_DOCUMENTO = '/informe_mantenimiento/informe_tipo_documento.vue';
+const MODULO_INFORMES_TIPO_VENTA = '/informe_mantenimiento/informe_tipo_producto.vue';
+const MODULO_INFORMES_TIPO_PRODUCTO = '/informe_mantenimiento/informe_tipo_venta.vue';
+const MODULO_INFORMES_TIMBRADO = '/informe_mantenimiento/informe_timbrado.vue';
+const MODULO_INFORMES_USUARIO = '/informe_mantenimiento/informe_usuario.vue';
+
+
+const MODULO_INFORMES_ORDEN_COMPRA_LOTE = '/informe_produccion/informe_orden_compra_lote.vue';
+const MODULO_INFORMES_COMPRA_LOTE = '/informe_produccion/informe_compra_lote.vue';
+const MODULO_INFORMES_URBANIZACION = '/informe_produccion/informe_urbanizacion.vue';
+const MODULO_INFORMES_CONTRATO = '/informe_produccion/informe_contrato.vue';
+const MODULO_INFORMES_VENTA = '/informe_ventas/informe_venta.vue';
+const MODULO_INFORMES_NOTA_CREDITO_VENTA = '/informe_ventas/informe_nota_credito_venta.vue';
+const MODULO_INFORMES_NOTA_DEBITO_VENTA = '/informe_ventas/informe_nota_debito_venta.vue';
+const MODULO_INFORMES_NOTA_REMISION_VENTA = '/informe_ventas/informe_nota_remision_venta.vue';
+
+
+
+
+
 const PERMISO_POR_NIVEL = {
     1: [MODULO_PEDIDOS, MODULO_PRESUPUESTO, MODULO_ORDENES_DE_COMPRA,
         MODULO_COMPRAS, MODULO_NCC, MODULO_NDC, MODULO_NRC, MODULO_LIBROCOMPRAS],
@@ -102,6 +153,27 @@ const PERMISO_POR_NIVEL = {
         MODULO_MANTENIMIENTO_NUMERO_ESTABLECIMIENTO, MODULO_MANTENIMIENTO_NUMERO_EXPEDICION,
         MODULO_MANTENIMIENTO_PRODUCTO, MODULO_MANTENIMIENTO_PROVEEDOR, MODULO_MANTENIMIENTO_SUCURSAL,
         MODULO_MANTENIMIENTO_TIPO_DOCUMENTO, MODULO_MANTENIMIENTO_TIPO_VENTA,
-        MODULO_MANTENIMIENTO_TIPO_PRODUCTO, MODULO_MANTENIMIENTO_TIMBRADO, MODULO_MANTENIMIENTO_USUARIO, MODULO_MANTENIMIENTO_COPIA_SEGURIDAD],
+        MODULO_MANTENIMIENTO_TIPO_PRODUCTO, MODULO_MANTENIMIENTO_TIMBRADO, MODULO_MANTENIMIENTO_USUARIO,
+        MODULO_MANTENIMIENTO_COPIA_SEGURIDAD, MODULO_INFORMES_PEDIDO,
+        MODULO_INFORMES_ORDEN_COMPRA, MODULO_INFORMES_PRESUPUESTO, MODULO_INFORMES_COMPRA, MODULO_INFORMES_NOTA_CREDITO_COMPRA,
+        MODULO_INFORMES_PEDIDO, MODULO_INFORMES_ORDEN_COMPRA,
+        MODULO_INFORMES_PRESUPUESTO, MODULO_INFORMES_COMPRA,
+        MODULO_INFORMES_NOTA_CREDITO_COMPRA, MODULO_INFORMES_NOTA_DEBITO_COMPRA,
+        MODULO_INFORMES_NOTA_REMISION_COMPRA, MODULO_INFORMES_BARRIO, MODULO_INFORMES_CAJA, MODULO_INFORMES_CIUDAD,
+        MODULO_INFORMES_CATEGORIA, MODULO_INFORMES_CLIENTE, MODULO_INFORMES_EFECTIVO, MODULO_INFORMES_FORMA_COBRO,
+        MODULO_INFORMES_FUNCIONARIO, MODULO_INFORMES_IVA, MODULO_INFORMES_MANZANA, MODULO_INFORMES_MARCA,
+        MODULO_INFORMES_MONEDA, MODULO_INFORMES_MOTIVO_CESION, MODULO_INFORMES_MOTIVO_RESCISION,
+        MODULO_INFORMES_MOTIVO_TRASLADO, MODULO_INFORMES_NIVEL, MODULO_INFORMES_NUMERO_ESTABLECIMIENTO,
+        MODULO_INFORMES_NUMERO_EXPEDICION, MODULO_INFORMES_PRODUCTO, MODULO_INFORMES_PROVEEDOR,
+        MODULO_INFORMES_SUCURSAL, MODULO_INFORMES_TIPO_DOCUMENTO, MODULO_INFORMES_TIPO_VENTA,
+        MODULO_INFORMES_TIPO_PRODUCTO, MODULO_INFORMES_TIMBRADO, MODULO_INFORMES_USUARIO, MODULO_INFORMES_ORDEN_COMPRA_LOTE,
+        MODULO_INFORMES_COMPRA_LOTE, MODULO_INFORMES_URBANIZACION, MODULO_INFORMES_CONTRATO, MODULO_INFORMES_VENTA,
+        MODULO_INFORMES_NOTA_CREDITO_VENTA, MODULO_INFORMES_NOTA_DEBITO_VENTA, MODULO_INFORMES_NOTA_REMISION_VENTA,MODULO_INFORMES_CATEGORIA],
+
+    
+
+
+
 }
+
 export { PERMISO_POR_NIVEL }

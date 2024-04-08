@@ -46,15 +46,35 @@
 
                             <v-card-text>
                                 <v-window v-model="tabCompras">
-                                    <v-window-item value="option-compras-1" v-if="$tienePermiso('/nota_credito_compras')">
+                                    <v-window-item value="option-compras-1" v-if="$tienePermiso('/informe_compras/informe_pedido.vue')">
+                                        <ComponenteInformePedido/>
+                                    </v-window-item>
+                                    
+                                   
+                                    <v-window-item value="option-compras-2" v-if="$tienePermiso('/informe_compras/informe_presupuesto.vue')">
+                                        <ComponenteInformePresupuesto/>
+                                    </v-window-item>
+
+                                 
+                                    <v-window-item value="option-compras-3" v-if="$tienePermiso('/informe_compras/informe_orden_compra.vue')">
+                                        <ComponenteOrdenCompra/>
+                                    </v-window-item>
+
+                                 
+                                    <v-window-item value="option-compras-4" v-if="$tienePermiso('/informe_compras/informe_compra.vue')">
+                                        <ComponenteCompra/>
+                                    </v-window-item>
+
+                                    
+                                    <v-window-item value="option-compras-5" v-if="$tienePermiso('/informe_compras/informe_nota_debito_compra.vue')">
                                         <ComponenteNotaCreditoCompra/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-compras-6"  v-if="$tienePermiso('/nota_debito_compra')">
+                                    <v-window-item value="option-compras-6"  v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                        <ComponenteNotaDebitoCompra/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-compras-7">
+                                    <v-window-item value="option-compras-7" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         <ComponenteNotaRemisionCompra/>
                                     </v-window-item>
                                 </v-window>
@@ -76,31 +96,31 @@
 
                             <v-card-text>
                                 <v-window v-model="tabProduccion">
-                                    <v-window-item value="option-produccion-1">
+                                    <v-window-item value="option-produccion-1"  v-if="$tienePermiso('/informe_produccion/informe_orden_compra_lote.vue')">
                                         <ComponenteOrdenCompraLote/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-produccion-2">
+                                    <v-window-item value="option-produccion-2" v-if="$tienePermiso('/informe_produccion/informe_compra_lote.vue')">
                                         <ComponenteCompraLote/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-produccion-3">
+                                    <v-window-item value="option-produccion-3" v-if="$tienePermiso('/informe_produccion/informe_urbanizacion.vue')">
                                         <ComponenteUrbanizacion/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-produccion-4">
+                                    <v-window-item value="option-produccion-4" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         Compras
                                     </v-window-item>
 
-                                    <v-window-item value="option-produccion-5">
+                                    <v-window-item value="option-produccion-5" v-if="$tienePermiso('/informe_produccion/informe_contrato.vue')">
                                        <ComponenteContrato/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-produccion-6">
+                                    <v-window-item value="option-produccion-6" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         Nota de Debito
                                     </v-window-item>
 
-                                    <v-window-item value="option-produccion-7">
+                                    <v-window-item value="option-produccion-7" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         Nota de Remision
                                     </v-window-item>
                                 </v-window>
@@ -125,31 +145,31 @@
 
                             <v-card-text>
                                 <v-window v-model="tabVenta">
-                                    <v-window-item value="option-venta-1">
+                                    <v-window-item value="option-venta-1" v-if="$tienePermiso('/informe_ventas/informe_venta.vue')">
                                         <ComponenteVenta/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-venta-2">
+                                    <v-window-item value="option-venta-2" v-if="$tienePermiso('/informe_ventas/informe_nota_credito_venta.vue')">
                                         <ComponenteNotaCreditoVenta/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-venta-3">
+                                    <v-window-item value="option-venta-3" v-if="$tienePermiso('/informe_ventas/informe_nota_debito_venta.vue')">
                                         <ComponenteNotaDebitoVenta/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-venta-4">
+                                    <v-window-item value="option-venta-4" v-if="$tienePermiso('/informe_ventas/informe_nota_remision_venta.vue')">
                                         <ComponenteNotaRemisionVenta/>
                                     </v-window-item>
 
-                                    <v-window-item value="option-venta-5">
+                                    <v-window-item value="option-venta-5" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         Nota de Credito
                                     </v-window-item>
 
-                                    <v-window-item value="option-venta-6">
+                                    <v-window-item value="option-venta-6" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         Nota de Debito
                                     </v-window-item>
 
-                                    <v-window-item value="option-venta-7">
+                                    <v-window-item value="option-venta-7" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         Nota de Remision
                                     </v-window-item>
                                 </v-window>
@@ -197,85 +217,85 @@
 
                             <v-card-text>
                                 <v-window v-model="tabmantenimiento">
-                                    <v-window-item value="option-mantenimiento-1">
+                                    <v-window-item value="option-mantenimiento-1" v-if="$tienePermiso('/informe_mantenimiento/informe_barrio.vue')">
                                         <ComponenteBarrio/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-2">
+                                    <v-window-item value="option-mantenimiento-2" v-if="$tienePermiso('/informe_mantenimiento/informe_caja.vue')">
                                         <ComponenteCaja/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-3">
+                                    <v-window-item value="option-mantenimiento-3" v-if="$tienePermiso('/informe_mantenimiento/informe_ciudad.vue')">
                                         <ComponenteCiudad/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-4">
+                                    <v-window-item value="option-mantenimiento-4" v-if="$tienePermiso('/informe_mantenimiento/informe_categoria.vue')">
                                         <ComponenteCategoria/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-5">
+                                    <v-window-item value="option-mantenimiento-5" v-if="$tienePermiso('/informe_mantenimiento/informe_cliente.vue')">
                                         <ComponenteCliente/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-6">
+                                    <v-window-item value="option-mantenimiento-6" v-if="$tienePermiso('/informe_mantenimiento/informe_efectivo.vue')">
                                         <ComponenteEfectivo/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-7">
+                                    <v-window-item value="option-mantenimiento-7" v-if="$tienePermiso('/informe_mantenimiento/informe_forma_cobro.vue')">
                                         <ComponenteFormaCobro/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-8">
+                                    <v-window-item value="option-mantenimiento-8" v-if="$tienePermiso('/informe_mantenimiento/informe_funcionario.vue')">
                                         <ComponenteFuncionario/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-9">
+                                    <v-window-item value="option-mantenimiento-9" v-if="$tienePermiso('/informe_mantenimiento/informe_iva.vue')">
                                         <ComponenteIva/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-10">
+                                    <v-window-item value="option-mantenimiento-10" v-if="$tienePermiso('/informe_mantenimiento/informe_manzana.vue')">
                                         <ComponenteManzana/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-11">
+                                    <v-window-item value="option-mantenimiento-11" v-if="$tienePermiso('/informe_mantenimiento/informe_marca.vue')">
                                         <ComponenteMarca/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-12">
+                                    <v-window-item value="option-mantenimiento-12" v-if="$tienePermiso('/informe_mantenimiento/informe_moneda.vue')">
                                         <ComponenteMoneda/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-13">
+                                    <v-window-item value="option-mantenimiento-13" v-if="$tienePermiso('/informe_mantenimiento/informe_motivo_cesion_contrato.vue')">
                                         <ComponenteMotivoCesionContrato/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-14">
+                                    <v-window-item value="option-mantenimiento-14" v-if="$tienePermiso('/informe_mantenimiento/informe_motivo_rescision_contrato.vue')">
                                         <ComponenteMotivoRescicionContrato/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-15">
+                                    <v-window-item value="option-mantenimiento-15" v-if="$tienePermiso('/informe_mantenimiento/informe_motivo_traslado.vue')">
                                         <ComponenteMotivoTraslado/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-16">
+                                    <v-window-item value="option-mantenimiento-16" v-if="$tienePermiso('/informe_mantenimiento/informe_nivel.vue')">
                                         <ComponenteNiveles/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-17">
+                                    <v-window-item value="option-mantenimiento-17" v-if="$tienePermiso('/informe_mantenimiento/informe_numero_establecimiento.vue')">
                                         <ComponenteNumeroEstablecimiento/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-18">
+                                    <v-window-item value="option-mantenimiento-18" v-if="$tienePermiso('/informe_mantenimiento/informe_numero_expedicion.vue')">
                                         <ComponenteNumeroExpedicion/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-19">
+                                    <v-window-item value="option-mantenimiento-19" v-if="$tienePermiso('/informe_mantenimiento/informe_producto.vue')">
                                         <ComponenteProducto/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-20">
+                                    <v-window-item value="option-mantenimiento-20" v-if="$tienePermiso('/informe_compras/informe_nota_remision_compra.vue')">
                                         <ComponenteProducto/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-21">
+                                    <v-window-item value="option-mantenimiento-21" v-if="$tienePermiso('/informe_mantenimiento/informe_proveedor.vue')">
                                         <ComponenteProveedor/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-22">
+                                    <v-window-item value="option-mantenimiento-22" v-if="$tienePermiso('/informe_mantenimiento/informe_sucursal.vue')">
                                         <ComponenteSucursal/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-23">
+                                    <v-window-item value="option-mantenimiento-23" v-if="$tienePermiso('/informe_mantenimiento/informe_timbrado.vue')">
                                         <ComponenteTimbrado/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-24">
+                                    <v-window-item value="option-mantenimiento-24" v-if="$tienePermiso('/informe_mantenimiento/informe_tipo_documento.vue')">
                                         <ComponenteTipoDocumento/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-25">
+                                    <v-window-item value="option-mantenimiento-25" v-if="$tienePermiso('/informe_mantenimiento/informe_tipo_producto.vue')">
                                         <ComponenteTipoProducto/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-26">
+                                    <v-window-item value="option-mantenimiento-26" v-if="$tienePermiso('/informe_mantenimiento/informe_tipo_venta.vue')">
                                         <ComponenteTipoVenta/>
                                     </v-window-item>
-                                    <v-window-item value="option-mantenimiento-27">
+                                    <v-window-item value="option-mantenimiento-27" v-if="$tienePermiso('/informe_mantenimiento/informe_usuario.vue')">
                                         <ComponenteUsuario/>
                                     </v-window-item>
                                 </v-window>
@@ -298,6 +318,7 @@ import ComponenteCompra from './informe_compras/informe_compra.vue';
 import ComponenteNotaCreditoCompra from './informe_compras/informe_nota_credito_compra.vue';
 import ComponenteNotaDebitoCompra from './informe_compras/informe_nota_debito_compra.vue';
 import ComponenteNotaRemisionCompra from './informe_compras/informe_nota_remision_compra.vue';
+
 import ComponenteBarrio from './informe_mantenimiento/informe_barrio.vue';
 import ComponenteCaja from './informe_mantenimiento/informe_caja.vue';
 import ComponenteCiudad from './informe_mantenimiento/informe_ciudad.vue';
@@ -324,10 +345,13 @@ import ComponenteTipoDocumento from './informe_mantenimiento/informe_tipo_docume
 import ComponenteTipoProducto from './informe_mantenimiento/informe_tipo_producto.vue';
 import ComponenteTipoVenta from './informe_mantenimiento/informe_tipo_venta.vue';
 import ComponenteUsuario from './informe_mantenimiento/informe_usuario.vue';
+
 import ComponenteOrdenCompraLote from './informe_produccion/informe_orden_compra_lote.vue';
 import ComponenteCompraLote from './informe_produccion/informe_compra_lote.vue';
 import ComponenteUrbanizacion from './informe_produccion/informe_urbanizacion.vue';
 import ComponenteContrato from './informe_produccion/informe_contrato.vue';
+
+
 import ComponenteVenta from './informe_ventas/informe_venta.vue';
 import ComponenteNotaCreditoVenta from './informe_ventas/informe_nota_credito_venta.vue';
 import ComponenteNotaDebitoVenta from './informe_ventas/informe_nota_debito_venta.vue';
