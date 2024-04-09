@@ -90,7 +90,7 @@
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2" @click="cerrarDialogo">Cancelar</v-btn>
                             <v-btn color="primary" @click="guardarFormulario"
-                                :disabled="!formulario.nombre_urb || !formulario.fechaD || !formulario.barrio || !formulario.ciudad || !formulario.ubicacion || !formulario.total_lote_generar || !formulario.costo">Guardarr</v-btn>
+                                :disabled="!formulario.nombre_urb || !formulario.fechaD || !formulario.barrio || !formulario.ciudad || !formulario.ubicacion || !formulario.total_lote_generar || !formulario.costo || !detalle_editar.l_derecho">Guardarr</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>

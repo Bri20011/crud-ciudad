@@ -31,18 +31,42 @@
                 <v-icon color="primary" size="small" @click="MostrarUrbanizacion(item.raw)">
                     mdi-file-eye-outline
                 </v-icon>
-                <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
+                <v-icon color="red" size="small" @click="confirmarCambiarEstado(item.raw)">
                     mdi-trash-can-outline
-                </v-icon> </template>
+                </v-icon>
+            </template>
         </v-data-table>
     </v-card>
     <UrbanizacionFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
     <UrbanizacionFormularioVista v-if="dialogoFormularioVista" @cerrar-dialogo-v="dialogoFormularioVista = false" :datosSelec="datosSelecionado"/>
+        <!-- Diálogo de confirmación -->
+        <v-dialog v-model="dialogoCambiarEstado" max-width="400">
+            <v-card>
+                <v-container>
+                    <v-card-title class="headline">Confirmar la Anulacion</v-card-title>
+                    <v-card-text>
+                        ¿Está seguro de que desea Anular este elemento?
+                    </v-card-text>
 
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" text @click="cambiarEstadoCompra">Anular</v-btn>
+                            <v-btn color="primary" text @click="cancelarCambiarEstado">Cancelar</v-btn>
+                        </v-col>
+                    </v-row>
+
+
+                </v-container>
+            </v-card>
+
+        </v-dialog>
+        <!-- FIN DIALOGO -->
 </template>
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import UrbanizacionFormulario from './urbanizacion-formulario.vue'
+import { UrbanizacionApi } from '@/services/urbanizacion.api'
 import UrbanizacionFormularioVista from './urbanizacion-formulario-vista.vue'
 
 import dayjs from 'dayjs'
@@ -59,6 +83,8 @@ export default {
     },
     data() {
         return {
+            dialogoCambiarEstado: false,
+
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Fecha de Urbanizacion', key: 'fechaD', align: 'star' },
@@ -91,7 +117,40 @@ export default {
         },
         formatearFecha(fechaD) {
             return dayjs(fechaD).format('DD/MM/YYYY')
-        }
+        },
+        confirmarCambiarEstado(elemento) {
+            // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
+            this.elementoACambiarEstado = elemento;
+            this.dialogoCambiarEstado = true;
+        },
+        cancelarCambiarEstado() {
+            // Cierra el diálogo de confirmación y restablece la variable
+            this.dialogoCambiarEstado = false;
+            this.elementoACambiarEstado = null;
+        },
+        cambiarEstadoCompra() {
+            if (this.elementoACambiarEstado) {
+                // Realiza la actualización aquí para cambiar el estado
+                UrbanizacionApi.update(this.elementoACambiarEstado.id, { estado: true }
+                ).then(() => {
+                    // Actualiza la tabla después de que la actualización se haya completado
+                    this.items = [];
+                    this.ObtenerUrbanizacion();
+
+                })
+
+
+                // Cierra el diálogo de confirmación
+                this.dialogoCambiarEstado = false;
+                this.elementoACambiarEstado = null;
+
+
+
+
+            }
+
+        },
+
     },
 }
 </script>

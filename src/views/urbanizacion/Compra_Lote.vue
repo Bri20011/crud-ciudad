@@ -18,17 +18,18 @@
                             <v-text-field type="number"  variant="outlined" label="Numero de Factura"
                                 v-model="formulario.numero_factura" required></v-text-field>
                         </v-col>
+                        
                         <v-col cols="12" sm="3" md="3">
-
-
                             <v-autocomplete variant="outlined" label="Tipo de Documento" :items="listaDocumento"
                                 item-title="descripcionD" item-value="id" v-model="formulario.documento"
-                                required></v-autocomplete>
+                                required
+                                @change="tipoDocumentoChanged">
+                            </v-autocomplete>
                         </v-col>
+
                         <v-col v-if="formulario.documento == 1" cols="12" sm="2" md="2">
-                            <v-autocomplete variant="outlined" label="Caja" :items="listaCaja"
-                                item-title="descripcionCa" item-value="id" v-model="formulario.caja"
-                                required></v-autocomplete>
+                            <v-autocomplete variant="outlined"  item-value="id" label="Caja" :items="listaCaja"
+                          disabled v-model="formulario.caja" item-title="descripcionCa" required></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12" sm="4" md="4">
@@ -99,7 +100,8 @@
                             <v-btn color="#E0E0E0" class="mx-2" @click="dialogoFormulario = false">Cancelar</v-btn>
 
                             <v-btn color="primary" @click="guardarFormulario"
-                                :disabled="!formulario.numero_orden || !formulario.numero_factura || !formulario.documento || !formulario.fechaO || !formulario.timbrado || !formulario.proveedor||(formulario.documento === 1 && !formulario.caja) || !formulario.ubicacion">GuardarPricn</v-btn>
+                                :disabled="!formulario.numero_orden || !formulario.numero_factura || !formulario.documento || !formulario.fechaO || !formulario.timbrado || !formulario.proveedor||(formulario.documento === 1 && !formulario.caja) || formulario.documento === 2 && !seRealizoAgregarPagos || !formulario.ubicacion">GuardarPricn
+                            </v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -336,7 +338,8 @@
                             <v-col cols="12" class="d-flex justify-end">
                                 <v-btn color="#E0E0E0" class="mx-2"
                                     @click="dialogoFormularioGenerarCuota = false">Cancelar</v-btn>
-                                <v-btn color="primary" @click="guardarFormularioPagos" :disabled="!CuentaPagar.observacion || !CuentaPagar.proveedor || !headersCuentasPagar"  >GuardarPa</v-btn>
+                                <v-btn color="primary" @click="guardarFormulario"
+                                    :disabled="!CuentaPagar.observacion || !CuentaPagar.proveedor || !itemsDetallePagos.length">Guardar</v-btn>
 
                             </v-col>
                         </v-row>
@@ -716,7 +719,7 @@ export default {
 
         guardarFormulario() {
             //Aqui valida algun campo tabla esta vacio no activa el boton
-            if (!this.formulario.numero_factura || !this.formulario.documento || !this.formulario.caja || !this.formulario.proveedor || !this.formulario.fechaD || !this.formulario.timbrado) {
+            if (this.formulario.documento === 1 && !this.formulario.caja) {
                 this.emptyFieldError = true;
                 return;
             }
@@ -935,7 +938,7 @@ export default {
         AgregarDetallePago() {
 
             this.itemsDetallePagos.push({
-                fecha: this.CuentaPagar.fechaD,
+                fechaD: this.CuentaPagar.fechaD,
                 monto: this.CuentaPagar.monto,
                 action: '',
 
@@ -1012,7 +1015,15 @@ export default {
 
 
     },
-
+    watch: {
+  'formulario.documento': function (newValue, oldValue) {
+    if (newValue === 1) {
+      this.formulario.caja = 102;
+    } else if (newValue === 2) {
+      this.formulario.caja = 100;
+    }
+  }
+},
 
 }
 </script>

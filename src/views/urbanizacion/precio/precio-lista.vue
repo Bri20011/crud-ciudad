@@ -31,19 +31,43 @@
                 <v-icon color="primary" size="small" @click="abrirFormularioEditar(item.raw)">
                     mdi-pencil
                 </v-icon>
-                <v-icon color="#C62828" size="small" @click="confirmarAnularUrbanizacion(item.raw)">
+                <v-icon color="#C62828" size="small" @click="confirmarCambiarEstado(item.raw)">
                     mdi-trash-can-outline
                 </v-icon> </template>
         </v-data-table>
     </v-card>
     <PrecioFormulario v-if="dialogoFormulario" @cerrar-dialogo="dialogoFormulario = false" />
     <PrecioFormularioEditar v-if="dialogoFormularioEditar" @cerrar-dialogo-v="dialogoFormularioEditar = false" :datosSelec="datosSelecionado"/>
+ <!-- Diálogo de confirmación -->
+ <v-dialog v-model="dialogoCambiarEstado" max-width="400">
+            <v-card>
+                <v-container>
+                    <v-card-title class="headline">Confirmar la Anulacion</v-card-title>
+                    <v-card-text>
+                        ¿Está seguro de que desea Anular este elemento?
+                    </v-card-text>
 
+
+                    <v-row>
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="#E0E0E0" class="mx-2" text @click="cambiarEstadoCompra">Anular</v-btn>
+                            <v-btn color="primary" text @click="cancelarCambiarEstado">Cancelar</v-btn>
+                        </v-col>
+                    </v-row>
+
+
+                </v-container>
+            </v-card>
+
+        </v-dialog>
+        <!-- FIN DIALOGO -->
 </template>
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import PrecioFormulario from './precio-formulario.vue'
 import PrecioFormularioEditar from './precio-formulario-editar.vue'
+import { PrecioApi } from '@/services/precio.api'
+
 // import UrbanizacionFormularioVista from './urbanizacion-formulario-vista.vue'
 
 import dayjs from 'dayjs'
@@ -61,6 +85,7 @@ export default {
     },
     data() {
         return {
+            dialogoCambiarEstado: false,
             headers: [
                 { title: 'Codigo', align: 'start', sortable: false, key: 'id', },
                 { title: 'Fecha de Precio', key: 'fechaD', align: 'star' },
@@ -93,7 +118,39 @@ export default {
         },
         formatearFecha(fechaD) {
             return dayjs(fechaD).format('DD/MM/YYYY')
-        }
+        },
+        confirmarCambiarEstado(elemento) {
+            // Abre el diálogo de confirmación y guarda el elemento a cambiar de estado
+            this.elementoACambiarEstado = elemento;
+            this.dialogoCambiarEstado = true;
+        },
+        cancelarCambiarEstado() {
+            // Cierra el diálogo de confirmación y restablece la variable
+            this.dialogoCambiarEstado = false;
+            this.elementoACambiarEstado = null;
+        },
+        cambiarEstadoCompra() {
+            if (this.elementoACambiarEstado) {
+                // Realiza la actualización aquí para cambiar el estado
+                PrecioApi.estado(this.elementoACambiarEstado.id, { estado_listadoPrecio: true }
+                ).then(() => {
+                    // Actualiza la tabla después de que la actualización se haya completado
+                    this.items = [];
+                    this.ObtenerPrecio();
+
+                })
+
+
+                // Cierra el diálogo de confirmación
+                this.dialogoCambiarEstado = false;
+                this.elementoACambiarEstado = null;
+
+
+
+
+            }
+
+        },
     },
 }
 </script>

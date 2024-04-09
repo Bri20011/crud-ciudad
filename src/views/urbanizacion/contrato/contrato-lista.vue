@@ -133,10 +133,9 @@ export default {
             this.elementoACambiarEstado = null;
         },
         cambiarEstadoContrato() {
-            console.log('Cambiar Estado:',this.elementoACambiarEstado);
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
-                ContratoApi.update(this.elementoACambiarEstado.id, { estado_contrato: true }
+                ContratoApi.update(this.elementoACambiarEstado.id, { estado: true }
                 ).then(() => {
                     // Actualiza la tabla después de que la actualización se haya completado
                     this.items = [];

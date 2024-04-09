@@ -166,15 +166,6 @@
                     <v-icon color="primary" size="small" class="me-2" @click="descargarFactura(item.raw.id)">
                         mdi mdi-download-circle-outline
                     </v-icon>
-
-                    <!-- <v-btn append-icon="mdi-trash-can-outline" color="primary"
-                        @click="confirmarCambiarEstado(item.raw)">
-                        Anular
-                    </v-btn>
-                    <v-btn append-icon="mdi-trash-can-outline" color="primary" @click="descargarFactura(item.raw.id)">
-                        Descargar
-                    </v-btn> -->
-
                 </template>
             </v-data-table>
         </v-card>
@@ -189,7 +180,7 @@
         <v-dialog v-model="dialogoCambiarEstado" max-width="400">
             <v-card>
                 <v-container>
-                    <v-card-title class="headline">Confirmar Eliminación</v-card-title>
+                    <v-card-title class="headline">Confirmar Anulacion</v-card-title>
                     <v-card-text>
                         ¿Está seguro de que desea Anular este elemento?
                     </v-card-text>
@@ -552,11 +543,11 @@ export default {
         cambiarEstadoCompra() {
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
-                VentaAPI.update(this.elementoACambiarEstado.id, { estado_compras: true }
+                VentaAPI.update(this.elementoACambiarEstado.id, { estado_venta: true }
                 ).then(() => {
                     // Actualiza la tabla después de que la actualización se haya completado
                     this.items = [];
-                    this.ObtenerCompras();
+                    this.ObtenerVentas();
 
                 })
 

@@ -2,7 +2,7 @@
     <v-dialog max-width="800" v-model="dialogoFormulario" persistent>
         <v-card class="rounded-xl">
             <v-container>
-                <h1 class="mb-3">Rescision de Contrato</h1>
+                <h1 class="mb-3">Rescision de Rescision</h1>
                 <v-form>
                     <v-row>
                         <v-col cols="12" sm="2" md="2">

@@ -6,7 +6,7 @@
         </v-col>
 
         <v-col cols="12" sm="7" md="7" class="d-flex justify-end align-center">
-            Cantidad de Contratos: {{ prop_listado_rescision.length }}
+            Cantidad de Rescisiones: {{ prop_listado_rescision.length }}
         </v-col>
 
     </v-row>
@@ -15,7 +15,7 @@
             <template v-slot:top>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>
-                        <p class="font-weight-bold">Registro de Contratos</p>
+                        <p class="font-weight-bold">Registro de Rescisiones</p>
                     </v-toolbar-title>
 
                     <v-btn class="custom-font" color="primary" prepend-icon="mdi-content-save-plus" variant="text"
@@ -65,6 +65,7 @@
 </template>
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import {RescisionAPI} from '@/services/rescision.api'
 import RescisionFormulario from './rescision-formulario.vue'
 import { MotivoRescisionAPI } from '@/services/motivo_rescision_contrato.api'
 import dayjs from 'dayjs'
@@ -130,11 +131,11 @@ export default {
             console.log('Cambiar Estado:',this.elementoACambiarEstado);
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
-                MotivoRescisionAPI.update(this.elementoACambiarEstado.id, { estado_contrato: true }
+                RescisionAPI.update(this.elementoACambiarEstado.id, { estado: true }
                 ).then(() => {
                     // Actualiza la tabla después de que la actualización se haya completado
                     this.items = [];
-                    this.ObtenerContrato();
+                    this.ObtenerRescision();
 
                 })
 

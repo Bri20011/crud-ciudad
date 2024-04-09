@@ -185,7 +185,7 @@
                         <v-col cols="12" class="d-flex justify-end">
                             <v-btn color="#E0E0E0" class="mx-2"
                                 @click="dialogoFormularioEditarDetalle = false">Cancelar</v-btn>
-                            <v-btn color="primary" @click="guardarFormularioEditarDetalle">Guardar</v-btn>
+                            <v-btn color="primary" @click="guardarFormularioEditarDetalle" :disabled="!detalle_editar.precioContado || !detalle_editar.precioCredito|| !detalle_editar.cantidadCuota || !detalle_editar.montoCredito">Guardar</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>

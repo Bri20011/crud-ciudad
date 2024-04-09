@@ -66,6 +66,7 @@
 <script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import CesionFormulario from './cesion-formulario.vue'
+import {CesionAPI} from '@/services/cesion.api'
 import { MotivoRescisionAPI } from '@/services/motivo_rescision_contrato.api'
 import dayjs from 'dayjs'
 import jsPDF from 'jspdf'
@@ -130,11 +131,11 @@ export default {
             console.log('Cambiar Estado:',this.elementoACambiarEstado);
             if (this.elementoACambiarEstado) {
                 // Realiza la actualización aquí para cambiar el estado
-                MotivoRescisionAPI.update(this.elementoACambiarEstado.id, { estado_contrato: true }
+                CesionAPI.update(this.elementoACambiarEstado.id, { estado: true }
                 ).then(() => {
                     // Actualiza la tabla después de que la actualización se haya completado
                     this.items = [];
-                    this.ObtenerContrato();
+                    this.ObtenerCesion();
 
                 })
 
