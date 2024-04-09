@@ -85,11 +85,7 @@
       </v-data-table>
     </v-card>
 
-    <v-row>
-      <v-col cols="12" md="12" class="d-flex justify-end align-center mt-5">
-        <v-btn>Cancelar </v-btn>
-      </v-col>
-    </v-row>
+ 
 
       <!-- Diálogo de confirmación -->
       <v-dialog v-model="dialogoEliminar" max-width="400">
