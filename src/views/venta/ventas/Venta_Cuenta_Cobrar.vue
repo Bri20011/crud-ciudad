@@ -218,8 +218,9 @@ import { ProductoAPI } from '@/services/producto.api'
 import { IvaAPI } from '@/services/iva.api'
 import { OrdenCompraApi } from '@/services/orden_compra.api'
 
-
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
 import { AperturaAPI } from '@/services/apertura.api'
 
 
@@ -443,9 +444,7 @@ export default {
         formatearFecha(fecha) {
             return dayjs(fecha).format('DD/MM/YYYY')
         },
-        formatearFecha(fechaO) {
-            return dayjs(fechaO).format('DD/MM/YYYY')
-        },
+      
         showDatePicker() {
             this.showDatepicker = true;
         },
@@ -472,11 +471,13 @@ export default {
                 this.emptyFieldError = true;
                 return;
             }
-
+            console.log(this.fechaO)
+            const Fecha = dayjs(this.fechaO, 'DD/MM/YYYY').format('YYYY-MM-DD')
+            console.log('Fecha: ', Fecha)
             VentaAPI.create({
                 //aqui envio al backend cabecera y detall
                 idventa: this.formulario.codigo,
-                Fecha: dayjs(this.fechaO).format('YYYY-MM-DD'),
+                Fecha: Fecha,
                 Numero_fact: this.numerosVenta,
                 numero_factura: this.ConteoFactura,
                 idtipo_venta: this.formulario.idtipo_venta,

@@ -112,8 +112,8 @@
                         </v-data-table>
                         <v-data-table v-if="formulario.tipoventa === 1" class="mt-5" max-width="1500" items-per-page-text="Articulos"
                             :headers="headersDetalleContado" :items="listadoDeLaTabla" :group-by="groupBy">
-                            <template v-slot:item.fechaVto="{ item }">
-                                {{ formatearFecha(item.raw.fechaVto) }}
+                            <template v-slot:item.fechaP="{ item }">
+                                {{ formatearFecha(item.raw.fechaP) }}
                             </template>
                             <template v-slot:item.action="{ item }">
                                 <v-icon size="small" class="me-2" @click="editarDetalleAntesGuardar(item.raw)">
